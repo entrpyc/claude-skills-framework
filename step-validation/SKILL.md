@@ -33,7 +33,7 @@ Does the completed work introduce contradictions with the implementation plan or
 Review the planning and implementation sessions for **concrete, observable friction** — not token counts, which can't be measured reliably across sessions. Look for:
 
 - Any step that required **more than two correction rounds.**
-- Any **doc reference that was ambiguous** or sent the work to the wrong place.
+- Any **doc reference that was ambiguous** or sent the work to the wrong place — including a link that pointed at the wrong line because the doc moved underneath it.
 - **Anything that got re-read repeatedly.**
 
 **Suggest major process improvements only** — reductions in complexity or friction that preserve implementation quality. Skip the small wins; a long list of marginal tweaks is noise.
@@ -44,7 +44,7 @@ Review the planning and implementation sessions for **concrete, observable frict
 ## Validation — Step <N>
 
 ### Consistency
-- <major contradiction> → cheaper fix: <more work | update docs>, because <reason>
+- <major contradiction, naming the section it contradicts as a link> → cheaper fix: <more work | update docs>, because <reason>
 (or: none found)
 
 ### Process friction

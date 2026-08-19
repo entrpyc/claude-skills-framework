@@ -64,7 +64,7 @@ One numbered subsection per feature (3.1, 3.2, …). For each:
   each one can be referenced individually (3.2.1, 3.2.2, …).
 - For complex features, nest further (3.4.1.1, …) for types, workflows, or
   step-by-step flows.
-- Reference related features and requirements by number rather than
+- Reference related features and requirements by linked number rather than
   restating them.
 
 Anything the product does is a feature here — including accounts, roles,

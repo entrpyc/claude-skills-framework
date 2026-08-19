@@ -37,8 +37,8 @@ Each step is **one reviewable unit of behavior**: testable in isolation, and sma
 
 **Read the PRD and architecture once, during generation.** For each step, write the *specific references it needs* — named sections of the PRD / slice PRD / architecture / slice architecture, **not whole documents**. Each later iteration then reads only what its step points to, which is what keeps step planning cheap and focused.
 
-- Reference named sections, e.g. "slice-prd.md § In scope → Auth", not "the PRD".
-- After generating the plan, **spot-check a few references** by opening them. A lazy or wrong reference propagates to every downstream step, so a few minutes here saves the whole chain.
+- Reference named sections as links, e.g. "[slice-prd.md § In scope → Auth](docs/slice-prd.md#L34)", not "the PRD".
+- After generating the plan, **spot-check a few references** by following them. A lazy or wrong reference propagates to every downstream step, so a few minutes here saves the whole chain — and since the links are resolved rather than guessed, following one is a click.
 
 ## Method
 
@@ -53,7 +53,7 @@ Each step is **one reviewable unit of behavior**: testable in isolation, and sma
 ```
 ### Step <N> — <title>
 **Delivers:** one reviewable unit of behavior — what observably changes.
-**References:** <named sections only, e.g. slice-architecture.md § Data model (slice); slice-prd.md § In scope → X>
+**References:** <named sections only, each linked to its line — e.g. [slice-architecture.md § Data model (slice)](docs/slice-architecture.md#L61); [slice-prd.md § In scope → X](docs/slice-prd.md#L18)>
 **Notes:** <optional — only if this step carries a hard-to-reverse decision worth flagging up front>
 ```
 
