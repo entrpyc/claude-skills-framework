@@ -27,7 +27,7 @@ Artifacts under `docs/`. Reference `docs/implementation-plan.md`, `docs/architec
 ## What to do
 
 ### 1. Consistency check
-Does the completed work introduce contradictions with the implementation plan or the architecture? **Flag major contradictions only.** For each, propose the **cheaper fix** — either additional work before continuing, or updating the docs to match reality. Name which is cheaper and why; the operator decides.
+Does the completed work introduce contradictions with the implementation plan or the architecture? **Read the step doc's Implementation notes first** — the assumptions recorded there are where implementation departed from what was planned, so that's the likeliest place a contradiction sits. **Flag major contradictions only.** For each, propose the **cheaper fix** — either additional work before continuing, or updating the docs to match reality. Name which is cheaper and why; the operator decides.
 
 ### 2. Efficiency review
 Review the planning and implementation sessions for **concrete, observable friction** — not token counts, which can't be measured reliably across sessions. Look for:

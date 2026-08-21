@@ -51,6 +51,8 @@ Control comes from the operator answering the major-assumption questions and rev
 
 8. **Separate the two kinds of manual work.** *User prerequisites* block the start of implementation (an account, a key, a service wired up). *User steps* come after the code is done (deploy, flip a flag, publish). Both list only things Claude genuinely can't do itself.
 
+9. **Leave the Implementation notes section empty.** It exists to hold what's learned only once code meets reality, and `step-implementation` is what fills it. Planning writes the heading and nothing under it — anything you already know at planning time belongs in **Assumptions**, not there.
+
 ## Output shape
 
 Write to `docs/steps/<NN>-<slug>.md`:
@@ -93,6 +95,9 @@ Write to `docs/steps/<NN>-<slug>.md`:
 - <the decision, one line>
 ...
 (or: none)
+
+## Implementation notes
+_Filled in during implementation — leave empty here._
 ```
 
 Keep every assumption to one plain line — the section is a scan, not a design record.

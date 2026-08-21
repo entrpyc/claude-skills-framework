@@ -23,8 +23,8 @@ Each phase writes an artifact the next phase reads.
 | 4 | `vertical-slice-architecture` | `architecture.md`, `slice-prd.md`, `completed-slices/` | `docs/slice-architecture.md` | once per slice |
 | 5 | `implementation-plan` | slice + full-scope docs | `docs/implementation-plan.md` | once per slice |
 | 6 | `step-planning` | only the sections its step references | `docs/steps/<NN>-<slug>.md` | once per step |
-| 7 | `step-implementation` | the step's plan | code, tests, manual-validation checklist | once per step |
-| 8 | `step-validation` | plan, architecture | validation notes | once per step |
+| 7 | `step-implementation` | the step's plan | code, tests, the step doc's Implementation notes, manual-validation checklist | once per step |
+| 8 | `step-validation` | plan, architecture, the step's Implementation notes | validation notes | once per step |
 
 ## Two loops
 
