@@ -1,0 +1,136 @@
+---
+name: epic-prd
+description: Define the next epic — either the specific feature(s) the operator names, or the ~20% of the *remaining* work that delivers ~80% of the remaining value as a working, scalable app — and capture it as an epic PRD. Repeatable, and identical every run: use it for the first epic when nothing is built yet, and again for every epic after, since it always prioritizes from what isn't done. Use after the full-scope PRD and architecture exist. Trigger on "define the epic", "next epic", "what do we build next", "scope the MVP", "what's the 20%", "epic prd".
+---
+# Epic PRD
+
+Produce `docs/epic-prd.md`: **the next epic — a working increment of the app, cut either to the feature(s) the operator names or to the ~20% of remaining work that delivers ~80% of remaining value.** This is Phase 3, and it is **repeatable** — run it once per epic, for as many epics as the project takes.
+
+## Two ways in, one output
+
+Every invocation produces the same artifact. What differs is only how the epic gets chosen:
+
+- **Operator-directed.** The operator names the feature(s) they want next. Your job is to scope them into a coherent epic — carve out what doesn't belong, and say plainly if what they named isn't yet buildable end-to-end or needs something delivered first.
+- **Default — the next 20%.** Nobody named anything, so you cut it:
+
+  > **remaining = full scope − what's already delivered.** Cut the ~20% of *remaining* that carries ~80% of the *remaining* value.
+
+If the operator hasn't named a target, take the default and say so, presenting the cut as the thing to argue with.
+
+The first epic is simply the case where nothing is delivered yet, so remaining is the whole PRD. That's why there is no separate first-run mode: epic 04 works exactly like epic 01, only the input differs.
+
+What does shift between epics is what "a working app" means:
+
+- **Epic 01** cuts through every layer to produce a working app where there was none.
+- **Later epics** are additive and must leave the app working the whole way — still end-to-end, still never a single layer, but now attaching to something that already runs.
+
+Like the full-scope PRD, this describes *what* and *why* for the epic — not *how* (that's the epic architecture, Phase 4).
+
+> Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
+
+## Working conventions (shared across the dev system)
+
+The **active epic** always lives at the canonical paths, so every downstream skill reads the same place no matter which epic is running:
+
+- `docs/prd.md`, `docs/architecture.md` — full scope. Read these; they are never overwritten by an epic.
+- `docs/epic-prd.md` — the active epic (this skill)
+- `docs/epic-architecture.md`, `docs/epic-plan.md`, `docs/tickets/<SS>.<TT>-<slug>.md` — the rest of the active epic's working set
+- `docs/completed-epics/<NN>-<slug>/` — epics already delivered, archived whole
+
+When an epic finishes, its artifacts move together into `docs/completed-epics/<NN>-<slug>/`, freeing the canonical paths for the next one:
+
+```
+docs/
+  prd.md  architecture.md          <- full scope, permanent
+  epic-prd.md                      <- the active epic
+  epic-architecture.md
+  epic-plan.md
+  tickets/<SS>.<TT>-<slug>.md
+  completed-epics/
+    01-core-playback/              <- archived when the next epic starts
+      prd.md  architecture.md  plan.md  tickets/
+    02-search/
+```
+
+Control comes from the operator reviewing each checkpoint. The riskiest thing here is quietly scoping in too much — so make the in/out line loud and easy to argue with.
+
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+
+## Method
+
+1. **Take stock.** Establish what is already delivered before scoping anything.
+   - Read `docs/completed-epics/`. The highest number there plus one is this epic's number — or `01` if that directory is empty or absent.
+   - If the canonical paths still hold a completed epic, **archive it first**: move `epic-prd.md` → `prd.md`, `epic-architecture.md` → `architecture.md`, `epic-plan.md` → `plan.md`, and `tickets/` across into `docs/completed-epics/<NN>-<slug>/`, so this run starts clean.
+   - **Scoped is not shipped.** Check what actually landed, not just what the last epic PRD claimed. Anything scoped but never delivered goes back into the remaining pool as a candidate for this epic.
+   - If nothing exists at all, the stock-take is simply "nothing delivered" and remaining is the full PRD. Say so and move on — don't special-case it.
+2. **Confirm the stock-take before scoping.** Present what you believe is done and what remains, and get it confirmed. Everything downstream rests on this being right, and it's the one input you can't derive from the documents alone.
+3. **Read `docs/prd.md` and `docs/architecture.md`.** You're selecting from full scope, not inventing new scope. If the operator named a target feature, find it in full scope — **a target that isn't described there is a gap to raise, not a licence to invent it.**
+4. **Re-rank against reality.** From epic 02 on, what the last epic taught you can change what matters most — a feature that looked essential may have been answered another way, and a deferred one may have become urgent. The PRD's original ordering is an input, not a queue to drain in order. Where you depart from it, say so and why. (Operator-directed epics skip the ranking, but not this check: if what they named depends on something not yet built, that dependency is the thing to raise before writing.)
+5. **Find the spine of this epic.** The smallest set of features that together form a coherent, usable increment — a real end-to-end path, not a pile of disconnected pieces. An epic cuts through every layer for a narrow set of features rather than building one whole layer.
+6. **Apply 80/20 honestly, to what remains.** Keep what delivers most of the remaining value; defer the rest. When tempted to include something "while we're here," that's the signal to defer it. For an operator-directed epic the same lever applies inward: keep the named feature's spine, defer its trimmings.
+7. **Check it's scalable, not a dead end.** The epic must be buildable so later work grows it toward full scope — not a throwaway that gets rewritten. If your cut forces a rewrite later, recut.
+8. **Write what still remains after this epic.** Each major thing left out, with a phrase on how it attaches later. This is the direct input to the *next* invocation, so it's worth writing properly rather than as an afterthought.
+9. **Audit the finished epic PRD for duplicates and mis-pointed references.** An epic PRD sits between two documents it doesn't own — `docs/prd.md` and the archive — so it degrades in two ways: it **restates a fact full scope or a completed epic already defines** (the copies drift, and the epic becomes the accidental source of truth), or it **points somewhere that no longer says what it assumes** — a PRD section renumbered since, or a "still remaining" entry naming something an earlier epic actually delivered. Do this as a real pass over the written draft, not from memory: open every section you cited and check it carries the fact you borrowed. Report what you find in the audit table below and let the operator choose the owner.
+
+## Structure
+
+```
+# <Project> — Epic <NN> PRD: <slug>
+
+## Builds on
+What already exists that this epic attaches to. For epic 01: "nothing —
+this is the first epic." A line or two; the detail lives in the archive.
+
+## What the epic is
+The working app this epic delivers, in a paragraph — what a user can do
+end-to-end once it's built that they couldn't before.
+
+## In scope — core features
+The features that form this epic's spine. Each: what it does, and why it's
+in the spine. Each of these becomes a story in the epic plan (Phase 5), so
+write them as things a user can do, not as work packages.
+
+## Still remaining after this epic
+Everything in full scope still not built, each with a phrase on how it
+attaches later. This is the next invocation's input — keep it current.
+
+## Epic flows
+The end-to-end path(s) this epic makes real.
+
+## Rationale
+Why this cut — why these features are the spine *now*, and what the last
+epic (if any) changed about the priority order. If the operator named the
+target, say that, and name anything you carved out of it and why.
+```
+
+## Duplicate & reference audit
+
+Run this over the finished epic PRD and present the table with it. The default owner is almost always **not** this document — an epic PRD earns its keep by citing full scope, not by re-describing it.
+
+```
+| Fact | Defined at | Also defined at | Recommended owner |
+|------|-----------|-----------------|-------------------|
+| Playback resumes at last position | [prd.md 3.2.4](docs/prd.md#L142)                                    | [epic-prd.md § In scope → Player](docs/epic-prd.md#L18)                     | [prd.md 3.2.4](docs/prd.md#L142) — epic should cite it |
+| Free tier upload cap              | [completed-epics/01 § In scope](docs/completed-epics/01-core-playback/prd.md#L28) | [epic-prd.md § Still remaining](docs/epic-prd.md#L31) | epic 01 — already delivered, drop from remaining |
+| Offline sync semantics            | —                                                                   | [epic-prd.md § Epic flows](docs/epic-prd.md#L44) → cites [prd.md 5.3](docs/prd.md#L260) | nothing defines it — ask |
+```
+
+Three kinds of row, same columns:
+
+- **Duplicate definition** — this epic restates what full scope or a completed epic already defines. *Recommended owner* is that upstream section; the epic keeps a reference instead of a copy.
+- **Mis-pointed reference** — a citation that resolves nowhere, or to a section that doesn't carry the fact. Put the true home in *Defined at* and the bad citation in *Also defined at* as `<citing section> → cites <target>`.
+- **Stale remaining entry** — something listed in "Still remaining after this epic" that an earlier epic already delivered, or that this epic now takes in. It feeds the next invocation directly, so a wrong entry there is the one that compounds.
+
+Where nothing owns the fact, write `—` in *Defined at* and say so in *Recommended owner*. That's a gap to raise — **never invent the definition**, and never quietly promote the epic PRD to owner of something full scope should define.
+
+An empty table is a real result. Say "none found" rather than manufacturing rows.
+
+## Checkpoint
+
+Link the epic PRD, keep the chat minimal — the audit table, plus anything the stock-take turned up that the operator wouldn't anticipate (work they thought was done and isn't, or the reverse) — and invite pushback on two things specifically: the **stock-take** (is this genuinely what's done?) and the **in-scope / still-remaining boundary**. Confirm the operator agrees the epic is both minimal and non-throwaway before moving to the epic architecture.
+
+If taking stock revealed that `docs/prd.md` no longer describes what the project is becoming, say so here rather than quietly scoping against a stale document. Updating full scope is a separate, deliberate act.
+
+Don't summarize the epic's features back at them — they're in the doc. (See *What goes in the chat* in the `dev-system` skill.)
+
+**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 4, `epic-architecture`, to design how epic NN gets built without contradicting the north star."* Suggest it; don't run it.

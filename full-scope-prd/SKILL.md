@@ -1,12 +1,12 @@
 ---
 name: full-scope-prd
-description: Generate a full-scope PRD (product requirements document) — a detailed, numbered product description of an entire project's vision, features, data, and non-functional requirements, laid out with metadata tables and per-feature functional requirements that cross-reference each other by number, plus a short technical-feasibility section validating the product is buildable. Use ONLY when the user explicitly says "PRD" — e.g. "write the PRD", "generate a PRD", "draft a PRD for this project", "flesh out the PRD", "PRD for X". Do NOT trigger on requests to spec, define, describe, or plan a project that don't use the word "PRD". If the PRD is scoped to a slice or MVP rather than the whole project, use vertical-slice-prd instead.
+description: Generate a full-scope PRD (product requirements document) — a detailed, numbered product description of an entire project's vision, features, data, and non-functional requirements, laid out with metadata tables and per-feature functional requirements that cross-reference each other by number, plus a short technical-feasibility section validating the product is buildable. Use ONLY when the user explicitly says "PRD" — e.g. "write the PRD", "generate a PRD", "draft a PRD for this project", "flesh out the PRD", "PRD for X". Do NOT trigger on requests to spec, define, describe, or plan a project that don't use the word "PRD". If the PRD is scoped to an epic or MVP rather than the whole project, use epic-prd instead.
 ---
 # Full-scope PRD
 
 Produce `docs/prd.md`: a detailed description of the whole project. This is Phase 1 of the dev system and the source of truth every later phase reads. It describes *what* the project is and *why* — not *how* it's built (that's the architecture phase).
 
-**This document covers full scope.** Everything the project is meant to be belongs here, described in full. There is no deferral, no phasing, no "later" in this document — cutting scope down to what gets built first is the vertical slice's job (Phase 3), and it can only cut well if this document is complete.
+**This document covers full scope.** Everything the project is meant to be belongs here, described in full. There is no deferral, no phasing, no "later" in this document — cutting scope down to what gets built first is the epic's job (Phase 3), and it can only cut well if this document is complete.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 
@@ -16,15 +16,15 @@ Artifacts live under `docs/` by default. If the project uses a different locatio
 
 - `docs/prd.md` — full-scope PRD (this skill)
 - `docs/architecture.md` — full-scope architecture
-- `docs/slice-prd.md` — vertical slice PRD
-- `docs/slice-architecture.md` — vertical slice architecture
-- `docs/implementation-plan.md` — implementation plan for the slice
-- `docs/steps/<NN>-<slug>.md` — per-step working docs
-- `docs/completed-slices/<NN>-<slug>/` — slices already delivered, archived whole
+- `docs/epic-prd.md` — epic PRD
+- `docs/epic-architecture.md` — epic architecture
+- `docs/epic-plan.md` — the epic broken into stories and tickets
+- `docs/tickets/<SS>.<TT>-<slug>.md` — per-ticket working docs
+- `docs/completed-epics/<NN>-<slug>/` — epics already delivered, archived whole
 
 Control in this system comes from the operator reviewing each checkpoint and pushing back. Your job is to make that easy: surface real decisions and open questions plainly, and **never invent a requirement to paper over a gap** — ask instead.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[slice-prd.md § In scope → Auth](docs/slice-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## Method
 

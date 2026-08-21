@@ -16,13 +16,13 @@ Artifacts live under `docs/` by default (change here and stay consistent):
 
 - `docs/prd.md` — full-scope PRD (read this)
 - `docs/architecture.md` — full-scope architecture (this skill)
-- `docs/slice-prd.md`, `docs/slice-architecture.md`, `docs/implementation-plan.md`
-- `docs/steps/<NN>-<slug>.md` — per-step working docs
-- `docs/completed-slices/<NN>-<slug>/` — slices already delivered, archived whole
+- `docs/epic-prd.md`, `docs/epic-architecture.md`, `docs/epic-plan.md`
+- `docs/tickets/<SS>.<TT>-<slug>.md` — per-ticket working docs
+- `docs/completed-epics/<NN>-<slug>/` — epics already delivered, archived whole
 
 Control comes from the operator reviewing each checkpoint and pushing back. Surface the load-bearing decisions plainly; don't bury a big call inside prose.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[slice-prd.md § In scope → Auth](docs/slice-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## Method
 
@@ -115,4 +115,4 @@ Two things that bite: set `fill`, `stroke`, and `color` together on every class,
 
 Link the architecture and keep the chat to what the operator wouldn't anticipate from reading it: the choices that are expensive to reverse, and any PRD feature that resisted a clean home. Don't tour the components or restate the stack — that's the document's job. (See *What goes in the chat* in the `dev-system` skill.) If a cost line looks like it would force a different decision at target scale, say so here rather than leaving it buried in the table. Hand control back before moving to slicing. Keep it a north star — resist the pull to over-specify now.
 
-**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 3, `vertical-slice-prd`, to cut the first ~20% slice out of full scope."* Suggest it; don't run it.
+**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 3, `epic-prd`, to cut the first epic out of full scope."* Suggest it; don't run it.
