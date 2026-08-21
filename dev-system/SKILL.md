@@ -68,7 +68,7 @@ Each phase writes an artifact the next phase reads.
 | 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` — stories, tickets, and what the operator should research | once per epic |
 | 6 | `ticket-planning` | only the sections its ticket references | `<epic>/stories/<story>/<NN>-<ticket>.md` | once per ticket |
 | 7 | `ticket-implementation` | the ticket's doc | code, tests, the ticket doc's Edge cases + Implementation notes, manual-validation checklist | once per ticket |
-| 8 | `story-validation` | the plan, the architecture, every ticket doc in the story folder | validation notes (chat only) | once per story |
+| 8 | `story-validation` | the plan, the architecture, every ticket doc in the story folder | `<epic>/implementation-plan.md` § Summary; report + operator quiz in chat | once per story |
 
 ## Three loops
 
@@ -118,7 +118,7 @@ Paths are relative to the repo root, matching the artifact map above. Because ep
 
 - No `<epic>/stories/<story>/<NN>-<ticket>.md` for it → **phase 6**, `ticket-planning`.
 - Its ticket doc has acceptance criteria, but the code isn't written or its manual checks haven't passed → **phase 7**, `ticket-implementation`.
-- **Every ticket in the story is done and validation hasn't run for it** → **phase 8**, `story-validation` for that story.
+- **Every ticket in the story is done, and the plan's `## Summary` doesn't cover it yet** → **phase 8**, `story-validation` for that story. The Summary is what makes a validated story visible on the filesystem.
 - **Every story in the plan is validated** → the epic is done. Go back to **phase 3**; `epic-prd` cuts the next epic into a new folder.
 
 Joining an existing codebase is the same procedure — a repo with code but no `docs/project/prd.md` starts at phase 1, and phase 3's stock-take is what reconciles the docs with what's already built.

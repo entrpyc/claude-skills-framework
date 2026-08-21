@@ -57,8 +57,9 @@ Control comes from the operator reviewing each checkpoint. The riskiest thing he
 ## Method
 
 1. **Take stock.** Establish what is already delivered before scoping anything.
-   - List `docs/epics/`. Every folder there is an epic already cut; read each one's `prd.md` § *In scope* to know what it claimed, and check whether its stories are actually finished.
-   - **Scoped is not shipped.** Check what actually landed, not just what an earlier epic PRD claimed. Anything scoped but never delivered goes back into the remaining pool as a candidate for this epic — including a story left unfinished in the epic you're following.
+   - List `docs/epics/`. Every folder there is an epic already cut. For each, **read `implementation-plan.md` § *Summary*** — story validation writes it as stories complete, so it's the record of what actually exists: what was created, what's fully implemented, what's only partial, and what the project still lacks. Its *Features still remaining* list is the closest thing to a ready-made input for this phase.
+   - **Scoped is not shipped.** An epic's `prd.md` § *In scope* says what it claimed; the Summary says what landed. Where they disagree, the Summary wins. Anything scoped but never delivered goes back into the remaining pool as a candidate for this epic — as does **the missing half of anything the Summary marks partial**, which is the easiest thing in this system to lose track of, since a partial feature reads as done in every other document.
+   - An epic with no Summary is one that hasn't validated a story yet; treat it as unfinished and check the code rather than the docs.
    - If `docs/epics/` is empty or absent, the stock-take is simply "nothing delivered" and remaining is the full PRD. Say so and move on — don't special-case it.
 2. **Confirm the stock-take before scoping.** Present what you believe is done and what remains, and get it confirmed. Everything downstream rests on this being right, and it's the one input you can't derive from the documents alone.
 3. **Read `docs/project/prd.md` and `docs/project/architecture.md`.** You're selecting from full scope, not inventing new scope. If the operator named a target feature, find it in full scope — **a target that isn't described there is a gap to raise, not a licence to invent it.**

@@ -102,9 +102,15 @@ topic — see the section of the same name below for the rules and shape.
 
 ## Story — <title>
 ...
+
+## Summary
+Left out here — `story-validation` (Phase 8) appends this section as each
+story completes, and it becomes the epic's record of what actually exists.
 ```
 
 Story and ticket titles are what the folders get named after, so write them as titles a slug survives — see *Working conventions* above.
+
+**Don't write the Summary.** It's listed above so the plan's final shape is visible, but it records what was *delivered*, which nothing knows yet at planning time. Phase 8 opens it after the first story is validated.
 
 ## Background to research
 
