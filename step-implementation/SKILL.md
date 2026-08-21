@@ -11,7 +11,9 @@ The step doc's **user prerequisites are assumed done** — the operator doesn't 
 
 ## Output principle (applies to all three step prompts)
 
-Default to **small, high-impact output**. Two exceptions:
+**The code, the tests, and the step doc are the deliverable; chat is not a report on them.** Say the minimum: what the operator wouldn't anticipate — something the code hit that the plan didn't foresee, a major assumption to confirm, a dead end — plus the checklist below and the one sentence naming what runs next. Don't list the files you touched or narrate the build. See *What goes in the chat* in the `dev-system` skill.
+
+Two exceptions:
 
 - The **manual-validation checklist** (produced here) is **exempt from compression** — always complete and specific.
 - A step carrying a **hard-to-reverse decision** gets the space it needs to explain it.

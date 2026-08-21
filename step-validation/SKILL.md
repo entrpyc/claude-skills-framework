@@ -9,12 +9,12 @@ Third and last of the three prompts per step: planning → implementation → **
 
 ## Output principle (applies to all three step prompts)
 
-Default to **small, high-impact output**. Two exceptions:
+This prompt writes no doc — its report *is* the chat output, which is why it must hold nothing but what the operator wouldn't anticipate: flag **major** issues only. Don't pad it with minor observations, and don't recap the step. **"None found" on both counts is a complete, correct validation** — two lines and the next step. See *What goes in the chat* in the `dev-system` skill.
+
+Two exceptions:
 
 - The **manual-validation checklist** (from the implementation prompt) is exempt from compression.
 - A step carrying a **hard-to-reverse decision** gets the space it needs to explain it.
-
-Here that means: flag **major** issues only. Don't pad the report with minor observations — that's exactly the skimming risk the principle guards against.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 

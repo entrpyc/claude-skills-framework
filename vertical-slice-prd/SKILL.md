@@ -120,8 +120,10 @@ An empty table is a real result. Say "none found" rather than manufacturing rows
 
 ## Checkpoint
 
-Present the slice with the duplicate & reference audit table, and invite pushback on two things specifically: the **stock-take** (is this genuinely what's done?) and the **in-scope / still-remaining boundary**. Confirm the operator agrees the cut is both minimal and non-throwaway before moving to the slice architecture.
+Link the slice PRD, keep the chat minimal — the audit table, plus anything the stock-take turned up that the operator wouldn't anticipate (work they thought was done and isn't, or the reverse) — and invite pushback on two things specifically: the **stock-take** (is this genuinely what's done?) and the **in-scope / still-remaining boundary**. Confirm the operator agrees the cut is both minimal and non-throwaway before moving to the slice architecture.
 
 If taking stock revealed that `docs/prd.md` no longer describes what the project is becoming, say so here rather than quietly slicing against a stale document. Updating full scope is a separate, deliberate act.
+
+Don't summarize the slice's features back at them — they're in the doc. (See *What goes in the chat* in the `dev-system` skill.)
 
 **Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 4, `vertical-slice-architecture`, to design how slice NN gets built without contradicting the north star."* Suggest it; don't run it.

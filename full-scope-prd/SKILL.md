@@ -128,6 +128,6 @@ An empty table is a real result. Say "none found" rather than manufacturing rows
 
 ## Checkpoint
 
-The PRD is a checkpoint, not a delivery. When the draft is ready, present it together with the duplicate & reference audit table, call out the open questions and any assumption you had to make, and hand control back for review before treating it as settled. A fact the audit found no owner for is an open question — put it in front of the operator, not in the document. Don't roll straight into architecture — that's a separate, deliberate step.
+The PRD is a checkpoint, not a delivery — and the checkpoint is a link plus what the operator wouldn't anticipate, not a tour of the document they're about to read. Keep the chat minimal: the audit table, the open questions, any assumption you had to make, anything the research turned up that changes what they thought they were building. Everything else is in the PRD. Then hand control back for review before treating it as settled. (See *What goes in the chat* in the `dev-system` skill.) A fact the audit found no owner for is an open question — put it in front of the operator, not in the document. Don't roll straight into architecture — that's a separate, deliberate step.
 
 **Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 2, `full-scope-architecture`, to turn this into a north-star technical standard — once you're happy with the PRD above."* Suggest it; don't run it.

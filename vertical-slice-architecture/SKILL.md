@@ -141,6 +141,6 @@ Four classes on **one** axis — what this slice does to the thing. Don't also c
 
 ## Checkpoint
 
-Present the slice architecture and put the operator's attention on two things: **what this slice changes in existing structure** — the additive parts are cheap, the changes are where regressions live — and where you resisted building ahead, which the diagram's ghost nodes show at a glance. Confirm it doesn't fight the north star, or that any divergence is deliberate and named. Get agreement before generating the implementation plan.
+Link the slice architecture, keep the chat minimal, and put the operator's attention on two things: **what this slice changes in existing structure** — the additive parts are cheap, the changes are where regressions live — and where you resisted building ahead, which the diagram's ghost nodes show at a glance. Confirm it doesn't fight the north star, or that any divergence is deliberate and named. Beyond those, say only what the doc wouldn't tell them — no component-by-component walkthrough. Get agreement before generating the implementation plan. (See *What goes in the chat* in the `dev-system` skill.)
 
 **Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 5, `implementation-plan`, to break this slice into reviewable, independently testable steps."* Suggest it; don't run it.

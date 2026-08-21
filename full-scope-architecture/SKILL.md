@@ -113,6 +113,6 @@ Two things that bite: set `fill`, `stroke`, and `color` together on every class,
 
 ## Checkpoint
 
-Present the architecture, name the choices that are expensive to reverse, and flag any PRD feature that resisted a clean home. If a cost line looks like it would force a different decision at target scale, say so here rather than leaving it buried in the table. Hand control back before moving to slicing. Keep it a north star — resist the pull to over-specify now.
+Link the architecture and keep the chat to what the operator wouldn't anticipate from reading it: the choices that are expensive to reverse, and any PRD feature that resisted a clean home. Don't tour the components or restate the stack — that's the document's job. (See *What goes in the chat* in the `dev-system` skill.) If a cost line looks like it would force a different decision at target scale, say so here rather than leaving it buried in the table. Hand control back before moving to slicing. Keep it a north star — resist the pull to over-specify now.
 
 **Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 3, `vertical-slice-prd`, to cut the first ~20% slice out of full scope."* Suggest it; don't run it.

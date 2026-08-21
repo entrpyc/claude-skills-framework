@@ -9,7 +9,9 @@ First of the three prompts run for each step of the implementation plan: **plann
 
 ## Output principle (applies to all three step prompts)
 
-Default to **small, high-impact output** so no step gets skimmed and the operator always has a real chance to respond. Two exceptions:
+**The step doc is the deliverable; chat is not a second copy of it.** Say the minimum: what the operator wouldn't anticipate from reading the doc, the major-assumption questions, a link to the doc, and the one sentence naming what runs next. Don't walk through the criteria you wrote or recap the step back at them — nothing surprising to report is a two-line checkpoint, and that's correct output. See *What goes in the chat* in the `dev-system` skill.
+
+Two exceptions:
 
 - The **manual-validation checklist** is exempt from compression — always complete and specific (that checklist is produced in the implementation prompt).
 - A step carrying a **hard-to-reverse decision** gets the space it needs to explain that decision.

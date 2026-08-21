@@ -97,13 +97,25 @@ Joining an existing codebase is the same procedure — a repo with code but no `
 
 **Report where you landed and what runs next — then stop.** Say it in the same shape every phase uses to close: one sentence, e.g. *"Next: Phase 4, `vertical-slice-architecture`, since the slice PRD is written but its architecture isn't."* Advancing a phase is the operator's call. Auto-running the next phase is exactly the skimming risk the checkpoints exist to prevent.
 
+## What goes in the chat
+
+**The artifact is the deliverable; the chat is not a second copy of it.** Every phase writes a doc (or code) the operator reads for themselves, so chat output stays minimal and carries only what reading the artifact wouldn't give them:
+
+- **What they wouldn't anticipate.** Something the work discovered — a constraint hit, a decision that closes off what they probably assumed was open, a cost or a dependency that surprises, a place the doc had to depart from what was agreed. **This is the main reason to write anything at all**, and it's what the operator is scanning your message for.
+- **Questions that gate the work** — major assumptions, dead-end options — as short numbered questions, each carrying a suggested answer.
+- **Where the artifact is**, as a link, and **the one sentence naming what runs next.**
+
+Everything else belongs in the doc. Don't summarize the sections you just wrote, don't recap the operator's own request back at them, don't narrate how you got there, and don't repeat a decision in chat merely because it's important — if it's important it's already written down, and a pointer to it is enough. When nothing surprising came up, a checkpoint of two lines is the correct output, not a lazy one.
+
+Two exceptions, both from the step loop: the **manual-validation checklist** (phase 7) is chat output by nature — it's a list of actions for the operator, not a record — and is never compressed; and a **hard-to-reverse decision** gets whatever space it needs, since that's the unanticipated thing itself.
+
 ## Principles that hold across every phase
 
 1. **Checkpoints, not deliveries.** Every phase ends by presenting its work, naming the open questions and assumptions, and handing control back. Never roll from one phase into the next unprompted — and always close with **one sentence naming what runs next**, so the operator knows where the pipeline stands without it advancing on its own.
 
 2. **Altitude discipline.** Each phase works at one level. The PRD is *what and why*, never *how*. The architecture is structure and load-bearing choices, not detailed design. The plan is product-legible steps, not implementation. Writing below your altitude pre-empts a decision the next phase should be making on its own terms — which is the most common way this system degrades.
 
-3. **Small, high-impact output**, so nothing gets skimmed and the operator always has a real chance to respond. Two exceptions: the **manual-validation checklist is never compressed**, and a **hard-to-reverse decision gets the space it needs** to explain itself.
+3. **The doc holds the work; the chat holds only what would otherwise be missed** — see *What goes in the chat* above. Output stays small and high-impact so nothing gets skimmed and the operator always has a real chance to respond, with the two exceptions named there.
 
 4. **Never invent to paper over a gap.** A missing requirement, an ambiguous reference, an unstated assumption — surface it and ask. A fabricated answer propagates silently through every phase downstream.
 

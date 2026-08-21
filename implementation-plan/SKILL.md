@@ -59,6 +59,6 @@ Each step is **one reviewable unit of behavior**: testable in isolation, and sma
 
 ## Checkpoint
 
-Present the plan and invite pushback specifically on **step granularity** — that's the knob most worth arguing about before the build starts. Confirm the reference spot-check passed. Once agreed, the iteration cycle (step-planning → step-implementation → step-validation) walks the plan one step at a time.
+Link the plan and invite pushback specifically on **step granularity** — that's the knob most worth arguing about before the build starts. Confirm the reference spot-check passed. Keep the rest of the chat to what the operator wouldn't anticipate: a step that turned out much larger than its neighbours, an ordering forced by a dependency they may not expect. Don't list the steps back at them — they're in the plan. (See *What goes in the chat* in the `dev-system` skill.) Once agreed, the iteration cycle (step-planning → step-implementation → step-validation) walks the plan one step at a time.
 
 **Next step.** End the checkpoint with a single sentence naming what runs next, including which step it starts on — e.g. *"Next: Phase 6, `step-planning` for Step 1 — Playback shell."* Suggest it; don't run it.
