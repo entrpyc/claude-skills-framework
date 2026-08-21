@@ -9,14 +9,9 @@ Second of the two prompts per ticket: planning → **implementation**. The ticke
 
 The ticket doc's **user prerequisites are assumed done** — the operator doesn't trigger this prompt until they are. Start building; only stop if one turns out to be missing in practice.
 
-## Output principle (applies to every prompt in the loop)
+## Output principle
 
-**The code, the tests, and the ticket doc are the deliverable; chat is not a report on them.** Say the minimum: what the operator wouldn't anticipate — something the code hit that the plan didn't foresee, a major assumption to confirm, a dead end — plus the checklist below and the one sentence naming what runs next. Don't list the files you touched or narrate the build. See *What goes in the chat* in the `dev-system` skill.
-
-Two exceptions:
-
-- The **manual-validation checklist** (produced here) is **exempt from compression** — always complete and specific.
-- A ticket carrying a **hard-to-reverse decision** gets the space it needs to explain it.
+**The code, the tests, and the ticket doc are the deliverable; chat is not a report on them.** Say the minimum: what the operator wouldn't anticipate — something the code hit that the plan didn't foresee, a major assumption to confirm, a dead end — plus the checklist below and the one sentence naming what runs next. Don't list the files you touched or narrate the build. Two things escape that compression: the **manual-validation checklist**, always complete and specific, and a **hard-to-reverse decision**, which gets the space it needs. See *What goes in the chat* in the `dev-system` skill.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 
@@ -24,7 +19,7 @@ Two exceptions:
 
 `<epic>` means `docs/epics/epic-<name>/` — the folder of the epic being built. Per-ticket doc: `<epic>/stories/<story>/<NN>-<ticket>.md`.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## What to do
 

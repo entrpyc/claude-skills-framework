@@ -10,14 +10,9 @@ Validating here rather than per ticket is deliberate: a ticket is too small a wi
 
 Four things happen, in order: check the feature is complete, check it doesn't contradict the docs, record what was built in the plan's **Summary**, and **quiz the operator** to confirm they can still explain the system they own.
 
-## Output principle (applies to every prompt in the loop)
+## Output principle
 
-The **Summary** is this phase's written deliverable; everything else is chat, and chat carries only what the operator wouldn't anticipate: flag **major** issues only. Don't pad it with minor observations, don't recap the story, and don't restate the Summary you just wrote. **"None found" on both checks is a complete, correct validation** — a few lines, the quiz, and the next ticket. See *What goes in the chat* in the `dev-system` skill.
-
-Two exceptions:
-
-- The **quiz** (produced here) is exempt from compression — it's an interaction with the operator, not a record.
-- A story carrying a **hard-to-reverse decision** gets the space it needs to explain it.
+The **Summary** is this phase's written deliverable; everything else is chat, and chat carries only what the operator wouldn't anticipate: flag **major** issues only. Don't pad it with minor observations, don't recap the story, and don't restate the Summary you just wrote. **"None found" on both checks is a complete, correct validation** — a few lines, the quiz, and the next ticket. Two things escape that compression: the **quiz**, which is an interaction rather than a record, and a **hard-to-reverse decision**, which gets the space it needs. See *What goes in the chat* in the `dev-system` skill.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 
@@ -25,7 +20,7 @@ Two exceptions:
 
 `<epic>` means `docs/epics/epic-<name>/` — the folder of the epic being built. Read the story's entry in `<epic>/implementation-plan.md`, every ticket doc in its folder (`<epic>/stories/<story>/`), and reference `<epic>/architecture.md` and `docs/project/architecture.md`. The Summary is written into `<epic>/implementation-plan.md`.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## What to do
 

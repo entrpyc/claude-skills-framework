@@ -29,9 +29,9 @@ Artifacts under `docs/` by default:
 - `<epic>/implementation-plan.md`
 - `<epic>/stories/<story>/<NN>-<ticket>.md`
 
-Control comes from the operator reviewing each checkpoint. Overengineering is the failure mode here, so make it easy to spot: for anything beyond the epic's needs, say why it earns its place now.
+Overengineering is the failure mode here, so make it easy for the operator to spot: for anything beyond the epic's needs, say why it earns its place now.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## Method
 

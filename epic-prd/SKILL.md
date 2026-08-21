@@ -32,7 +32,7 @@ Like the project PRD, this describes *what* and *why* for the epic — not *how*
 
 ## Working conventions (shared across the dev system)
 
-Every epic owns a folder that **never moves**. There is no archive step and no set of shared paths passed between epics — an epic is written where it will live for good, and a delivered epic is simply one whose stories are all done.
+Every epic owns a folder that **never moves**: this run creates one, and nothing later relocates, archives, or renames it.
 
 ```
 docs/
@@ -50,9 +50,9 @@ docs/
 
 `<epic>` throughout means `docs/epics/epic-<name>/` — the folder of the epic being worked on. The name is a slug of the epic's name, chosen here and used for the rest of its life.
 
-Control comes from the operator reviewing each checkpoint. The riskiest thing here is quietly scoping in too much — so make the in/out line loud and easy to argue with.
+The riskiest thing here is quietly scoping in too much — so make the in/out line loud and easy for the operator to argue with.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## Method
 
@@ -69,7 +69,7 @@ Control comes from the operator reviewing each checkpoint. The riskiest thing he
 7. **Check it's scalable, not a dead end.** The epic must be buildable so later work grows it toward full scope — not a throwaway that gets rewritten. If your cut forces a rewrite later, recut.
 8. **Name the epic and create its folder.** A short slug naming what the epic delivers — `epic-search`, `epic-offline-sync` — not its position in the queue. Create `docs/epics/epic-<name>/` and write `prd.md` into it.
 9. **Write what still remains after this epic.** Each major thing left out, with a phrase on how it attaches later. This is the direct input to the *next* invocation, so it's worth writing properly rather than as an afterthought.
-10. **Audit the finished epic PRD for duplicates and mis-pointed references.** An epic PRD sits between documents it doesn't own — `docs/project/prd.md` and the earlier epics — so it degrades in two ways: it **restates a fact the project docs or an earlier epic already define** (the copies drift, and the epic becomes the accidental source of truth), or it **points somewhere that no longer says what it assumes** — a PRD section renumbered since, or a "still remaining" entry naming something an earlier epic actually delivered. Do this as a real pass over the written draft, not from memory: open every section you cited and check it carries the fact you borrowed. Report what you find in the audit table below and let the operator choose the owner.
+10. **Audit the finished epic PRD for duplicates and mis-pointed references.** An epic PRD sits between documents it doesn't own — `docs/project/prd.md` and the earlier epics — so it degrades in the three ways the audit section below defines. Do this as a real pass over the written draft, not from memory: open every section you cited and check it carries the fact you borrowed. Report what you find in the audit table and let the operator choose the owner.
 
 ## Structure
 

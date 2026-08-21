@@ -7,14 +7,9 @@ description: Plan a single ticket — pull only the sections that ticket referen
 
 First of the two prompts run for each ticket of the epic plan: **planning → implementation.** This one establishes what "done" means for the ticket, before any code is written. When the last ticket of a story lands, `story-validation` runs once over the whole story.
 
-## Output principle (applies to every prompt in the loop)
+## Output principle
 
-**The ticket doc is the deliverable; chat is not a second copy of it.** Say the minimum: what the operator wouldn't anticipate from reading the doc, the major-assumption questions, a link to the doc, and the one sentence naming what runs next. Don't walk through the criteria you wrote or recap the ticket back at them — nothing surprising to report is a two-line checkpoint, and that's correct output. See *What goes in the chat* in the `dev-system` skill.
-
-Two exceptions:
-
-- The **manual-validation checklist** is exempt from compression — always complete and specific (that checklist is produced in the implementation prompt).
-- A ticket carrying a **hard-to-reverse decision** gets the space it needs to explain that decision.
+**The ticket doc is the deliverable; chat is not a second copy of it.** Say the minimum: what the operator wouldn't anticipate from reading the doc, the major-assumption questions, a link to the doc, and the one sentence naming what runs next. Don't walk through the criteria you wrote or recap the ticket back at them — nothing surprising to report is a two-line checkpoint, and that's correct output. The one thing that gets whatever space it needs is a **hard-to-reverse decision**. See *What goes in the chat* in the `dev-system` skill.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 
@@ -24,7 +19,7 @@ Two exceptions:
 
 Control comes from the operator answering the major-assumption questions and reviewing this plan before implementation starts.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## What to do
 

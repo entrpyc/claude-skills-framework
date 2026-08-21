@@ -12,22 +12,11 @@ Produce `docs/project/prd.md`: a detailed description of the whole project. This
 
 ## Working conventions (shared across the dev system)
 
-Artifacts live under `docs/` by default. If the project uses a different location, change it here and stay consistent:
+Artifacts live under `docs/` by default and this skill writes `docs/project/prd.md`. If the project uses a different location, change it here and stay consistent. The full artifact map is in the `dev-system` skill.
 
-```
-docs/
-  project/
-    prd.md                       <- this skill; full scope, permanent
-    architecture.md              <- full-scope architecture
-  epics/
-    epic-<name>/                 <- one folder per epic, kept forever
-      prd.md  architecture.md  implementation-plan.md
-      stories/<story>/<NN>-<ticket>.md
-```
+Surface real decisions and open questions plainly, and **never invent a requirement to paper over a gap** — ask instead.
 
-Control in this system comes from the operator reviewing each checkpoint and pushing back. Your job is to make that easy: surface real decisions and open questions plainly, and **never invent a requirement to paper over a gap** — ask instead.
-
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## Method
 
@@ -38,7 +27,7 @@ Control in this system comes from the operator reviewing each checkpoint and pus
 5. **Make features concrete enough to architect against.** Each feature gets a **Functional requirements** list of specific capabilities, detailed enough that the architecture phase can design directly from it without guessing.
 6. **Answer "is this actually buildable?" — and stop there.** The technical section exists to validate that the product described is possible, and to sketch at a high level how it works. Name the moving pieces and how they connect, and call out anything genuinely hard, uncertain, or dependent on something outside your control. Do **not** design it: no schemas, no file layout, no interface definitions, no library-by-library breakdown, no chosen implementation for something that has several viable ones. If a reader could start coding from what you wrote, you went too far — that detail is the architecture phase's job (Phase 2), and writing it here pre-empts a decision that phase should make on its own terms. A paragraph plus a short list is usually the right size.
 7. **Cross-reference by number, and link every number.** Features and functional requirements refer to each other by their section number — "extends [3.2.1](docs/project/prd.md#L118)", "consumes the metadata defined in [4.3](docs/project/prd.md#L214)" — rather than by restating them. Every part of the document is numbered so this works; use it to keep the document non-repetitive and to make relationships between features explicit. The link makes a reference followable instead of a scavenger hunt, and resolving it is also how you catch a number that has drifted.
-8. **Audit the finished draft for duplicates and mis-pointed references.** A numbered, cross-referenced document fails in two ways, and both are cheap to fix now and expensive later: the **same fact defined in two places** (the copies drift, and no reader can tell which is authoritative), and a **reference that doesn't resolve to what the citing text assumes** — usually because sections got renumbered or moved while writing. Do this as a real pass over the written draft, not from memory: read every cross-reference and open the section it names. Report what you find in the audit table below, and let the operator choose the owner — collapsing a duplicate on your own can silently drop a nuance only one copy carried.
+8. **Audit the finished draft for duplicates and mis-pointed references.** A numbered, cross-referenced document fails in exactly the two ways the audit section below defines, and both are cheap to fix now and expensive later. Do this as a real pass over the written draft, not from memory: read every cross-reference and open the section it names. Report what you find in the audit table, and let the operator choose the owner — collapsing a duplicate on your own can silently drop a nuance only one copy carried.
 
 ## Structure
 

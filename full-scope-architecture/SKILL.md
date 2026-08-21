@@ -12,22 +12,11 @@ Produce `docs/project/architecture.md`: one standard for the whole project, desi
 
 ## Working conventions (shared across the dev system)
 
-Artifacts live under `docs/` by default (change here and stay consistent):
+Artifacts live under `docs/` by default (change here and stay consistent): read `docs/project/prd.md`, write `docs/project/architecture.md`. The full artifact map is in the `dev-system` skill.
 
-```
-docs/
-  project/
-    prd.md                       <- read this
-    architecture.md              <- this skill; full scope, permanent
-  epics/
-    epic-<name>/                 <- one folder per epic, kept forever
-      prd.md  architecture.md  implementation-plan.md
-      stories/<story>/<NN>-<ticket>.md
-```
+Surface the load-bearing decisions plainly; don't bury a big call inside prose.
 
-Control comes from the operator reviewing each checkpoint and pushing back. Surface the load-bearing decisions plainly; don't bury a big call inside prose.
-
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
 
 ## Method
 
