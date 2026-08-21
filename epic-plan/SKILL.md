@@ -1,6 +1,6 @@
 ---
 name: epic-plan
-description: Break the epic into stories and tickets — each story one feature of the epic, each ticket one reviewable, independently testable unit of behavior carrying specific references to named PRD and architecture sections. Use this after the epic PRD and epic architecture exist, or whenever the user wants to break the epic into build work. Trigger on "epic plan", "implementation plan", "break this into stories", "break this into tickets", "plan the build".
+description: Break the epic into stories and tickets — each story one feature of the epic, each ticket one reviewable, independently testable unit of behavior carrying specific references to named PRD and architecture sections — plus a background-research list naming what the operator should learn to be able to review the epic's work. Use this after the epic PRD and epic architecture exist, or whenever the user wants to break the epic into build work. Trigger on "epic plan", "implementation plan", "break this into stories", "break this into tickets", "plan the build".
 ---
 # Epic plan
 
@@ -74,13 +74,19 @@ As a feel for size, not a law: most stories land at two to five tickets. One is 
 2. Turn the epic's in-scope features into stories, ordered so the app keeps working as each lands (Rule 1).
 3. Break each story into tickets, in build order, each satisfying Rule 2.
 4. For each ticket, write what it delivers and the specific references from Rule 3.
-5. Keep it high-level and product-legible — a reader should follow the arc of what's being built, not drown in implementation detail. No bloat, no tickets that exist only to be thorough.
-6. Spot-check references, then present.
+5. Write the **Background to research** list from what the tickets actually lean on — see the section below. It comes last in the writing, first in the document.
+6. Keep it high-level and product-legible — a reader should follow the arc of what's being built, not drown in implementation detail. No bloat, no tickets that exist only to be thorough.
+7. Spot-check references, then present.
 
 ## Structure
 
 ```
 # <Project> — Epic plan: <name>
+
+## Background to research
+Technologies, services, methodologies, and concepts this epic introduces
+that the operator should learn in order to review its work. One entry per
+topic — see the section of the same name below for the rules and shape.
 
 ## Story — <title>
 **Delivers:** what a user can do end-to-end once this story is done.
@@ -100,7 +106,40 @@ As a feel for size, not a law: most stories land at two to five tickets. One is 
 
 Story and ticket titles are what the folders get named after, so write them as titles a slug survives — see *Working conventions* above.
 
+## Background to research
+
+**Control depends on the operator understanding what they're reviewing.** A plan they can't evaluate produces approval by default, which is the failure this whole system exists to prevent — so the plan names the gaps in their knowledge that this epic's work will sit in. This section is written **for the operator**, and it's the one part of the document that asks something of them before building starts.
+
+What belongs in it — anything this epic leans on that can't be assumed known from what's already been built:
+
+- **Technologies** the epic introduces — a runtime, a datastore, a protocol, a language feature the code will now depend on.
+- **Third-party software and services** it pulls in — a library, an API, a hosted service, including its pricing or rate-limit model where that shapes the design.
+- **Methodologies and practices** the work assumes — an approach to testing, a migration strategy, a deployment model, a security practice.
+- **Patterns and concepts** the architecture picked — what a queue actually guarantees, what eventual consistency costs, why a structure was chosen over the obvious one.
+
+Four rules keep it worth reading:
+
+1. **Only what this epic adds.** Something an earlier epic already used and the operator has already reviewed doesn't come back — unless this epic uses it in a way it wasn't used before, in which case name only the new part. The list should shrink as the project goes; a long one late in a project usually means it's being padded. Use the repo as the signal: a library already in the dependency list and worked with across earlier epics isn't news.
+2. **Scope each entry to what the review needs, not to the subject.** "How Postgres advisory locks behave when a connection drops" is an entry; "learn Postgres" is not. The test is whether reading it would let the operator look at the resulting diff and tell whether it's right.
+3. **Say which depth is needed**, because the two cost very different amounts of their time:
+   - *Recognize* — enough to follow the diff and know what the code is doing.
+   - *Judge* — enough to push back on the choice itself. Reserve it for hard-to-reverse decisions and anything expensive to get wrong.
+4. **Name real sources; never invent one.** Point at the official documentation, the project's README, the specification — by name. **Don't fabricate a URL, a title, or a chapter**: a named source they can search for beats a precise-looking link that doesn't exist. If you don't know where the good explanation lives, say what to search for instead.
+
+One entry per line, in the shape below — it's a scan, not a syllabus:
+
+```
+- **<topic>** — <what it is, one line>. **Needed for:** <the story or ticket that uses it>. **Understand:** <the specific thing, at review depth>. **Depth:** recognize | judge. **Source:** <named source, or what to search for>.
+```
+
+> - **Server-sent events** — a one-way HTTP stream the server pushes to a client. **Needed for:** Story — Live results, Ticket 02. **Understand:** how reconnection and event IDs work, and why this was picked over WebSockets. **Depth:** judge — it's the hardest choice in this epic to reverse. **Source:** the MDN page on EventSource.
+> - **`pg_advisory_lock`** — Postgres session-scoped locking, used to serialize index writes. **Needed for:** Story — Search, Ticket 03. **Understand:** that the lock dies with the connection, and what that means if a worker crashes mid-write. **Depth:** recognize. **Source:** the Postgres docs on advisory locks.
+
+Write this **after** the tickets exist, so you're naming what the plan actually leans on rather than what the epic sounded like it would. If the operator already knows an entry, they strike it — that's cheaper than guessing at what they know. **An empty list is a real result** when an epic introduces nothing new; say so rather than manufacturing entries.
+
 ## Checkpoint
+
+Two things in this plan ask something of the operator before building starts, and both belong in the checkpoint: **the research list** — point at it, say roughly how much reading it represents, and flag any entry marked *judge*, since that's where they'll need to be able to argue with a choice rather than just follow it — and **the granularity of the work**.
 
 Link the plan and invite pushback specifically on **ticket granularity** — that's the knob most worth arguing about before the build starts — and on the **story split**, since stories are what gets validated and a badly drawn story hides a broken feature behind a green checklist. Confirm the reference spot-check passed. Keep the rest of the chat to what the operator wouldn't anticipate: a ticket that turned out much larger than its neighbours, an ordering forced by a dependency they may not expect, a story that couldn't be made independently validatable and why. Don't list the stories back at them — they're in the plan. (See *What goes in the chat* in the `dev-system` skill.) Once agreed, the iteration cycle walks the plan one ticket at a time, validating at each story boundary.
 

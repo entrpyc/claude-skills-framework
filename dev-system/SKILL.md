@@ -65,7 +65,7 @@ Each phase writes an artifact the next phase reads.
 | 2 | `full-scope-architecture` | project PRD | `docs/project/architecture.md` | once per project |
 | 3 | `epic-prd` | project docs, earlier epics | `<epic>/prd.md` | once per epic |
 | 4 | `epic-architecture` | project architecture, `<epic>/prd.md`, earlier epics | `<epic>/architecture.md` | once per epic |
-| 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` | once per epic |
+| 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` — stories, tickets, and what the operator should research | once per epic |
 | 6 | `ticket-planning` | only the sections its ticket references | `<epic>/stories/<story>/<NN>-<ticket>.md` | once per ticket |
 | 7 | `ticket-implementation` | the ticket's doc | code, tests, the ticket doc's Edge cases + Implementation notes, manual-validation checklist | once per ticket |
 | 8 | `story-validation` | the plan, the architecture, every ticket doc in the story folder | validation notes (chat only) | once per story |
