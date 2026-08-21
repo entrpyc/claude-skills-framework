@@ -89,7 +89,7 @@ Paths are relative to the repo root, matching the artifact map above.
 **Inside the step loop.** Take the implementation plan's steps in order and find the first one not finished:
 
 - No `docs/steps/<NN>-<slug>.md` for it → **phase 6**, `step-planning`.
-- Its step doc has requirements, but the code isn't written or its manual checks haven't passed → **phase 7**, `step-implementation`.
+- Its step doc has acceptance criteria, but the code isn't written or its manual checks haven't passed → **phase 7**, `step-implementation`.
 - Code done and manual checks passed, no validation notes → **phase 8**, `step-validation`.
 - **Every step in the plan is finished** → the slice is done. Go back to **phase 3**; `vertical-slice-prd` archives this slice into `docs/completed-slices/` and cuts the next one.
 

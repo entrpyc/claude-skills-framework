@@ -1,6 +1,6 @@
 ---
 name: step-planning
-description: Plan a single implementation step — pull only the sections that step references, write test-covered requirements plus manual-only feel requirements, list assumptions to confirm, and state scope edges. Use this as the first of three prompts per step in the dev-system iteration cycle. Trigger on "plan this step", "requirements for step N", "let's start the next step".
+description: Plan a single implementation step — pull only the sections that step references, resolve every assumption with the operator before writing, and produce a step doc with goal, out of scope, user prerequisites, test-covered acceptance criteria, and user steps. Use this as the first of three prompts per step in the dev-system iteration cycle. Trigger on "plan this step", "requirements for step N", "let's start the next step".
 ---
 
 # Step planning
@@ -20,7 +20,7 @@ Default to **small, high-impact output** so no step gets skimmed and the operato
 
 Artifacts under `docs/` by default. Per-step work goes in `docs/steps/<NN>-<slug>.md`.
 
-Control comes from the operator reviewing this plan and pushing back before implementation starts.
+Control comes from the operator answering the assumption questions and reviewing this plan before implementation starts.
 
 **Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[slice-prd.md § In scope → Auth](docs/slice-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
@@ -28,11 +28,21 @@ Control comes from the operator reviewing this plan and pushing back before impl
 
 1. **Pull only the referenced sections named by this step** in `docs/implementation-plan.md` — not all the docs. The whole point of per-step references is that you read narrowly here.
 
-2. **Create requirements** — the acceptance criteria for marking the step done. Each requirement must be **covered by a test**, with one exception (feel requirements, below). If a requirement rests on an assumption, **list the assumptions to the operator for confirmation** rather than silently baking them in.
+2. **Resolve assumptions with the operator — before writing the doc.** An assumption is **anything this step needs that the PRD doesn't describe**, and that you would otherwise decide on your own while planning. Don't bake them in and don't list them in the document. Ask them, as a short numbered set of questions, and **carry a proposed answer with every question** so the operator can confirm in one word instead of designing from scratch:
 
-3. **Propose feel requirements when the step involves application feel** — e.g. "input response feels tight to the beat", "hit feedback feels punchy". These carry a **manual-only carve-out**: no automated test, the manual check *is* the acceptance criterion. This is the one explicit exception to "every requirement is test-covered." The operator owns what the app should feel like, so **feel requirements are approved before any work starts.**
+   > 1. The PRD doesn't say what happens when the token expires mid-session. **Proposal:** silently refresh once, then bounce to login if that fails. OK?
 
-4. **State the scope edges** — what is in scope for this step and what is not — so implementation doesn't bloat or overengineer.
+   Ask everything in one pass rather than trickling questions out. Once answered, the answers become ordinary content of the doc — acceptance criteria, out-of-scope lines, prerequisites — with no trace that they were ever open. **The written step doc contains requirements, never assumptions.**
+
+3. **Write the step doc** in the shape below, once the assumptions are settled.
+
+4. **Every acceptance criterion must be covered by a test.** Name the test on the criterion line — if you can't name one that would fail when the criterion isn't met, the criterion is too vague to implement against; sharpen it or split it until it is testable.
+
+5. **Give every acceptance criterion its sub-bullets for how it's achieved** — one line each, plain language, no code. These exist to keep the operator in the loop on *how* the thing gets built, so they must stay short enough to actually read.
+
+6. **Keep out of scope sharp.** It's the anti-overengineering lever: name the things a reasonable implementer might reach for on this step that are explicitly not wanted.
+
+7. **Separate the two kinds of manual work.** *User prerequisites* block the start of implementation (an account, a key, a service wired up). *User steps* come after the code is done (deploy, flip a flag, publish). Both list only things Claude genuinely can't do itself.
 
 ## Output shape
 
@@ -41,25 +51,33 @@ Write to `docs/steps/<NN>-<slug>.md`:
 ```
 # Step <N> — <title>
 
-## Requirements (test-covered)
-- <criterion> — verified by <test idea>
+## Goal
+<one or two sentences on what this step delivers>
+
+- As a user I want to be able to <x>
+- As a user I want to be able to <y>
+
+## Out of scope
+- <thing this step explicitly does not implement>
 ...
 
-## Feel requirements (manual-only) — approved before work starts
-- <criterion> — what to feel for: <note>
+## User prerequisites
+- <what the operator must wire, configure, or provide before implementation starts>
+(or: none)
+
+## Acceptance criteria
+- <criterion the implementation must meet for the goal to be fully met> — verified by <test>
+  - <how it's achieved — short>
+  - <how it's achieved — short>
 ...
 
-## Assumptions to confirm
-- <assumption the operator needs to sign off before implementation>
-...
-
-## Scope
-In:  <what this step covers>
-Out: <what it explicitly doesn't>
+## User steps
+- <what the operator does after implementation to finalize the work>
+(or: none)
 ```
 
 ## Handoff
 
-Keep the prose tight (output principle). Surface the assumptions and feel requirements clearly and get them approved before moving to the implementation prompt — work does not start until the assumptions are confirmed and the feel requirements are agreed.
+Keep the prose tight (output principle). The assumption questions come first and gate everything: **work does not start until they're answered and the step doc is approved.**
 
-**Next step.** End with a single sentence naming what runs next and what gates it — e.g. *"Next: Phase 7, `step-implementation` for Step 3, once the assumptions and feel requirements above are approved."* Suggest it; don't run it.
+**Next step.** End with a single sentence naming what runs next and what gates it — e.g. *"Next: Phase 7, `step-implementation` for Step 3, once the step doc above is approved and its user prerequisites are done."* Suggest it; don't run it.
