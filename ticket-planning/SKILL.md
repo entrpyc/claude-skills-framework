@@ -20,15 +20,15 @@ Two exceptions:
 
 ## Working conventions
 
-Artifacts under `docs/` by default. Per-ticket work goes in `docs/tickets/<SS>.<TT>-<slug>.md`, where `SS` is the story number and `TT` the ticket number from `docs/epic-plan.md` — Ticket 01.02 → `docs/tickets/01.02-<slug>.md`.
+`<epic>` means `docs/epics/epic-<name>/` — the folder of the epic being built. Per-ticket work goes in `<epic>/stories/<story>/<NN>-<ticket>.md`, where `<story>` is the slug of the story's title and `<NN>` is the ticket's number within that story, both taken from `<epic>/implementation-plan.md`. Ticket 02 of "Resume where I left off" → `<epic>/stories/resume-where-i-left-off/02-restore-on-load.md`.
 
 Control comes from the operator answering the major-assumption questions and reviewing this plan before implementation starts.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## What to do
 
-1. **Pull only the referenced sections named by this ticket** in `docs/epic-plan.md` — not all the docs. The whole point of per-ticket references is that you read narrowly here. Read the ticket's **story** heading too: it's one line, and it's what tells you the feature this ticket is a piece of.
+1. **Pull only the referenced sections named by this ticket** in `<epic>/implementation-plan.md` — not all the docs. The whole point of per-ticket references is that you read narrowly here. Read the ticket's **story** heading too: it's one line, and it's what tells you the feature this ticket is a piece of.
 
 2. **Find the assumptions and classify each one.** An assumption is **anything this ticket needs that the PRD doesn't describe**, and that you would otherwise decide on your own while planning. Sort every one into:
 
@@ -59,11 +59,11 @@ Control comes from the operator answering the major-assumption questions and rev
 
 ## Output shape
 
-Write to `docs/tickets/<SS>.<TT>-<slug>.md`:
+Write to `<epic>/stories/<story>/<NN>-<ticket>.md`:
 
 ```
-# Ticket <SS>.<TT> — <title>
-_Story <SS> — <story title>_
+# Ticket <NN> — <title>
+_Story: <story title>_
 
 ## Goal
 <one or two sentences on what this ticket delivers>
@@ -114,4 +114,4 @@ Keep every assumption to one plain line — the section is a scan, not a design 
 
 Keep the prose tight (output principle). The major-assumption questions come first and gate everything: **work does not start until they're answered and the ticket doc is approved.**
 
-**Next step.** End with a single sentence naming what runs next and what gates it — e.g. *"Next: Phase 7, `ticket-implementation` for Ticket 01.02, once the ticket doc above is approved and its user prerequisites are done."* Suggest it; don't run it.
+**Next step.** End with a single sentence naming what runs next and what gates it — e.g. *"Next: Phase 7, `ticket-implementation` for Ticket 02 — Restore on load, once the ticket doc above is approved and its user prerequisites are done."* Suggest it; don't run it.

@@ -4,7 +4,7 @@ description: Generate a full-scope high-level architecture — one coherent tech
 ---
 # Full-scope architecture
 
-Produce `docs/architecture.md`: one standard for the whole project, designed so everything in the PRD can be supported. This is Phase 2.
+Produce `docs/project/architecture.md`: one standard for the whole project, designed so everything in the PRD can be supported. This is Phase 2.
 
 **It is a north star, not a contract.** As iteration diverges from it later, that's expected — it guides direction, it doesn't bind every decision. Write it at that altitude: high-level structure and the choices that are expensive to reverse, not detailed design.
 
@@ -14,19 +14,24 @@ Produce `docs/architecture.md`: one standard for the whole project, designed so 
 
 Artifacts live under `docs/` by default (change here and stay consistent):
 
-- `docs/prd.md` — full-scope PRD (read this)
-- `docs/architecture.md` — full-scope architecture (this skill)
-- `docs/epic-prd.md`, `docs/epic-architecture.md`, `docs/epic-plan.md`
-- `docs/tickets/<SS>.<TT>-<slug>.md` — per-ticket working docs
-- `docs/completed-epics/<NN>-<slug>/` — epics already delivered, archived whole
+```
+docs/
+  project/
+    prd.md                       <- read this
+    architecture.md              <- this skill; full scope, permanent
+  epics/
+    epic-<name>/                 <- one folder per epic, kept forever
+      prd.md  architecture.md  implementation-plan.md
+      stories/<story>/<NN>-<ticket>.md
+```
 
 Control comes from the operator reviewing each checkpoint and pushing back. Surface the load-bearing decisions plainly; don't bury a big call inside prose.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## Method
 
-1. **Read `docs/prd.md` fully.** The one job here is a structure that can support *everything* in the PRD.
+1. **Read `docs/project/prd.md` fully.** The one job here is a structure that can support *everything* in the PRD.
 2. **Coverage check.** Walk the PRD's features and flows and make sure each has a home in the architecture. If a feature has no clean home, that's a signal — flag it (the PRD may need a decision) rather than bolting on a special case.
 3. **Pick the load-bearing choices, justify them briefly.** Language/runtime, data store, the major boundaries, how state and errors flow, cross-cutting concerns (auth, observability, config). One or two sentences of rationale each — enough to review, not a thesis.
 4. **Mark the expensive reversals.** Any choice that would be painful to undo gets said so in place, next to its rationale — so later divergence from it is a conscious act, not an accident.

@@ -4,7 +4,7 @@ description: Generate a full-scope PRD (product requirements document) — a det
 ---
 # Full-scope PRD
 
-Produce `docs/prd.md`: a detailed description of the whole project. This is Phase 1 of the dev system and the source of truth every later phase reads. It describes *what* the project is and *why* — not *how* it's built (that's the architecture phase).
+Produce `docs/project/prd.md`: a detailed description of the whole project. This is Phase 1 of the dev system and the source of truth every later phase reads. It describes *what* the project is and *why* — not *how* it's built (that's the architecture phase).
 
 **This document covers full scope.** Everything the project is meant to be belongs here, described in full. There is no deferral, no phasing, no "later" in this document — cutting scope down to what gets built first is the epic's job (Phase 3), and it can only cut well if this document is complete.
 
@@ -14,17 +14,20 @@ Produce `docs/prd.md`: a detailed description of the whole project. This is Phas
 
 Artifacts live under `docs/` by default. If the project uses a different location, change it here and stay consistent:
 
-- `docs/prd.md` — full-scope PRD (this skill)
-- `docs/architecture.md` — full-scope architecture
-- `docs/epic-prd.md` — epic PRD
-- `docs/epic-architecture.md` — epic architecture
-- `docs/epic-plan.md` — the epic broken into stories and tickets
-- `docs/tickets/<SS>.<TT>-<slug>.md` — per-ticket working docs
-- `docs/completed-epics/<NN>-<slug>/` — epics already delivered, archived whole
+```
+docs/
+  project/
+    prd.md                       <- this skill; full scope, permanent
+    architecture.md              <- full-scope architecture
+  epics/
+    epic-<name>/                 <- one folder per epic, kept forever
+      prd.md  architecture.md  implementation-plan.md
+      stories/<story>/<NN>-<ticket>.md
+```
 
 Control in this system comes from the operator reviewing each checkpoint and pushing back. Your job is to make that easy: surface real decisions and open questions plainly, and **never invent a requirement to paper over a gap** — ask instead.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## Method
 
@@ -34,12 +37,12 @@ Control in this system comes from the operator reviewing each checkpoint and pus
 4. **Be clear and specific.** Product-level does not mean vague. Every statement should be concrete enough that two readers would agree on what it means and the next phase can build a structure to support it. "User can X so that Y" beats "great UX." Name real behaviors, real limits, real numbers where they're known — and where they aren't, say so instead of hedging.
 5. **Make features concrete enough to architect against.** Each feature gets a **Functional requirements** list of specific capabilities, detailed enough that the architecture phase can design directly from it without guessing.
 6. **Answer "is this actually buildable?" — and stop there.** The technical section exists to validate that the product described is possible, and to sketch at a high level how it works. Name the moving pieces and how they connect, and call out anything genuinely hard, uncertain, or dependent on something outside your control. Do **not** design it: no schemas, no file layout, no interface definitions, no library-by-library breakdown, no chosen implementation for something that has several viable ones. If a reader could start coding from what you wrote, you went too far — that detail is the architecture phase's job (Phase 2), and writing it here pre-empts a decision that phase should make on its own terms. A paragraph plus a short list is usually the right size.
-7. **Cross-reference by number, and link every number.** Features and functional requirements refer to each other by their section number — "extends [3.2.1](docs/prd.md#L118)", "consumes the metadata defined in [4.3](docs/prd.md#L214)" — rather than by restating them. Every part of the document is numbered so this works; use it to keep the document non-repetitive and to make relationships between features explicit. The link makes a reference followable instead of a scavenger hunt, and resolving it is also how you catch a number that has drifted.
+7. **Cross-reference by number, and link every number.** Features and functional requirements refer to each other by their section number — "extends [3.2.1](docs/project/prd.md#L118)", "consumes the metadata defined in [4.3](docs/project/prd.md#L214)" — rather than by restating them. Every part of the document is numbered so this works; use it to keep the document non-repetitive and to make relationships between features explicit. The link makes a reference followable instead of a scavenger hunt, and resolving it is also how you catch a number that has drifted.
 8. **Audit the finished draft for duplicates and mis-pointed references.** A numbered, cross-referenced document fails in two ways, and both are cheap to fix now and expensive later: the **same fact defined in two places** (the copies drift, and no reader can tell which is authoritative), and a **reference that doesn't resolve to what the citing text assumes** — usually because sections got renumbered or moved while writing. Do this as a real pass over the written draft, not from memory: read every cross-reference and open the section it names. Report what you find in the audit table below, and let the operator choose the owner — collapsing a duplicate on your own can silently drop a nuance only one copy carried.
 
 ## Structure
 
-Model `docs/prd.md` on the numbered format below. It's a skeleton — keep the spine, drop sections that don't apply to the project, and renumber so numbering stays contiguous. Cross-references use the final numbers as they end up in the written document. Prefer tables for anything that's fundamentally a grid (roles, permissions, capabilities, non-functional requirements).
+Model `docs/project/prd.md` on the numbered format below. It's a skeleton — keep the spine, drop sections that don't apply to the project, and renumber so numbering stays contiguous. Cross-references use the final numbers as they end up in the written document. Prefer tables for anything that's fundamentally a grid (roles, permissions, capabilities, non-functional requirements).
 
 ```
 # <Project> — PRD
@@ -112,9 +115,9 @@ Run this over the finished draft and present the table with the PRD.
 ```
 | Fact | Defined at | Also defined at | Recommended owner |
 |------|-----------|-----------------|-------------------|
-| Free tier caps uploads at 10/month | [3.2.4](docs/prd.md#L142) | [6 Non-functional](docs/prd.md#L318)                      | [3.2.4](docs/prd.md#L142) — 6 should cite it |
-| "Draft" status semantics           | [4.1](docs/prd.md#L201)   | [3.5.2](docs/prd.md#L176)                                 | [4.1](docs/prd.md#L201) — data definitions own status |
-| Retention window                   | —                         | [3.7.1](docs/prd.md#L188) → cites [6.2](docs/prd.md#L322) | nothing defines it — ask |
+| Free tier caps uploads at 10/month | [3.2.4](docs/project/prd.md#L142) | [6 Non-functional](docs/project/prd.md#L318)                      | [3.2.4](docs/project/prd.md#L142) — 6 should cite it |
+| "Draft" status semantics           | [4.1](docs/project/prd.md#L201)   | [3.5.2](docs/project/prd.md#L176)                                 | [4.1](docs/project/prd.md#L201) — data definitions own status |
+| Retention window                   | —                         | [3.7.1](docs/project/prd.md#L188) → cites [6.2](docs/project/prd.md#L322) | nothing defines it — ask |
 ```
 
 Two kinds of row, same columns:

@@ -5,7 +5,7 @@ description: Implement a single planned ticket — write the least code that sat
 
 # Ticket implementation
 
-Second of the two prompts per ticket: planning → **implementation**. The ticket's goal, out-of-scope list, user prerequisites, acceptance criteria, and user steps already exist from planning (`docs/tickets/<SS>.<TT>-<slug>.md`).
+Second of the two prompts per ticket: planning → **implementation**. The ticket's goal, out-of-scope list, user prerequisites, acceptance criteria, and user steps already exist from planning (`<epic>/stories/<story>/<NN>-<ticket>.md`).
 
 The ticket doc's **user prerequisites are assumed done** — the operator doesn't trigger this prompt until they are. Start building; only stop if one turns out to be missing in practice.
 
@@ -22,9 +22,9 @@ Two exceptions:
 
 ## Working conventions
 
-Artifacts under `docs/`. Per-ticket doc: `docs/tickets/<SS>.<TT>-<slug>.md`.
+`<epic>` means `docs/epics/epic-<name>/` — the folder of the epic being built. Per-ticket doc: `<epic>/stories/<story>/<NN>-<ticket>.md`.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## What to do
 
@@ -74,7 +74,7 @@ Artifacts under `docs/`. Per-ticket doc: `docs/tickets/<SS>.<TT>-<slug>.md`.
 
 ## Edge cases shape
 
-Written into the ticket doc `docs/tickets/<SS>.<TT>-<slug>.md`, replacing the empty section planning left there:
+Written into the ticket doc `<epic>/stories/<story>/<NN>-<ticket>.md`, replacing the empty section planning left there:
 
 ```
 ## Edge cases
@@ -87,7 +87,7 @@ One line each. Write what the operator would *observe*, not the internal reason 
 
 ## Implementation notes shape
 
-Written into the ticket doc `docs/tickets/<SS>.<TT>-<slug>.md`, replacing the empty section planning left there:
+Written into the ticket doc `<epic>/stories/<story>/<NN>-<ticket>.md`, replacing the empty section planning left there:
 
 ```
 ## Implementation notes
@@ -113,7 +113,7 @@ One plain line per entry, same as planning's assumptions — it's a scan, not a 
 ## Manual-validation checklist shape
 
 ```
-## Manual validation — Ticket <SS>.<TT>
+## Manual validation — Ticket <NN> — <title>
 
 ### Acceptance criteria checks
 - <criterion> — what to look for: <note>
@@ -129,10 +129,10 @@ Mark the ticket done only after every check above passes.
 
 When every acceptance criterion is implemented, the full test suite is green, false positives are cleared, and the Edge cases and Implementation notes sections are written into the ticket doc, present the manual-validation checklist and wait for the operator to run it. **Point at the Edge cases list in chat as a link, without reproducing it** — a gap that genuinely needs a decision now is the exception, and gets its own line. If tests are still failing, that is what you report — not a finished ticket. The ticket closes only when the manual checks pass.
 
-**Next step.** End with a single sentence naming what runs next and what gates it — check `docs/epic-plan.md` to get it right:
+**Next step.** End with a single sentence naming what runs next and what gates it — check `<epic>/implementation-plan.md` to get it right:
 
-- More tickets left in this story → *"Next: Phase 6, `ticket-planning` for Ticket 01.03 — Session store, once every check above passes."*
-- That was the story's last ticket → *"Next: Phase 8, `story-validation` for Story 01 — Sign-in, once every check above passes."*
+- More tickets left in this story → *"Next: Phase 6, `ticket-planning` for Ticket 03 — Session store, once every check above passes."*
+- That was the story's last ticket → *"Next: Phase 8, `story-validation` for Story — Sign-in, once every check above passes."*
 - The ticket aborted into a re-plan instead → point back at `ticket-planning` for this same ticket, and name the decision that unblocks it.
 
 Suggest it; don't run it.

@@ -1,21 +1,21 @@
 ---
 name: epic-architecture
-description: Generate the epic architecture — a lean architecture that delivers the current epic's features without overengineering, doesn't contradict the full-scope architecture, and is built so later work can grow it toward full scope. Repeatable per epic, and aware that from epic 02 on it is extending a system that already runs: it separates what the epic adds from what it changes, and produces an epic diagram showing both against what stays untouched and what stays deferred. Use after the epic PRD exists. Trigger on "architecture for the epic", "how do we build this epic", "epic architecture".
+description: Generate the epic architecture — a lean architecture that delivers the current epic's features without overengineering, doesn't contradict the full-scope architecture, and is built so later work can grow it toward full scope. Repeatable per epic, and aware that from the second epic on it is extending a system that already runs: it separates what the epic adds from what it changes, and produces an epic diagram showing both against what stays untouched and what stays deferred. Use after the epic PRD exists. Trigger on "architecture for the epic", "how do we build this epic", "epic architecture".
 ---
 # Epic architecture
 
-Produce `docs/epic-architecture.md`: the architecture that guides how the current epic gets implemented. This is Phase 4, and like the epic PRD it runs once per epic.
+Produce `<epic>/architecture.md`: the architecture that guides how the current epic gets implemented. This is Phase 4, and like the epic PRD it runs once per epic.
 
 Four constraints define it:
 
-- **Doesn't contradict** the full-scope architecture (`docs/architecture.md`).
-- **Extends what already runs without breaking it** — from epic 02 on.
+- **Doesn't contradict** the full-scope architecture (`docs/project/architecture.md`).
+- **Extends what already runs without breaking it** — from the second epic on.
 - **Delivers the epic's core features without overengineering.**
 - **Built so later work can grow it** toward full scope.
 
 The tension is the whole point: lean enough that you're not building for scope you don't have yet, but shaped so full scope plugs in rather than forcing a rewrite.
 
-**From epic 02 on, you are not designing on a blank page.** A running system is a harder constraint than a north star, because it is already true. Most of what follows is about telling three things apart: what this epic adds, what it attaches to, and what it changes.
+**From the second epic on, you are not designing on a blank page.** A running system is a harder constraint than a north star, because it is already true. Most of what follows is about telling three things apart: what this epic adds, what it attaches to, and what it changes.
 
 > Part of the **dev system** — see the `dev-system` skill for the full pipeline, the artifact map, and the principles that hold across every phase.
 
@@ -23,19 +23,19 @@ The tension is the whole point: lean enough that you're not building for scope y
 
 Artifacts under `docs/` by default:
 
-- `docs/architecture.md`, `docs/epic-prd.md` — read these
-- `docs/completed-epics/<NN>-<slug>/` — earlier epics; their architectures are what already runs
-- `docs/epic-architecture.md` — this skill
-- `docs/epic-plan.md`
-- `docs/tickets/<SS>.<TT>-<slug>.md`
+- `docs/project/architecture.md`, `<epic>/prd.md` — read these
+- `docs/epics/` — every epic already cut; the earlier ones' architectures are what already runs
+- `<epic>/architecture.md` — this skill
+- `<epic>/implementation-plan.md`
+- `<epic>/stories/<story>/<NN>-<ticket>.md`
 
 Control comes from the operator reviewing each checkpoint. Overengineering is the failure mode here, so make it easy to spot: for anything beyond the epic's needs, say why it earns its place now.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## Method
 
-1. **Read the inputs — including what already runs.** `docs/architecture.md` and `docs/epic-prd.md`. From epic 02 on, also read each architecture in `docs/completed-epics/`, and lean on two of their sections in particular: **Extension points** (seams earlier epics left for exactly this) and **Deliberately deferred** (structure consciously postponed, which this epic may be the one to finally need).
+1. **Read the inputs — including what already runs.** `docs/project/architecture.md` and `<epic>/prd.md`. From the second epic on, also read each architecture in `docs/epics/`, and lean on two of their sections in particular: **Extension points** (seams earlier epics left for exactly this) and **Deliberately deferred** (structure consciously postponed, which this epic may be the one to finally need).
 2. **Locate the epic against what exists.** Before designing anything, sort the epic's work into three kinds, because they carry very different risk:
 
    - **Adds** — new components standing alongside what runs. The cheap case.
@@ -44,13 +44,13 @@ Control comes from the operator reviewing each checkpoint. Overengineering is th
 
    If the epic attaches somewhere no earlier epic anticipated, say so. Either the earlier prediction was wrong or this epic is cutting against the grain — both are worth a moment before proceeding.
 3. **Simplify to the epic.** Drop or stub anything the epic's features don't require. Fewer moving parts is the goal, not fidelity to the full design.
-4. **Stay compatible in both directions.** Don't make a choice the full-scope architecture would have to undo, *and* don't make one that fights what's already running. When the two disagree — the north star says one thing, the code that exists says another — **reality wins for this epic, and you flag the drift** rather than quietly pretending it isn't there. The north star is a north star; by epic 03 some divergence is expected and healthy. What isn't healthy is nobody noticing.
+4. **Stay compatible in both directions.** Don't make a choice the full-scope architecture would have to undo, *and* don't make one that fights what's already running. When the two disagree — the north star says one thing, the code that exists says another — **reality wins for this epic, and you flag the drift** rather than quietly pretending it isn't there. The north star is a north star; by the third epic some divergence is expected and healthy. What isn't healthy is nobody noticing.
 5. **Mark the extension points.** Where deferred features will later attach (from the epic PRD's "Still remaining after this epic"), leave a clear seam — a note on where and how full scope plugs in. This is what makes the epic growable instead of throwaway, and it is what the *next* epic's step 2 will read.
 6. **Draw the epic.** One mermaid flowchart, same base conventions as the full-scope diagram — subgraphs by deployment boundary, weighted edges, explicit `fill`/`stroke`/`color` on every class. What differs is the axis you colour on: an epic diagram colours by **what this epic does to each component**, since the subgraphs already carry what kind of thing it is. Four states, straight out of step 2:
 
    - **Adds** — new in this epic.
    - **Changes** — already there, reshaped here. The category worth staring at.
-   - **Untouched** — already running, not affected. Muted. For epic 01 there is none, and the diagram degrades to a plain one.
+   - **Untouched** — already running, not affected. Muted. For the first epic there is none, and the diagram degrades to a plain one.
    - **Deferred** — the seams from step 5, as dashed ghosts. Drawing what you are *not* building is what makes it easy to keep not building it.
 
    Underneath, write **one line naming what it proves.** For an epic that's usually restraint: what a reader should notice is how much of the north star isn't there. If your epic diagram has as many boxes as the full-scope one, you didn't scope it — go back to step 3.
@@ -59,14 +59,14 @@ Control comes from the operator reviewing each checkpoint. Overengineering is th
 ## Structure
 
 ```
-# <Project> — Epic <NN> architecture: <slug>
+# <Project> — Epic architecture: <name>
 
 ## Overview
 The epic's structure in a paragraph. Deliberately smaller than the north star.
 
 ## Builds on
 What already runs that this epic attaches to, and which extension point from
-an earlier epic it lands on. For epic 01: "nothing — first epic." If it
+an earlier epic it lands on. For the first epic: "nothing — first epic." If it
 attaches where nothing anticipated it, say so; that's a signal, not a detail.
 
 ## Epic diagram
@@ -92,7 +92,7 @@ the full-scope architecture, and a note where a decision from an earlier
 epic constrained it.
 
 ## Divergence from the north star
-Where this epic knowingly differs from `docs/architecture.md`, and whether
+Where this epic knowingly differs from `docs/project/architecture.md`, and whether
 that's the epic bending or the north star being out of date. Omit if none.
 
 ## Extension points

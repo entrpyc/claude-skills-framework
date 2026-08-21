@@ -22,14 +22,14 @@ Two exceptions:
 
 ## Working conventions
 
-Artifacts under `docs/`. Read the story's entry in `docs/epic-plan.md`, every ticket doc for it (`docs/tickets/<SS>.*.md`), and reference `docs/epic-architecture.md` and `docs/architecture.md`.
+`<epic>` means `docs/epics/epic-<name>/` — the folder of the epic being built. Read the story's entry in `<epic>/implementation-plan.md`, every ticket doc in its folder (`<epic>/stories/<story>/`), and reference `<epic>/architecture.md` and `docs/project/architecture.md`.
 
-**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/prd.md#L142)`, `[epic-prd.md § In scope → Auth](docs/epic-prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
+**Reference links.** Write every section reference as a markdown link to the file and line it lives at — `[3.2.4](docs/project/prd.md#L142)`, `[epic prd § In scope → Auth](docs/epics/epic-search/prd.md#L34)` — with the visible text left as the plain reference. Resolve the line by finding the heading (`grep -n`); never guess it. See the `dev-system` skill for the full rule.
 
 ## What to do
 
 ### 1. Feature completeness
-Does the story deliver what its **Delivers** line in `docs/epic-plan.md` promised — end to end, as one feature? Each ticket was validated on its own criteria; nobody has yet checked that they add up. Look at the joins:
+Does the story deliver what its **Delivers** line in `<epic>/implementation-plan.md` promised — end to end, as one feature? Each ticket was validated on its own criteria; nobody has yet checked that they add up. Look at the joins:
 
 - A path that works ticket-by-ticket but breaks when walked start to finish.
 - Something the plan promised that no ticket's acceptance criteria ever claimed — it fell between tickets rather than being cut.
@@ -53,7 +53,7 @@ Review the story's planning and implementation sessions for **concrete, observab
 ## Output shape
 
 ```
-## Validation — Story <SS> — <title>
+## Validation — Story: <title>
 
 ### Feature completeness
 - <gap between tickets, or something the plan promised that no ticket delivered>
@@ -64,7 +64,7 @@ Review the story's planning and implementation sessions for **concrete, observab
 (or: none found)
 
 ### Process friction
-- <concrete observation, e.g. "ticket 01.03 needed 3 correction rounds because…">
+- <concrete observation, e.g. "ticket 03 needed 3 correction rounds because…">
   → suggested improvement: <major change only>
 (or: none worth flagging)
 ```
@@ -73,10 +73,10 @@ Review the story's planning and implementation sessions for **concrete, observab
 
 Keep it lean and major-issues-only. If a gap or a contradiction needs a decision, get it before the next story starts. A completeness gap usually becomes a new ticket appended to this story rather than a note — say which you're proposing. If the fix is to update a doc, make the update (or flag it) so the plan and architecture stay honest as the epic grows.
 
-**Next step.** End with a single sentence naming what runs next, and check `docs/epic-plan.md` to get it right:
+**Next step.** End with a single sentence naming what runs next, and check `<epic>/implementation-plan.md` to get it right:
 
-- Stories left in the plan → *"Next: Phase 6, `ticket-planning` for Ticket 02.01 — Search index."*
-- That was the plan's last story → *"Next: Phase 3, `epic-prd`, to archive this epic and cut the next one."*
+- Stories left in the plan → *"Next: Phase 6, `ticket-planning` for Ticket 01 of Search — Index writer."*
+- That was the plan's last story → *"Next: Phase 3, `epic-prd`, to cut the next epic."*
 - A gap or contradiction above needs deciding first → say that, and name the decision that unblocks the next ticket.
 
 Suggest it; don't run it.

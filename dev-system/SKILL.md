@@ -17,12 +17,43 @@ The whole system is one idea applied at four widths: describe the thing, then cu
 
 | Level | What it is | Scope |
 |---|---|---|
-| **Full scope** | The entire project — everything it is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral. | The project |
-| **Epic** | The ~20% of remaining functionality carrying ~80% of remaining value — or the specific feature(s) the operator names. Carries **its own PRD and its own architecture**, in the same shape as full scope, scoped to the epic. | A working increment of the app |
+| **Project** | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral. | The project |
+| **Epic** | The ~20% of remaining functionality carrying ~80% of remaining value — or the specific feature(s) the operator names. Carries **its own PRD and its own architecture**, in the same shape as the project's, scoped to the epic. | A working increment of the app |
 | **Story** | One feature of the epic, described end-to-end. The unit of validation. | A feature |
 | **Ticket** | One reviewable, independently testable piece of a story. Small on purpose. The unit of build. | A change |
 
 Epics repeat until full scope is delivered. Stories break an epic down; tickets break a story down. **Tickets are planned and implemented one at a time; validation runs once per completed story**, not per ticket.
+
+## Artifacts
+
+Every level owns a directory, and **nothing ever moves.** An epic is written where it will live forever, so a delivered epic is simply one whose stories are all done — there is no archive step and no set of canonical paths that get swapped between epics.
+
+```
+docs/
+  project/
+    prd.md                        <- full scope, permanent
+    architecture.md
+  epics/
+    epic-core-playback/           <- one folder per epic, kept forever
+      prd.md
+      architecture.md
+      implementation-plan.md      <- stories, each broken into tickets
+      stories/
+        play-a-track/
+          01-audio-element.md     <- ticket docs, numbered in build order
+          02-transport-controls.md
+        resume-where-i-left-off/
+          01-position-store.md
+    epic-search/                  <- the next epic, cut when the last one finished
+      prd.md
+      ...
+```
+
+Throughout these skills, **`<epic>` is shorthand for `docs/epics/epic-<name>/`** — the folder of the epic being worked on. So `<epic>/prd.md` is the epic PRD, and `<epic>/stories/<story>/<NN>-<ticket>.md` is a ticket doc.
+
+Naming: an epic folder is `epic-` plus a slug of the epic's name; a story folder is a slug of the story's name, matching what the implementation plan calls it; a ticket file is its number within the story plus a slug of its title. **Order lives in the plan, not in the folder names** — `implementation-plan.md` lists stories in build order, and ticket numbers give the order inside each story.
+
+`docs/` is the default root. If a project uses somewhere else, change it in each skill's Working conventions block and stay consistent — the pipeline connects through these paths.
 
 ## The pipeline
 
@@ -30,67 +61,43 @@ Each phase writes an artifact the next phase reads.
 
 | # | Skill | Reads | Writes | Runs |
 |---|-------|-------|--------|------|
-| 1 | `full-scope-prd` | — | `docs/prd.md` | once per project |
-| 2 | `full-scope-architecture` | `prd.md` | `docs/architecture.md` | once per project |
-| 3 | `epic-prd` | `prd.md`, `architecture.md`, `completed-epics/` | `docs/epic-prd.md` | once per epic |
-| 4 | `epic-architecture` | `architecture.md`, `epic-prd.md`, `completed-epics/` | `docs/epic-architecture.md` | once per epic |
-| 5 | `epic-plan` | epic + full-scope docs | `docs/epic-plan.md` — stories, each broken into tickets | once per epic |
-| 6 | `ticket-planning` | only the sections its ticket references | `docs/tickets/<SS>.<TT>-<slug>.md` | once per ticket |
-| 7 | `ticket-implementation` | the ticket's plan | code, tests, the ticket doc's Edge cases + Implementation notes, manual-validation checklist | once per ticket |
-| 8 | `story-validation` | `epic-plan.md`, architecture, every ticket doc in the story | validation notes (chat only) | once per story |
+| 1 | `full-scope-prd` | — | `docs/project/prd.md` | once per project |
+| 2 | `full-scope-architecture` | project PRD | `docs/project/architecture.md` | once per project |
+| 3 | `epic-prd` | project docs, earlier epics | `<epic>/prd.md` | once per epic |
+| 4 | `epic-architecture` | project architecture, `<epic>/prd.md`, earlier epics | `<epic>/architecture.md` | once per epic |
+| 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` | once per epic |
+| 6 | `ticket-planning` | only the sections its ticket references | `<epic>/stories/<story>/<NN>-<ticket>.md` | once per ticket |
+| 7 | `ticket-implementation` | the ticket's doc | code, tests, the ticket doc's Edge cases + Implementation notes, manual-validation checklist | once per ticket |
+| 8 | `story-validation` | the plan, the architecture, every ticket doc in the story folder | validation notes (chat only) | once per story |
 
 ## Three loops
 
 Phases 1–2 happen once for the project. Everything after them repeats, nested:
 
-- **Per epic — phases 3–8.** An epic is a working increment of the app. Phase 3 either cuts the next ~20% from what *remains undelivered*, or scopes the feature(s) the operator named — which is why epic 01 and epic 05 run identically: only the input differs.
+- **Per epic — phases 3–8.** An epic is a working increment of the app. Phase 3 either cuts the next ~20% from what *remains undelivered*, or scopes the feature(s) the operator named — which is why the first epic and the fifth run identically: only the input differs.
 - **Per story — phases 6–8.** A story's tickets are planned and built in order; when its last ticket is done, phase 8 validates the story as a whole.
 - **Per ticket — phases 6–7.** Every ticket runs **planning → implementation**, in that order, and then the next ticket starts.
 
-When the last story of an epic validates, the loop closes back to phase 3 and the next epic is cut.
-
-## Artifacts
-
-The **active epic** always sits at the canonical paths, which is what lets phases 4–8 stay epic-agnostic — they never need to know which epic is running. Completed epics are archived whole when the next one starts.
-
-Ticket docs are flat files named `<SS>.<TT>-<slug>.md` — story number, ticket number, slug — so the story a ticket belongs to is readable from its filename and build order is sort order.
-
-```
-docs/
-  prd.md  architecture.md          <- full scope, permanent
-  epic-prd.md                      <- the active epic
-  epic-architecture.md
-  epic-plan.md                     <- stories, each broken into tickets
-  tickets/
-    01.01-login-form.md            <- story 01, ticket 01
-    01.02-session-store.md
-    02.01-index-writer.md          <- story 02, ticket 01
-  completed-epics/
-    01-core-playback/              <- archived when the next epic starts
-      prd.md  architecture.md  plan.md  tickets/
-    02-search/
-```
-
-`docs/` is the default. If a project uses somewhere else, change it in each skill's Working conventions block and stay consistent — the pipeline connects through these paths.
+When the last story of an epic validates, the loop closes back to phase 3 and the next epic is cut into a new folder beside it.
 
 ## Reference links
 
 Every reference to a numbered section or a named heading — in a written artifact and in what you present to the operator — is a markdown link to the file and line it lives at, so it can be opened rather than hunted for:
 
 ```
-[3.2.4](docs/prd.md#L142)
-[epic-architecture.md § Data model (epic)](docs/epic-architecture.md#L61)
-[completed-epics/01 § In scope](docs/completed-epics/01-core-playback/prd.md#L28)
+[3.2.4](docs/project/prd.md#L142)
+[epic architecture § Data model (epic)](docs/epics/epic-search/architecture.md#L61)
+[epic-core-playback § In scope](docs/epics/epic-core-playback/prd.md#L28)
 ```
 
 Four rules keep them worth trusting:
 
-- **Resolve every link, never guess the line.** Find the heading first (`grep -n "^### 3.2.4" docs/prd.md`) and use what it returns. A link to a plausible-looking line is worse than a bare number, because it reads as checked when it isn't.
+- **Resolve every link, never guess the line.** Find the heading first (`grep -n "^### 3.2.4" docs/project/prd.md`) and use what it returns. A link to a plausible-looking line is worse than a bare number, because it reads as checked when it isn't.
 - **Anchor on the heading line**, not the sentence you're borrowing from. Headings survive edits to the prose beneath them; sentences shift by a line whenever anything above them grows.
 - **Keep the visible text the reference itself** — the number or the section name, exactly as you would have written it unlinked. The document has to still read correctly wherever links don't render.
 - **Treat them as a snapshot, not a guarantee.** A renumber or a rewrite upstream silently rots every link into it. This is why the PRD phases re-open each reference during their duplicate & reference audit instead of trusting the link text, and why a doc you edit is a reason to re-resolve the links pointing into it.
 
-Paths are relative to the repo root, matching the artifact map above.
+Paths are relative to the repo root, matching the artifact map above. Because epic folders never move, a link written into one epic still resolves from the next one — which is what makes citing an earlier epic cheap.
 
 ## Where am I?
 
@@ -98,21 +105,23 @@ Paths are relative to the repo root, matching the artifact map above.
 
 | If this is missing | You're at |
 |---|---|
-| `docs/prd.md` | Phase 1 — `full-scope-prd` |
-| `docs/architecture.md` | Phase 2 — `full-scope-architecture` |
-| `docs/epic-prd.md` | Phase 3 — `epic-prd` |
-| `docs/epic-architecture.md` | Phase 4 — `epic-architecture` |
-| `docs/epic-plan.md` | Phase 5 — `epic-plan` |
+| `docs/project/prd.md` | Phase 1 — `full-scope-prd` |
+| `docs/project/architecture.md` | Phase 2 — `full-scope-architecture` |
+| any epic folder with unfinished work | Phase 3 — `epic-prd`, cutting the next epic |
+| `<epic>/architecture.md` | Phase 4 — `epic-architecture` |
+| `<epic>/implementation-plan.md` | Phase 5 — `epic-plan` |
 | nothing — all present | the story/ticket loop, below |
 
-**Inside the loop.** Take the epic plan's stories in order, and within each story its tickets in order. Find the first ticket that isn't finished:
+**Finding the active epic.** Epics are cut one at a time, so at most one folder in `docs/epics/` has unfinished work — that's the active one. Every other folder is a delivered epic and is read-only history. If every epic is finished, the next phase is 3.
 
-- No `docs/tickets/<SS>.<TT>-<slug>.md` for it → **phase 6**, `ticket-planning`.
+**Inside the loop.** Take the plan's stories in the order it lists them, and within each story its tickets in number order. Find the first ticket that isn't finished:
+
+- No `<epic>/stories/<story>/<NN>-<ticket>.md` for it → **phase 6**, `ticket-planning`.
 - Its ticket doc has acceptance criteria, but the code isn't written or its manual checks haven't passed → **phase 7**, `ticket-implementation`.
 - **Every ticket in the story is done and validation hasn't run for it** → **phase 8**, `story-validation` for that story.
-- **Every story in the plan is validated** → the epic is done. Go back to **phase 3**; `epic-prd` archives this epic into `docs/completed-epics/` and cuts the next one.
+- **Every story in the plan is validated** → the epic is done. Go back to **phase 3**; `epic-prd` cuts the next epic into a new folder.
 
-Joining an existing codebase is the same procedure — a repo with code but no `docs/prd.md` starts at phase 1, and phase 3's stock-take is what reconciles the docs with what's already built.
+Joining an existing codebase is the same procedure — a repo with code but no `docs/project/prd.md` starts at phase 1, and phase 3's stock-take is what reconciles the docs with what's already built.
 
 **Report where you landed and what runs next — then stop.** Say it in the same shape every phase uses to close: one sentence, e.g. *"Next: Phase 4, `epic-architecture`, since the epic PRD is written but its architecture isn't."* Advancing a phase is the operator's call. Auto-running the next phase is exactly the skimming risk the checkpoints exist to prevent.
 
@@ -132,7 +141,7 @@ Two exceptions, both from the ticket loop: the **manual-validation checklist** (
 
 1. **Checkpoints, not deliveries.** Every phase ends by presenting its work, naming the open questions and assumptions, and handing control back. Never roll from one phase into the next unprompted — and always close with **one sentence naming what runs next**, so the operator knows where the pipeline stands without it advancing on its own.
 
-2. **Altitude discipline.** Each phase works at one level. A PRD — full scope or epic — is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The epic plan is product-legible stories and tickets, not implementation. Writing below your altitude pre-empts a decision the next phase should be making on its own terms — which is the most common way this system degrades.
+2. **Altitude discipline.** Each phase works at one level. A PRD — project or epic — is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The implementation plan is product-legible stories and tickets, not implementation. Writing below your altitude pre-empts a decision the next phase should be making on its own terms — which is the most common way this system degrades.
 
 3. **The doc holds the work; the chat holds only what would otherwise be missed** — see *What goes in the chat* above. Output stays small and high-impact so nothing gets skimmed and the operator always has a real chance to respond, with the two exceptions named there.
 
