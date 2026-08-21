@@ -23,8 +23,8 @@ Each phase writes an artifact the next phase reads.
 | 4 | `vertical-slice-architecture` | `architecture.md`, `slice-prd.md`, `completed-slices/` | `docs/slice-architecture.md` | once per slice |
 | 5 | `implementation-plan` | slice + full-scope docs | `docs/implementation-plan.md` | once per slice |
 | 6 | `step-planning` | only the sections its step references | `docs/steps/<NN>-<slug>.md` | once per step |
-| 7 | `step-implementation` | the step's plan | code, tests, the step doc's Implementation notes, manual-validation checklist | once per step |
-| 8 | `step-validation` | plan, architecture, the step's Implementation notes | validation notes | once per step |
+| 7 | `step-implementation` | the step's plan | code, tests, the step doc's Edge cases + Implementation notes, manual-validation checklist | once per step |
+| 8 | `step-validation` | plan, architecture, the step's Edge cases + Implementation notes | validation notes | once per step |
 
 ## Two loops
 
@@ -121,4 +121,4 @@ Two exceptions, both from the step loop: the **manual-validation checklist** (ph
 
 5. **The plan is the master knob.** Step granularity (phase 5) determines whether review is real or theatre: a step should change one observable behavior, be testable on its own, and have a diff that fits in your head. Per-step references keep each iteration reading narrowly — and a lazy reference propagates to every step that inherits it, so they're worth spot-checking.
 
-6. **Anti-bloat, including here.** No step, abstraction, or section that exists only to be thorough. That applies to these skills too — if one feels heavy for your project, trim it.
+6. **Anti-bloat, including here.** No step, abstraction, or section that exists only to be thorough. That applies to these skills too — if one feels heavy for your project, trim it. In implementation (phase 7) it hardens into a rule: **prefer under-achieving to over-engineering** — write the least code that satisfies the acceptance criteria, and record every edge that leaves uncovered in the step doc's **Edge cases** rather than coding around it. Thin code plus a visible list of gaps is reviewable; thorough code isn't.

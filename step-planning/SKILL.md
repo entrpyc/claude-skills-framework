@@ -53,7 +53,9 @@ Control comes from the operator answering the major-assumption questions and rev
 
 8. **Separate the two kinds of manual work.** *User prerequisites* block the start of implementation (an account, a key, a service wired up). *User steps* come after the code is done (deploy, flip a flag, publish). Both list only things Claude genuinely can't do itself.
 
-9. **Leave the Implementation notes section empty.** It exists to hold what's learned only once code meets reality, and `step-implementation` is what fills it. Planning writes the heading and nothing under it — anything you already know at planning time belongs in **Assumptions**, not there.
+9. **Leave the Edge cases and Implementation notes sections empty.** Both hold what's learned only once code meets reality, and `step-implementation` is what fills them. Planning writes the headings and nothing under them — what you already know at planning time belongs in **Assumptions** or **Out of scope**, not there.
+
+   Knowing what these become is worth carrying while you write the criteria, though: implementation is instructed to build **the least code that satisfies the acceptance criteria** and to log every unhandled edge rather than code around it. So a criterion that leaves its boundaries vague doesn't produce careful handling — it produces a longer Edge cases list. Pin down in the criteria whatever genuinely must be handled.
 
 ## Output shape
 
@@ -97,6 +99,9 @@ Write to `docs/steps/<NN>-<slug>.md`:
 - <the decision, one line>
 ...
 (or: none)
+
+## Edge cases
+_Filled in during implementation — leave empty here._
 
 ## Implementation notes
 _Filled in during implementation — leave empty here._
