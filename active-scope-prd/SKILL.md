@@ -1,6 +1,6 @@
 ---
 name: active-scope-prd
-description: Define the active scope with the operator and capture it as a detailed PRD that refines the full-scope PRD without contradicting it. The operator names the features they want; four questions settle the boundary, how deep the requirements go, how far the architecture should reach, and how much interface detail to pin down. Also handles the scope cycle — folding the delivered scope's status back into the project PRD before wiping docs/active-scope/. Runs once per scope, after the project PRD and architecture exist. Trigger on "define the active scope", "next scope", "scope prd", "I want these features in the active scope".
+description: Define the active scope with the operator and capture it as a detailed PRD that refines the full-scope PRD without contradicting it. The operator names the features they want; four questions settle the boundary, what coverage outside the happy path is aimed for, how far the architecture should reach, and what reaches the user. Also handles the scope cycle — folding the delivered scope's status back into the project PRD before wiping docs/active-scope/. Runs once per scope, after the project PRD and architecture exist. Trigger on "define the active scope", "next scope", "scope prd", "I want these features in the active scope".
 ---
 # Active-scope PRD
 
@@ -76,9 +76,9 @@ One `AskUserQuestion` pass, at most four, options on each with **future-proof** 
 | Question                     | What it settles                                                                                                                                                                                                                                                                                         |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Boundary**           | Confirm what's in and what's carved out. The operator named the features; this is where you offer the boundary calls — a half of a feature that could go either way, a dependency their list implies but doesn't name. If their list is unambiguous, this becomes a confirmation rather than a choice. |
-| **Requirements depth** | How deep the requirements go: happy path only, or the error, empty, and permission cases specified up front. Deeper here means fewer assumptions in every task downstream.                                                                                                                              |
-| **Architecture reach** | How far Phase 4 reaches: the minimum to make these features run, or structure laid now for what's coming.**Phase 4 reads this answer instead of judging for itself**, so it has to be recorded.                                                                                                   |
-| **Interface detail**   | How much of the interface this PRD pins down — behavior only, or the specific screens, states, and copy. Say what's in `docs/design-references/` when you ask; if it's empty, that itself is a constraint worth naming.                                                                              |
+| **Requirements depth** | **What coverage outside the happy path this scope is aiming for** — happy path only, or the error, empty, permission, and concurrent cases specified up front. Whatever isn't specified here doesn't disappear; it becomes an assumption someone makes silently in a task downstream. **Phase 5 reads this answer** to know how much the plan is allowed to leave open. |
+| **Architecture reach** | Whether Phase 4 designs only what these features need to run, or lays the seams for what's coming — one provider hardcoded, versus an interface with that one provider behind it. It's asked here, of the operator, because it's a cost call rather than a technical one: the narrow version ships sooner and gets rewritten when the next scope arrives, the reaching version costs more now and absorbs that scope without a rewrite. Only the operator knows whether that next scope is actually coming. **Phase 4 reads this answer instead of judging for itself**, so it has to be recorded. |
+| **What reaches the user** | What this scope actually puts in front of a user, and how far this document pins it down — the behavior only, or the specific screens, states, and copy. A scope can be built end-to-end and still surface almost nothing; settle that here rather than letting Phase 5 discover it. Say what's in `docs/design-references/` when you ask; if it's empty, that itself is a constraint worth naming. |
 
 **A feature the operator asked for that isn't in `docs/project/prd.md` is a gap to raise, not a licence to invent it.** Say so before asking the rest — full scope may be out of date, and updating it is their separate, deliberate act.
 
@@ -112,13 +112,13 @@ _Defined: <YYYY-MM-DD>_
 
 ## 1. Scope decisions
 The four answers, one line each — boundary, requirements depth, architecture
-reach, interface detail. This is what the scope was defined against, and what
-a later reader checks drift against. Phase 4 reads 1.3; Phase 5 reads 1.2.
+reach, what reaches the user. This is what the scope was defined against, and
+what a later reader checks drift against. Phase 4 reads 1.3; Phase 5 reads 1.2.
 
 1.1 What's in — the features, one line each, each naming its full-scope parent
-1.2 Requirements depth
-1.3 Architecture reach
-1.4 Interface detail
+1.2 Requirements depth — the coverage aimed for outside the happy path
+1.3 Architecture reach — how far Phase 4 designs beyond what these features need
+1.4 What reaches the user — the surface this scope puts in front of them
 
 ## 2. What this scope delivers
 A paragraph: what a user can do end-to-end once this is built that they
