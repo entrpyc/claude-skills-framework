@@ -31,11 +31,11 @@ Artifacts under `docs/` by default:
 
 Overengineering is the failure mode here, so make it easy for the operator to spot: for anything beyond the epic's needs, say why it earns its place now.
 
-**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
+**References** are plain labels — `project architecture § Key technology choices`, `epic-core-playback architecture § Extension points` — never links. Confirm the section exists before citing it. Full rule in the `dev-system` skill.
 
 ## Method
 
-1. **Read the inputs — including what already runs.** `docs/project/architecture.md` and `<epic>/prd.md`. From the second epic on, also read each architecture in `docs/epics/`, and lean on two of their sections in particular: **Extension points** (seams earlier epics left for exactly this) and **Deliberately deferred** (structure consciously postponed, which this epic may be the one to finally need).
+1. **Read the inputs — including what already runs.** `docs/project/architecture.md` and `<epic>/prd.md`. **The epic PRD's *Scope decisions* section carries the operator's architecture-scope answer** — whether this epic gets the minimum to make its features run, or structure laid now for what's coming. That answer, not your judgment, sets how far this document reaches. If following it would force a rewrite later, say so in a line and follow it anyway; the divergence goes in *Divergence from the north star*. From the second epic on, also read each architecture in `docs/epics/`, and lean on two of their sections in particular: **Extension points** (seams earlier epics left for exactly this) and **Deliberately deferred** (structure consciously postponed, which this epic may be the one to finally need).
 2. **Locate the epic against what exists.** Before designing anything, sort the epic's work into three kinds, because they carry very different risk:
 
    - **Adds** — new components standing alongside what runs. The cheap case.
@@ -141,6 +141,6 @@ Four classes on **one** axis — what this epic does to the thing. Don't also co
 
 ## Checkpoint
 
-Link the epic architecture, keep the chat minimal, and put the operator's attention on two things: **what this epic changes in existing structure** — the additive parts are cheap, the changes are where regressions live — and where you resisted building ahead, which the diagram's ghost nodes show at a glance. Confirm it doesn't fight the north star, or that any divergence is deliberate and named. Beyond those, say only what the doc wouldn't tell them — no component-by-component walkthrough. Get agreement before generating the epic plan. (See *What goes in the chat* in the `dev-system` skill.)
+A link to the epic architecture, and the operator's attention on one thing: **what this epic changes in existing structure.** The additive parts are cheap; the changes are where regressions live. Say in a line whether any divergence from the north star is deliberate.
 
-**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 5, `epic-plan`, to break this epic into stories and reviewable tickets."* Suggest it; don't run it.
+No component-by-component walkthrough, and don't name what runs next.

@@ -1,32 +1,32 @@
 ---
 name: dev-system
-description: Explain and navigate the dev system — the controlled Claude Code workflow that runs a project from full-scope PRD, through repeatable epics, down to per-ticket implementation. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what phase now", "what runs next"), or to start a project on the system. Every other dev-system skill points here for the whole picture. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in", "what's the next phase".
+description: Explain and navigate the dev system — the controlled Claude Code workflow that runs a project from full-scope PRD, through operator-pulled epics, down to per-ticket implementation and validation. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what phase now", "what runs next"), or to start a project on the system. Every other dev-system skill points here for the whole picture. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in".
 ---
 
 # The dev system
 
 Build projects heavily with Claude Code while keeping strong control and awareness over how development is done.
 
-**Control comes from the operator staying engaged at each checkpoint.** The system creates the checkpoints; reading the output carefully and pushing back is what produces the control. Every phase below ends by handing control back deliberately — none of them roll straight into the next.
+**Control comes from the operator staying engaged at each checkpoint.** The system creates the checkpoints; reading the output carefully and pushing back is what produces the control. Every phase ends by handing control back — none of them roll into the next, and **the operator pulls the next phase themselves.**
 
-This skill is the map. It doesn't produce an artifact of its own — it tells you where you are, what runs next, and what holds true across all of it.
+This skill is the map. It doesn't produce an artifact of its own — it tells you where you are and what holds true across all of it.
 
 ## The vocabulary
 
-The whole system is one idea applied at four widths: describe the thing, then cut it down until a piece is small enough to build and review in one sitting.
+One idea applied at four widths: describe the thing, then cut it down until a piece is small enough to build and review in one sitting.
 
 | Level | What it is | Scope |
 |---|---|---|
 | **Project** | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral. | The project |
-| **Epic** | The ~20% of remaining functionality carrying ~80% of remaining value — or the specific feature(s) the operator names. Carries **its own PRD and its own architecture**, in the same shape as the project's, scoped to the epic. | A working increment of the app |
+| **Epic** | A working increment of the app, **scoped by the operator** — they say how big, what goes in, how far the architecture reaches, and how deep the requirements go. Carries **its own PRD and architecture**, scoped to the epic. | An increment |
 | **Story** | One feature of the epic, described end-to-end. The unit of validation. | A feature |
 | **Ticket** | One reviewable, independently testable piece of a story. Small on purpose. The unit of build. | A change |
 
-Epics repeat until full scope is delivered. Stories break an epic down; tickets break a story down. **Tickets are planned and implemented one at a time; validation runs once per completed story**, not per ticket.
+Epics repeat until full scope is delivered. **Tickets are planned, built, and test-validated one at a time; story validation runs once per completed story.**
 
 ## Artifacts
 
-Every level owns a directory, and **nothing ever moves.** An epic is written where it will live forever, so a delivered epic is simply one whose stories are all done — there is no archive step and no set of canonical paths that get swapped between epics.
+Every level owns a directory, and **nothing ever moves.** A delivered epic is simply one whose stories are all done — there is no archive step.
 
 ```
 docs/
@@ -42,111 +42,162 @@ docs/
         play-a-track/
           01-audio-element.md     <- ticket docs, numbered in build order
           02-transport-controls.md
-        resume-where-i-left-off/
-          01-position-store.md
-    epic-search/                  <- the next epic, cut when the last one finished
-      prd.md
+    epic-search/
       ...
 ```
 
-Throughout these skills, **`<epic>` is shorthand for `docs/epics/epic-<name>/`** — the folder of the epic being worked on. So `<epic>/prd.md` is the epic PRD, and `<epic>/stories/<story>/<NN>-<ticket>.md` is a ticket doc.
+**`<epic>` means `docs/epics/epic-<name>/`** — the folder of the epic being worked on.
 
-Naming: an epic folder is `epic-` plus a slug of the epic's name; a story folder is a slug of the story's name, matching what the implementation plan calls it; a ticket file is its number within the story plus a slug of its title. **Order lives in the plan, not in the folder names** — `implementation-plan.md` lists stories in build order, and ticket numbers give the order inside each story.
+Naming: an epic folder is `epic-` plus a slug of its name; a story folder is a slug of the story's name; a ticket file is its number within the story plus a slug of its title. **Order lives in the plan, not in the folder names.**
 
-`docs/` is the default root. If a project uses somewhere else, change it in each skill's Working conventions block and stay consistent — the pipeline connects through these paths.
+`docs/` is the default root. Change it in each skill's Working conventions block if the project uses somewhere else.
 
 ## The pipeline
 
-Each phase writes an artifact the next phase reads.
+Each phase writes an artifact the next phase reads. **Every one is triggered by the operator.**
 
 | # | Skill | Reads | Writes | Runs |
 |---|-------|-------|--------|------|
 | 1 | `full-scope-prd` | — | `docs/project/prd.md` | once per project |
 | 2 | `full-scope-architecture` | project PRD | `docs/project/architecture.md` | once per project |
 | 3 | `epic-prd` | project docs, earlier epics | `<epic>/prd.md` | once per epic |
-| 4 | `epic-architecture` | project architecture, `<epic>/prd.md`, earlier epics | `<epic>/architecture.md` | once per epic |
-| 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` — stories, tickets, and what the operator should research | once per epic |
-| 6 | `ticket-planning` | only the sections its ticket references | `<epic>/stories/<story>/<NN>-<ticket>.md` | once per ticket |
-| 7 | `ticket-implementation` | the ticket's doc | code, tests, the ticket doc's Edge cases + Implementation notes, manual-validation checklist | once per ticket |
-| 8 | `story-validation` | the plan, the architecture, every ticket doc in the story folder | `<epic>/implementation-plan.md` § Summary; report + operator quiz in chat | once per story |
+| 4 | `epic-architecture` | project architecture, `<epic>/prd.md` | `<epic>/architecture.md` | once per epic |
+| 5 | `epic-plan` | epic + project docs | `<epic>/implementation-plan.md` | once per epic |
+| 6 | `plan-validation` | the plan, the epic docs | corrections to the plan | once per epic |
+| 7 | `ticket-planning` | only the sections its ticket references | `<epic>/stories/<story>/<NN>-<ticket>.md` | once per ticket |
+| 8 | `ticket-implementation` | the ticket's doc | code, tests, Edge cases, Implementation notes, manual checklist | once per ticket |
+| 9 | `test-validation` | the ticket's tests, its criteria, the PRDs | test fixes, a verdict | once per ticket |
+| 10 | `story-validation` | the plan, the architecture, every ticket doc in the story | `<epic>/implementation-plan.md` § Summary | once per story |
 
 ## Three loops
 
-Phases 1–2 happen once for the project. Everything after them repeats, nested:
+Phases 1–2 happen once. Everything after repeats, nested:
 
-- **Per epic — phases 3–8.** An epic is a working increment of the app. Phase 3 either cuts the next ~20% from what *remains undelivered*, or scopes the feature(s) the operator named — which is why the first epic and the fifth run identically: only the input differs.
-- **Per story — phases 6–8.** A story's tickets are planned and built in order; when its last ticket is done, phase 8 validates the story as a whole.
-- **Per ticket — phases 6–7.** Every ticket runs **planning → implementation**, in that order, and then the next ticket starts.
+- **Per epic — phases 3–10.** The operator scopes the epic; the system builds it.
+- **Per story — phases 7–10.** A story's tickets are built in order; when its last one is done, phase 10 validates the story as a whole.
+- **Per ticket — phases 7–9.** Planning → implementation → test validation.
 
-When the last story of an epic validates, the loop closes back to phase 3 and the next epic is cut into a new folder beside it.
+## References
 
-## Reference links
-
-Every reference to a numbered section or a named heading — in a written artifact and in what you present to the operator — is a markdown link to the file and line it lives at, so it can be opened rather than hunted for:
+**No links.** A reference is a plain label naming the document and the section — nothing more:
 
 ```
-[3.2.4](docs/project/prd.md#L142)
-[epic architecture § Data model (epic)](docs/epics/epic-search/architecture.md#L61)
-[epic-core-playback § In scope](docs/epics/epic-core-playback/prd.md#L28)
+project prd 3.2.4
+epic architecture § Data model (epic)
+epic-core-playback prd § In scope
 ```
 
-Four rules keep them worth trusting:
+Line-anchored links rot the moment anything above them shifts, and a stale link reads as checked when it isn't. A label a reader can search for is worth more than a link that lands in the wrong place.
 
-- **Resolve every link, never guess the line.** Find the heading first (`grep -n "^### 3.2.4" docs/project/prd.md`) and use what it returns. A link to a plausible-looking line is worse than a bare number, because it reads as checked when it isn't.
-- **Anchor on the heading line**, not the sentence you're borrowing from. Headings survive edits to the prose beneath them; sentences shift by a line whenever anything above them grows.
-- **Keep the visible text the reference itself** — the number or the section name, exactly as you would have written it unlinked. The document has to still read correctly wherever links don't render.
-- **Treat them as a snapshot, not a guarantee.** A renumber or a rewrite upstream silently rots every link into it. This is why the PRD phases re-open each reference during their duplicate & reference audit instead of trusting the link text, and why a doc you edit is a reason to re-resolve the links pointing into it.
+Three rules:
 
-Paths are relative to the repo root, matching the artifact map above. Because epic folders never move, a link written into one epic still resolves from the next one — which is what makes citing an earlier epic cheap.
+- **Name a section that exists.** Confirm the heading with `grep` before citing it. A reference to a section that isn't there is the same failure a broken link was.
+- **Cite the smallest section that carries the fact** — a numbered requirement, not the document.
+- **Keep labels stable.** Renaming a heading breaks every reference into it, so rename deliberately and fix what pointed at it.
+
+## Asking the operator
+
+Questions are **asked, not printed.** Use the `AskUserQuestion` tool — never a numbered list in chat that the operator has to answer in prose.
+
+Four rules hold for every question set, in every phase:
+
+1. **At most 5 questions per set.** If you have more, the extras aren't major — decide them yourself and record them as minor. Ask everything in one pass rather than trickling.
+2. **Every question carries options, and two labels always exist:**
+   - **future-proof** — the option that costs more now and is cheaper to live with as the codebase grows.
+   - **cheaper now** — the option that gets this ticket done fastest.
+
+   More options are welcome without a label. If the same option is genuinely both, say so on it and still offer a distinct alternative.
+3. **Each option says what it commits to** in a line — what it makes easy later, and what it forecloses.
+4. **Only ask what gates the work.** A question you could answer from the docs isn't a question; it's reading you skipped.
+
+## Major assumptions
+
+An assumption is **anything the work needs that the docs don't settle.** Every phase that makes one classifies it the same way:
+
+**Major** — any one of these is enough:
+- it could change the target architecture;
+- it produces code later tickets won't anticipate;
+- it's user-facing;
+- it affects what running the application costs;
+- **it gets harder to change as the codebase grows** — a data shape, a boundary, a naming or ownership convention, an interface other code will bind to. Cheap to decide once, expensive to unpick after twenty files depend on it.
+
+**Minor** — everything else: not covered, but it contradicts nothing, isn't user-facing, isn't cost-impacting, and stays cheap to reverse.
+
+When a call sits on the line, treat it as major. **Major assumptions get asked** (see above); **minor ones are listed, never surfaced.** Never leave an open question inside a written doc — docs record decisions.
+
+## Metrics
+
+Every ticket doc carries a `## Metrics` block. **Performance is measured against acceptance criteria, not against effort.**
+
+```
+## Metrics
+- Planning started: <YYYY-MM-DD HH:MM>
+- Implementation started: <YYYY-MM-DD HH:MM>
+- Ticket closed: <YYYY-MM-DD HH:MM>
+- Criteria met first pass: <n>/<total>
+- Criteria needing rework: <n> — <which, one phrase each>
+- Tests rewritten as false positives: <n>
+```
+
+Each phase stamps its own line as it starts, taking the real system time. Ticket planning creates the block; implementation and test validation fill the rest; story validation reads them across the story. A ticket that repeatedly misses criteria on the first pass is a planning signal, not a coding one.
+
+## What goes in the chat
+
+**The artifact is the deliverable. The chat is not a second copy of it, a summary of it, or a report on writing it.**
+
+A checkpoint is **at most five lines**, and carries only:
+
+- **What the operator wouldn't anticipate** — a constraint hit, a decision that closes off something they assumed was open, a cost, a departure from what was agreed. This is the main reason to write anything at all.
+- **Where the artifact is.**
+
+Then stop. Questions go through `AskUserQuestion`, not into the prose.
+
+Never: summarize sections you just wrote, recap the request back, narrate how you got there, list files touched, restate a decision because it's important (it's written down — point at it), or add a closing offer of what you could do next.
+
+**Nothing surprising to report is a one-line checkpoint, and that is the correct output.**
+
+Three things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 8), a **hard-to-reverse decision**, and a **dead-end abort** with its options.
+
+## Principles that hold across every phase
+
+1. **Checkpoints, not deliveries.** Every phase ends by presenting its work, naming what's open, and handing control back. Never roll into the next phase, and **don't suggest one** — the operator decides what runs next and pulls it themselves.
+
+2. **Altitude discipline.** Each phase works at one level. A PRD is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The implementation plan is product-legible stories and tickets, not implementation. Writing below your altitude pre-empts a decision the next phase should be making.
+
+3. **The doc holds the work; the chat holds only what would otherwise be missed** — see above. This is the rule most often eroded.
+
+4. **Never invent to paper over a gap.** A missing requirement, an ambiguous reference, an unstated assumption — surface it and ask. A fabricated answer propagates silently through every phase downstream.
+
+5. **Ticket granularity is the master knob.** Set in phase 5, checked in phase 6. A ticket should change one observable behavior, be testable on its own, and have a diff that fits in your head. **A ticket carrying a huge chunk of work is a planning failure, not a big ticket** — split it.
+
+6. **Anti-bloat, including here.** No ticket, abstraction, or section that exists only to be thorough. In implementation it hardens into a rule: **prefer under-achieving to over-engineering** — write the least code that satisfies the acceptance criteria, and record every edge it leaves uncovered in **Edge cases** rather than coding around it. Thin code plus a visible list of gaps is reviewable; thorough code isn't.
+
+7. **Assumptions and edge cases are the record.** They are what makes thin code safe and what makes a fast loop reviewable. Never drop one to keep a doc tidy.
 
 ## Where am I?
 
-**The artifacts are the state.** Nothing else tracks progress, so orientation is just reading the filesystem. Walk down and stop at the first thing missing:
+**The artifacts are the state.** Orientation is reading the filesystem. Stop at the first thing missing:
 
 | If this is missing | You're at |
 |---|---|
 | `docs/project/prd.md` | Phase 1 — `full-scope-prd` |
 | `docs/project/architecture.md` | Phase 2 — `full-scope-architecture` |
-| any epic folder with unfinished work | Phase 3 — `epic-prd`, cutting the next epic |
+| any epic folder with unfinished work | Phase 3 — `epic-prd` |
 | `<epic>/architecture.md` | Phase 4 — `epic-architecture` |
 | `<epic>/implementation-plan.md` | Phase 5 — `epic-plan` |
-| nothing — all present | the story/ticket loop, below |
+| the plan's `_Validated:_` stamp | Phase 6 — `plan-validation` |
+| nothing — all present | the ticket loop, below |
 
-**Finding the active epic.** Epics are cut one at a time, so at most one folder in `docs/epics/` has unfinished work — that's the active one. Every other folder is a delivered epic and is read-only history. If every epic is finished, the next phase is 3.
+**The active epic** is the one folder in `docs/epics/` with unfinished work; every other is read-only history.
 
-**Inside the loop.** Take the plan's stories in the order it lists them, and within each story its tickets in number order. Find the first ticket that isn't finished:
+**Inside the loop.** Take the plan's stories in order, and within each story its tickets in number order. Find the first unfinished ticket:
 
-- No `<epic>/stories/<story>/<NN>-<ticket>.md` for it → **phase 6**, `ticket-planning`.
-- Its ticket doc has acceptance criteria, but the code isn't written or its manual checks haven't passed → **phase 7**, `ticket-implementation`.
-- **Every ticket in the story is done, and the plan's `## Summary` doesn't cover it yet** → **phase 8**, `story-validation` for that story. The Summary is what makes a validated story visible on the filesystem.
-- **Every story in the plan is validated** → the epic is done. Go back to **phase 3**; `epic-prd` cuts the next epic into a new folder.
+- No ticket doc → **phase 7**, `ticket-planning`.
+- Doc exists, code isn't written or its manual checks haven't passed → **phase 8**, `ticket-implementation`.
+- Code done, `## Metrics` has no false-positive line → **phase 9**, `test-validation`.
+- Every ticket in the story done and the plan's `## Summary` doesn't cover it → **phase 10**, `story-validation`.
+- Every story validated → the epic is done; the operator decides whether to cut another.
 
-Joining an existing codebase is the same procedure — a repo with code but no `docs/project/prd.md` starts at phase 1, and phase 3's stock-take is what reconciles the docs with what's already built.
+Joining an existing codebase is the same procedure — a repo with code but no `docs/project/prd.md` starts at phase 1.
 
-**Report where you landed and what runs next — then stop.** Say it in the same shape every phase uses to close: one sentence, e.g. *"Next: Phase 4, `epic-architecture`, since the epic PRD is written but its architecture isn't."* Advancing a phase is the operator's call. Auto-running the next phase is exactly the skimming risk the checkpoints exist to prevent.
-
-## What goes in the chat
-
-**The artifact is the deliverable; the chat is not a second copy of it.** Every phase writes a doc (or code) the operator reads for themselves, so chat output stays minimal and carries only what reading the artifact wouldn't give them:
-
-- **What they wouldn't anticipate.** Something the work discovered — a constraint hit, a decision that closes off what they probably assumed was open, a cost or a dependency that surprises, a place the doc had to depart from what was agreed. **This is the main reason to write anything at all**, and it's what the operator is scanning your message for.
-- **Questions that gate the work** — major assumptions, dead-end options — as short numbered questions, each carrying a suggested answer.
-- **Where the artifact is**, as a link, and **the one sentence naming what runs next.**
-
-Everything else belongs in the doc. Don't summarize the sections you just wrote, don't recap the operator's own request back at them, don't narrate how you got there, and don't repeat a decision in chat merely because it's important — if it's important it's already written down, and a pointer to it is enough. When nothing surprising came up, a checkpoint of two lines is the correct output, not a lazy one.
-
-Two exceptions, both from the ticket loop: the **manual-validation checklist** (phase 7) is chat output by nature — it's a list of actions for the operator, not a record — and is never compressed; and a **hard-to-reverse decision** gets whatever space it needs, since that's the unanticipated thing itself.
-
-## Principles that hold across every phase
-
-1. **Checkpoints, not deliveries.** Every phase ends by presenting its work, naming the open questions and assumptions, and handing control back. Never roll from one phase into the next unprompted — and always close with **one sentence naming what runs next**, so the operator knows where the pipeline stands without it advancing on its own.
-
-2. **Altitude discipline.** Each phase works at one level. A PRD — project or epic — is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The implementation plan is product-legible stories and tickets, not implementation. Writing below your altitude pre-empts a decision the next phase should be making on its own terms — which is the most common way this system degrades.
-
-3. **The doc holds the work; the chat holds only what would otherwise be missed** — see *What goes in the chat* above. Output stays small and high-impact so nothing gets skimmed and the operator always has a real chance to respond, with the two exceptions named there.
-
-4. **Never invent to paper over a gap.** A missing requirement, an ambiguous reference, an unstated assumption — surface it and ask. A fabricated answer propagates silently through every phase downstream.
-
-5. **Ticket granularity is the master knob.** It's set in phase 5, and it decides whether review is real or theatre: a ticket should change one observable behavior, be testable on its own, and have a diff that fits in your head. **A ticket carrying a huge chunk of work is a planning failure, not a big ticket** — split it. Per-ticket references keep each iteration reading narrowly, and a lazy reference propagates to every ticket that inherits it, so they're worth spot-checking.
-
-6. **Anti-bloat, including here.** No ticket, abstraction, or section that exists only to be thorough. That applies to these skills too — if one feels heavy for your project, trim it. In implementation (phase 7) it hardens into a rule: **prefer under-achieving to over-engineering** — write the least code that satisfies the acceptance criteria, and record every edge that leaves uncovered in the ticket doc's **Edge cases** rather than coding around it. Thin code plus a visible list of gaps is reviewable; thorough code isn't.
+**Report where you landed in one line, then stop.**

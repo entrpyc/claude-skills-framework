@@ -16,17 +16,17 @@ Artifacts live under `docs/` by default and this skill writes `docs/project/prd.
 
 Surface real decisions and open questions plainly, and **never invent a requirement to paper over a gap** — ask instead.
 
-**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
+**References** are plain labels — `3.2.4`, `§ Non-functional requirements` — never links. Full rule in the `dev-system` skill.
 
 ## Method
 
 1. **Read what exists.** If any brief, notes, or partial spec is in the repo or conversation, start from it rather than a blank page.
-2. **Interview for the gaps.** Ask the operator only about things you genuinely can't infer — vision, who it's for, what problem it kills, hard constraints. Batch questions; don't drip one at a time.
+2. **Interview for the gaps, with `AskUserQuestion`.** Ask only about what you genuinely can't infer — vision, who it's for, what problem it kills, hard constraints. **At most 5 questions per pass**, each with options carrying **future-proof** and **cheaper now** labels where the answer is a real trade-off (scale posture, access model, platform reach). Batch them; don't drip one at a time, and don't print a numbered list for them to answer in prose.
 3. **Write a product description, not a design.** This document stays on the product side of the line. Describe what the product does, for whom, and why. If you catch yourself specifying database schemas, frameworks, libraries, APIs, or file layout, stop — that belongs to the architecture phase. (The data-definitions section describes *what data exists and who sets it*, conceptually — not table structures.) The one deliberate exception is the technical feasibility section, and it has its own tight limit — see step 6.
 4. **Be clear and specific.** Product-level does not mean vague. Every statement should be concrete enough that two readers would agree on what it means and the next phase can build a structure to support it. "User can X so that Y" beats "great UX." Name real behaviors, real limits, real numbers where they're known — and where they aren't, say so instead of hedging.
 5. **Make features concrete enough to architect against.** Each feature gets a **Functional requirements** list of specific capabilities, detailed enough that the architecture phase can design directly from it without guessing.
 6. **Answer "is this actually buildable?" — and stop there.** The technical section exists to validate that the product described is possible, and to sketch at a high level how it works. Name the moving pieces and how they connect, and call out anything genuinely hard, uncertain, or dependent on something outside your control. Do **not** design it: no schemas, no file layout, no interface definitions, no library-by-library breakdown, no chosen implementation for something that has several viable ones. If a reader could start coding from what you wrote, you went too far — that detail is the architecture phase's job (Phase 2), and writing it here pre-empts a decision that phase should make on its own terms. A paragraph plus a short list is usually the right size.
-7. **Cross-reference by number, and link every number.** Features and functional requirements refer to each other by their section number — "extends [3.2.1](docs/project/prd.md#L118)", "consumes the metadata defined in [4.3](docs/project/prd.md#L214)" — rather than by restating them. Every part of the document is numbered so this works; use it to keep the document non-repetitive and to make relationships between features explicit. The link makes a reference followable instead of a scavenger hunt, and resolving it is also how you catch a number that has drifted.
+7. **Cross-reference by number.** Features and functional requirements refer to each other by their section number — "extends 3.2.1", "consumes the metadata defined in 4.3" — rather than by restating them. Every part of the document is numbered so this works; use it to keep the document non-repetitive and to make relationships between features explicit. **Bare numbers, not links** — a number is searchable and stays correct; a line-anchored link rots the moment anything above it shifts.
 8. **Audit the finished draft for duplicates and mis-pointed references.** A numbered, cross-referenced document fails in exactly the two ways the audit section below defines, and both are cheap to fix now and expensive later. Do this as a real pass over the written draft, not from memory: read every cross-reference and open the section it names. Report what you find in the audit table, and let the operator choose the owner — collapsing a duplicate on your own can silently drop a nuance only one copy carried.
 
 ## Structure
@@ -56,7 +56,7 @@ One numbered subsection per feature (3.1, 3.2, …). For each:
   each one can be referenced individually (3.2.1, 3.2.2, …).
 - For complex features, nest further (3.4.1.1, …) for types, workflows, or
   step-by-step flows.
-- Reference related features and requirements by linked number rather than
+- Reference related features and requirements by number rather than
   restating them.
 
 Anything the product does is a feature here — including accounts, roles,
@@ -104,9 +104,9 @@ Run this over the finished draft and present the table with the PRD.
 ```
 | Fact | Defined at | Also defined at | Recommended owner |
 |------|-----------|-----------------|-------------------|
-| Free tier caps uploads at 10/month | [3.2.4](docs/project/prd.md#L142) | [6 Non-functional](docs/project/prd.md#L318)                      | [3.2.4](docs/project/prd.md#L142) — 6 should cite it |
-| "Draft" status semantics           | [4.1](docs/project/prd.md#L201)   | [3.5.2](docs/project/prd.md#L176)                                 | [4.1](docs/project/prd.md#L201) — data definitions own status |
-| Retention window                   | —                         | [3.7.1](docs/project/prd.md#L188) → cites [6.2](docs/project/prd.md#L322) | nothing defines it — ask |
+| Free tier caps uploads at 10/month | 3.2.4 | 6 Non-functional          | 3.2.4 — 6 should cite it |
+| "Draft" status semantics           | 4.1   | 3.5.2                     | 4.1 — data definitions own status |
+| Retention window                   | —     | 3.7.1 → cites 6.2         | nothing defines it — ask |
 ```
 
 Two kinds of row, same columns:
@@ -120,6 +120,8 @@ An empty table is a real result. Say "none found" rather than manufacturing rows
 
 ## Checkpoint
 
-The PRD is a checkpoint, not a delivery — and the checkpoint is a link plus what the operator wouldn't anticipate, not a tour of the document they're about to read. Keep the chat minimal: the audit table, the open questions, any assumption you had to make, anything the research turned up that changes what they thought they were building. Everything else is in the PRD. Then hand control back for review before treating it as settled. (See *What goes in the chat* in the `dev-system` skill.) A fact the audit found no owner for is an open question — put it in front of the operator, not in the document. Don't roll straight into architecture — that's a separate, deliberate step.
+A link to the PRD, the audit table, and what the operator wouldn't anticipate — an assumption you had to make, something the research turned up that changes what they thought they were building. Nothing else; the document is right there.
 
-**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 2, `full-scope-architecture`, to turn this into a north-star technical standard — once you're happy with the PRD above."* Suggest it; don't run it.
+A fact the audit found no owner for is an open question — put it to them with `AskUserQuestion`, not into the document.
+
+Don't tour the document, and don't name what runs next.

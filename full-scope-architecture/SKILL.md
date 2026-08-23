@@ -16,7 +16,7 @@ Artifacts live under `docs/` by default (change here and stay consistent): read 
 
 Surface the load-bearing decisions plainly; don't bury a big call inside prose.
 
-**Reference links.** Every section reference is a markdown link to the file and the line its heading sits on — `[3.2.4](docs/project/prd.md#L142)` — with the visible text left as the plain reference. Resolve the line with `grep -n`; never guess it. Full rule in the `dev-system` skill.
+**References** are plain labels — `project prd 3.2.4`, `§ Data model` — never links. Confirm the section exists before citing it. Full rule in the `dev-system` skill.
 
 ## Method
 
@@ -107,6 +107,6 @@ Two things that bite: set `fill`, `stroke`, and `color` together on every class,
 
 ## Checkpoint
 
-Link the architecture and keep the chat to what the operator wouldn't anticipate from reading it: the choices that are expensive to reverse, and any PRD feature that resisted a clean home. Don't tour the components or restate the stack — that's the document's job. (See *What goes in the chat* in the `dev-system` skill.) If a cost line looks like it would force a different decision at target scale, say so here rather than leaving it buried in the table. Hand control back before moving to slicing. Keep it a north star — resist the pull to over-specify now.
+A link to the architecture, and only what the operator wouldn't anticipate from reading it: the choices expensive to reverse, any PRD feature that resisted a clean home, and any cost line that would force a different decision at target scale — that one belongs in chat rather than buried in the table.
 
-**Next step.** End the checkpoint with a single sentence naming what runs next — e.g. *"Next: Phase 3, `epic-prd`, to cut the first epic out of full scope."* Suggest it; don't run it.
+Don't tour the components, don't restate the stack, and don't name what runs next. Keep it a north star — resist the pull to over-specify.
