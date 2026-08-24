@@ -8,7 +8,7 @@ description: Close out a delivered active scope — reconcile the codebase again
 Close out the delivered scope. This is Phase 6, it runs once per scope, and it does four things **in this order and never out of it**:
 
 1. **Reconcile** — find where the codebase and `docs/project/prd.md` now disagree, and let the operator settle each one.
-2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started`.
+2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started` — as a marker on every requirement line, and as the summary table.
 3. **Hand over** — collect what deploying this scope takes, from documents that are about to be deleted.
 4. **Wipe** — delete `docs/active-scope/prd.md` and `implementation-plan.md`.
 
@@ -20,7 +20,7 @@ Close out the delivered scope. This is Phase 6, it runs once per scope, and it d
 
 ```
 docs/
-  project/prd.md                       <- read in full; the Delivery status table is written here
+  project/prd.md                       <- read in full; status markers and the Delivery status table are written here
   project/architecture.md              <- read only where a contradiction is architectural
   active-scope/prd.md                  <- read: what this scope claimed
   active-scope/implementation-plan.md  <- read: what was claimed done, and the Records
@@ -28,7 +28,7 @@ docs/
   design-references/                   <- never read, never written, never deleted here
 ```
 
-The riskiest thing here is marking something `complete` that is `partial` — it reads as delivered everywhere afterwards and nobody ever cuts a scope for the missing half. The second riskiest is wiping before the table is written. The third is quietly picking a side on a contradiction instead of asking.
+The riskiest thing here is marking something `complete` that is `partial` — it reads as delivered everywhere afterwards and nobody ever cuts a scope for the missing half. The second riskiest is wiping before the fold is written — both the markers on the requirement lines and the table. The third is quietly picking a side on a contradiction instead of asking.
 
 **This phase is where `dev-system` § *The source of truth* gets enforced, so hold its distinction exactly.** `docs/project/prd.md` is the truth about what the product is meant to be. The code is evidence of what it currently does — a checked criterion is a claim, and the code is what settles it — and it is never an argument that a requirement is wrong. **The operator is the only one who decides which side changes.** You bring the disagreement and the two options; you don't bring a verdict.
 
@@ -174,7 +174,7 @@ Six rules:
 - **Status only.** The requirement text is full scope's; only this table is yours. The single exception is an edit the operator settled in step 5.
 - **Never downgrade quietly.** If something a previous scope marked `complete` is now `partial` — a regression, or a step-5 fix that took a piece back out — change it and put it in the checkpoint.
 
-Then read the table back against the project PRD's feature list and confirm every feature appears exactly once.
+Then read the table back against the project PRD's feature list and confirm every feature appears exactly once — **and walk the requirement lines to confirm each one carries a marker that matches its row.** A requirement in the table with no marker on its line, or a ✅ line sitting over a `partial` row, means the fold is half-done.
 
 **Then count the project, once.** Across **every** functional requirement in the project PRD — all features, not just this scope's — count the ones now `complete` and divide by the total. `partial` and `not started` requirements count as not done; a requirement is never half-counted. Round to a whole percent and carry the raw counts, and count requirements only — feature rows are derived, so counting them too would double-count the same work. This number goes in the checkpoint as a single line.
 
@@ -206,7 +206,7 @@ The list goes in the checkpoint, where the operator acts on it. It is not writte
 
 ### 8. Wipe `docs/active-scope/`
 
-Preconditions, all of them: every contradiction settled, every settled code fix landed and green on the tests that cover it, the table written and checked, **and the deployment steps collected** — this is the last moment they exist. Then delete `prd.md` and `implementation-plan.md`.
+Preconditions, all of them: every contradiction settled, every settled code fix landed and green on the tests that cover it, **the markers and the table both written and checked against each other**, **and the deployment steps collected** — this is the last moment they exist. Then delete `prd.md` and `implementation-plan.md`.
 
 Leave `docs/design-references/` alone — it belongs to the operator and spans scopes. If `docs/active-scope/` holds anything else, leave it and name it in the checkpoint; it isn't yours.
 
