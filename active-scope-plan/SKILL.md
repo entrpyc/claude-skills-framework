@@ -125,7 +125,7 @@ Nothing else validates this plan before code gets written, so the check happens 
 
 **Coverage — nothing dropped, nothing invented.** Walk every numbered functional requirement in `active-scope prd § 3` against the criteria, both directions. A requirement no criterion claims is the failure that survives to the end of the scope, because a plan that never mentioned something can't be seen to be missing it. A criterion delivering something the PRD doesn't ask for is scope creep — name it and propose cutting it.
 
-**Every criterion names a test.** Walk the checkboxes and check each one carries a named test that would fail if the behavior were absent. A criterion whose test is the task title restated, or a whole task sharing one vague test, is the same gap — Phase 5 has nothing to break in step 8 and the box gets ticked on a claim.
+**Every criterion names a test.** Walk the checkboxes and check each one carries a named test that would fail if the behavior were absent. A criterion whose test is the task title restated, or a whole task sharing one vague test, is the same gap — Phase 5 has nothing to break in step 7 and the box gets ticked on a claim.
 
 **References resolve.** `grep` every heading you cited, in the file you named. Check two things: the section exists, and it carries the fact the task needs it for. A reference pointing at a real section that doesn't say the thing is worse than a missing one, because Phase 5 will read it, find nothing, and assume instead. **Check all of them, not a sample.**
 

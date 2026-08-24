@@ -94,17 +94,20 @@ Write what the operator would *observe*, not the internal reason — "loses one 
 
 If an edge belongs to a *later* task, still list it. Nothing else in this system sweeps for edges at feature level, so an unlisted one is simply lost.
 
-### 7. Reach green — the whole suite
-
-Every targeted criterion implemented, covered by the test named on it, **and the full suite run and green.** Not the tests you wrote; all of them. **Work is not done until the tests pass** — a failing, skipped, or never-run test means the run is still in progress.
-
-Never disable or `.skip` a test to get green, never narrow the run to make it pass, and never report a test as passing without running it. Note anything skipped or excluded by config — **a test that doesn't run is a false positive with extra steps.**
-
-### 8. Break your own tests on purpose
+### 7. Break your own tests on purpose — before the suite
 
 **Green tests are a claim, not a result.** A test that passes without exercising the behavior it names is worse than no test: it certifies the criterion as met and stops anyone looking again.
 
 Checking your own work is the weakest form of this check — you'd have to find your own reasoning wrong — so don't do it by reasoning. Do it mechanically: **for each targeted criterion, break the behavior in the code, run its test, and confirm it fails. Then put the code back.** A test you cannot make fail proves nothing, and this pass is the only thing standing between a hollow test and a checked box.
+
+**This runs before the full-suite gate, and that ordering is the point.** It is the step most likely to change the code, so putting it first means the expensive run happens once instead of once per rewrite.
+
+Four things keep it cheap. None of them reduce what gets checked:
+
+- **Run narrow.** A break check asserts exactly one thing — this criterion's test goes red. Run that test alone. Step 8's never-narrow rule is about the gate; it does not apply here, and paying a full suite to read one test's colour is pure waste.
+- **Batch the breaks.** Break several independent behaviors at once and run their tests in one go: if every corresponding test goes red and no other test's result moves, all of them passed. Bisect only what's ambiguous — a test that should have gone red and didn't, or an unrelated one that moved.
+- **An observed red already counts.** A test written before its code and watched fail on the behavior's genuine absence **is** the break, and repeating it buys nothing. Credit it only where you actually saw it red for the right reason — having written the test first is not the same as having watched it fail.
+- **Restore mechanically, not by hand.** Revert with the VCS — `git stash` or `git checkout -- <file>` — and end the step with the diff back to what it was before the first break. Hand-editing a break back out is how a deliberate break ships.
 
 The shapes that survive a reasoning-based check and die to a deliberate break:
 
@@ -115,15 +118,23 @@ The shapes that survive a reasoning-based check and die to a deliberate break:
 - **Assertion-free** — runs code, throws nothing, passes.
 - **Passes on the wrong reason** — right outcome, wrong cause; the assertion holds even if the feature is bypassed.
 
-Rewrite what fails this pass, and verify the rewrite by breaking the code again. Count them for the *Record*.
+Rewrite what fails this pass, and verify the rewrite by breaking the code again — narrowly, same as above. Count them for the *Record*.
 
 **Never close a finding by weakening a criterion so the existing test passes.** That converts a real gap into a documented one and defeats the point of the pass. If an honest test is now red, the criterion is not met — report it red.
+
+### 8. Reach green — the whole suite, once
+
+With the code settled by step 7: every targeted criterion implemented, covered by the test named on it, **and the full suite run and green.** Not the tests you wrote; all of them. **Work is not done until the tests pass** — a failing, skipped, or never-run test means the run is still in progress.
+
+**This is the gate, so it is the one run that is never narrowed.** Never disable or `.skip` a test to get green, never narrow the run to make it pass, and never report a test as passing without running it. Note anything skipped or excluded by config — **a test that doesn't run is a false positive with extra steps.**
+
+**Once per target, not once per criterion.** If it comes back red, fix and re-run; where the fix changes a criterion's behavior, redo that one criterion's break check narrowly rather than repeating step 7 wholesale.
 
 ### 9. Write the result back into the plan
 
 `docs/active-scope/implementation-plan.md` is the scope's status, so leaving it stale is leaving the system without a state.
 
-- **Tick each criterion you actually met** — `- [ ]` → `- [x]`. Only criteria whose test is green and survived step 8.
+- **Tick each criterion you actually met** — `- [ ]` → `- [x]`. Only criteria whose test is green and survived step 7.
 - **Fill the task's Record** in the shape below.
 - **Update the Status line** at the top: the new `<n>/<total>`, and any group now complete.
 - **Correct the plan where reality diverged** — a criterion reworded after step 5, a dependency discovered, a prerequisite the plan missed. Note the change in *Notes* so the edit isn't silent.
@@ -182,7 +193,7 @@ Present the checklist and wait. Beyond it, at most a few lines:
 
 - what the code hit that the plan didn't foresee;
 - **whether operator steps changed** — if you added or removed one, say which, because that's the part they act on;
-- the false-positive count from step 8, if it wasn't zero;
+- the false-positive count from step 7, if it wasn't zero;
 - if a group completed, whether it works end-to-end.
 
 Point at the Record without reproducing it. Don't list files touched, don't narrate the build, and don't name what runs next.

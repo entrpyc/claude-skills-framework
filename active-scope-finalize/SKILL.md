@@ -96,7 +96,7 @@ For an **undocumented** finding the two options are: add it to the project PRD a
 For each one:
 
 - Write the least code that satisfies the requirement, exactly as in `active-scope-implementation` § 3 — the requirement is the ceiling, and the edges it doesn't name are not yours to handle.
-- Cover it with a test that would fail if the fix weren't there, and **break the code on purpose to confirm that test goes red** (§ 8 there). A green test is a claim until you've seen it fail.
+- Cover it with a test that would fail if the fix weren't there, and **break the code on purpose to confirm that test goes red** (§ 7 there). A green test is a claim until you've seen it fail.
 - **Run the full suite, not the tests you touched.** Never narrow the run, never `.skip` anything to get green, and never report a suite you didn't run.
 
 **The exit condition is a green full suite.** Red means the work is still in progress — keep going, don't fold, don't wipe, and don't report the run as finished. There are exactly two ways out of a red suite:
