@@ -54,16 +54,17 @@ Each phase writes an artifact the next phase reads. **Every one is triggered by 
 | - | ------------------------------- | ------------------------------------------------ | ---------------------------------------------- | -------------------- |
 | 1 | `full-scope-prd`              | —                                               | `docs/project/prd.md`                        | once per project     |
 | 2 | `full-scope-architecture`     | project PRD                                      | `docs/project/architecture.md`               | once per project     |
-| 3 | `active-scope-prd`            | project docs, the code, design-references        | `docs/active-scope/prd.md`                   | once per scope       |
-| 4 | `active-scope-architecture`   | project architecture, active-scope PRD, the code | `docs/active-scope/architecture.md`          | once per scope       |
-| 5 | `active-scope-plan`           | both PRDs, both architectures                    | `docs/active-scope/implementation-plan.md`   | once per scope       |
-| 6 | `active-scope-implementation` | only the references its target names             | code, tests, and the plan's status and records | many times per scope |
+| 3 | `active-scope-prd`            | project docs, the code, design-references        | `docs/active-scope/prd.md` **and** `architecture.md` | once per scope       |
+| 4 | `active-scope-plan`           | both PRDs, both architectures                    | `docs/active-scope/implementation-plan.md`   | once per scope       |
+| 5 | `active-scope-implementation` | only the references its target names             | code, tests, and the plan's status and records | many times per scope |
 
-Phases 1–2 happen once. Phases 3–5 run once per scope. Phase 6 runs as often as the operator points it at something.
+Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something.
+
+**Phase 3 writes both scope documents in one run** — the PRD first, then the architecture that refines it. They are two altitudes and stay two documents; they just no longer take two invocations.
 
 ## The refinement rule
 
-This is the spine of the system, and phases 3, 4, and 5 all enforce it.
+This is the spine of the system, and phases 3 and 4 both enforce it — across all three active-scope documents.
 
 **An active-scope document never contradicts its full-scope counterpart. It refines it.** Every statement in an active-scope doc stands in exactly one of three relationships to full scope:
 
@@ -137,7 +138,7 @@ Then stop. Questions go through `AskUserQuestion`, not into the prose.
 
 Never: summarize sections you just wrote, recap the request back, narrate how you got there, list files touched, restate a decision because it's important (it's written down — point at it), or add a closing offer of what you could do next.
 
-Three things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 6), a **hard-to-reverse decision**, and a **dead-end abort** with its options.
+Three things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 5), a **hard-to-reverse decision**, and a **dead-end abort** with its options.
 
 ## The scope cycle
 
@@ -154,7 +155,7 @@ The cost of this design is that a delivered scope's PRD, architecture, and plan 
 3. **Altitude discipline.** Each phase works at one level. A PRD is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The implementation plan is product-legible groups and tasks, not implementation. Writing below your altitude pre-empts a decision the next phase should be making.
 4. **The doc holds the work; the chat holds only what would otherwise be missed** — see above. This is the rule most often eroded.
 5. **Never invent to paper over a gap.** A missing requirement, an ambiguous reference, an unstated assumption — surface it and ask. A fabricated answer propagates silently through every phase downstream.
-6. **Task granularity is the master knob.** Set in phase 5. A task should change one observable behavior, be testable on its own, and have a diff that fits in your head. **A task carrying a huge chunk of work is a planning failure, not a big task** — split it.
+6. **Task granularity is the master knob.** Set in phase 4. A task should change one observable behavior, be testable on its own, and have a diff that fits in your head. **A task carrying a huge chunk of work is a planning failure, not a big task** — split it.
 7. **Anti-bloat, including here.** No task, abstraction, or section that exists only to be thorough. In implementation it hardens into a rule: **prefer under-achieving to over-engineering** — write the least code that satisfies the acceptance criteria, and record every edge it leaves uncovered in the task's **Edge cases** rather than coding around it. Thin code plus a visible list of gaps is reviewable; thorough code isn't.
 8. **Assumptions and edge cases are the record.** They are what makes thin code safe and what makes a fast loop reviewable. Never drop one to keep a doc tidy.
 
@@ -166,14 +167,13 @@ The cost of this design is that a delivered scope's PRD, architecture, and plan 
 | -------------------------------------------- | ----------------------------------------------------------------------------- |
 | `docs/project/prd.md`                      | Phase 1 —`full-scope-prd`                                                  |
 | `docs/project/architecture.md`             | Phase 2 —`full-scope-architecture`                                         |
-| `docs/active-scope/prd.md`                 | Phase 3 —`active-scope-prd`                                                |
-| `docs/active-scope/architecture.md`        | Phase 4 —`active-scope-architecture`                                       |
-| `docs/active-scope/implementation-plan.md` | Phase 5 —`active-scope-plan`                                               |
-| nothing — all three present                 | Phase 6 —`active-scope-implementation`, on whatever the operator points at |
+| `docs/active-scope/prd.md` or `architecture.md` | Phase 3 —`active-scope-prd`, which writes both                        |
+| `docs/active-scope/implementation-plan.md` | Phase 4 —`active-scope-plan`                                               |
+| nothing — all three present                 | Phase 5 —`active-scope-implementation`, on whatever the operator points at |
 
 If every criterion in the plan is checked, the scope is delivered and the operator decides whether to define the next one.
 
-**Never pick the next implementation target yourself.** Phase 6 is aimed by the operator at a group, a task, or specific criteria. When asked where things stand, report the first group with unchecked criteria and stop — choosing what to build next is theirs, not a recommendation to volunteer.
+**Never pick the next implementation target yourself.** Phase 5 is aimed by the operator at a group, a task, or specific criteria. When asked where things stand, report the first group with unchecked criteria and stop — choosing what to build next is theirs, not a recommendation to volunteer.
 
 Joining an existing codebase is the same procedure — a repo with code but no `docs/project/prd.md` starts at phase 1.
 

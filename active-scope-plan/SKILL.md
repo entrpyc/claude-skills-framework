@@ -5,7 +5,7 @@ description: Break the active scope into groups, tasks, and numbered acceptance 
 
 # Active-scope plan
 
-Produce `docs/active-scope/implementation-plan.md`: the plan covering the whole active scope, broken into **groups**, then **tasks**, then **numbered acceptance criteria**. This is Phase 5, and it runs once per scope.
+Produce `docs/active-scope/implementation-plan.md`: the plan covering the whole active scope, broken into **groups**, then **tasks**, then **numbered acceptance criteria**. This is Phase 4, and it runs once per scope.
 
 Three levels, three jobs:
 
@@ -15,7 +15,7 @@ Three levels, three jobs:
 
 Every level is one-to-many: a scope has several groups, a group several tasks, a task several criteria. The numbering carries it — `2.3.1` is group 2, task 3, criterion 1.
 
-**This file outlives the planning phase.** It is also where the scope's status lives — every criterion carries a checkbox, and Phase 6 writes its record back into the task it worked on. Write it knowing it will be edited many times and read many more.
+**This file outlives the planning phase.** It is also where the scope's status lives — every criterion carries a checkbox, and Phase 5 writes its record back into the task it worked on. Write it knowing it will be edited many times and read many more.
 
 **This phase is interactive.** The plan is the most expensive thing in the system to get wrong, so its shape is agreed with the operator while it's being made, not presented finished for approval.
 
@@ -59,21 +59,21 @@ As a feel, not a law: most groups land at two to five tasks, most tasks at two t
 Implementation can be aimed at a single criterion, which puts more weight on each one than in a plan where the task is the smallest unit.
 
 - **Observable.** A criterion that can be satisfied without anything visibly changing is a hollow criterion. Ask: when this is met, what is different that someone could look at?
-- **Test-covered — every criterion, no exceptions.** Each one names the test that proves it, written on the criterion itself — `verified by <test>`. A criterion with no named test does not go in the plan: Phase 6 ticks a box only when that test is green, so an untested criterion can never be marked met. If you cannot name a test that would *fail* when the criterion is not met, the criterion is too vague to implement against — sharpen it, split it, or drop it.
+- **Test-covered — every criterion, no exceptions.** Each one names the test that proves it, written on the criterion itself — `verified by <test>`. A criterion with no named test does not go in the plan: Phase 5 ticks a box only when that test is green, so an untested criterion can never be marked met. If you cannot name a test that would *fail* when the criterion is not met, the criterion is too vague to implement against — sharpen it, split it, or drop it.
 - **Self-contained.** Someone handed `2.3.1` alone must know what to build. Not "and the same for the other states" — write the other states as their own criteria.
 - **Sub-bullets say how it's achieved** — one line each, plain language, no code. These keep the operator in the loop on *how* without dropping the plan to implementation altitude, so they have to stay short enough to actually read.
 
 ## Rule 4 — Dependencies are explicit
 
-Because the operator can point Phase 6 at any group, task, or criterion in any order, **an order that only exists in the document's layout does not exist.** Where a task genuinely can't be built before another, write `**Depends on:** <task number>` on it. Where it doesn't, say nothing — a plan full of defensive dependencies is a plan with no real ones.
+Because the operator can point Phase 5 at any group, task, or criterion in any order, **an order that only exists in the document's layout does not exist.** Where a task genuinely can't be built before another, write `**Depends on:** <task number>` on it. Where it doesn't, say nothing — a plan full of defensive dependencies is a plan with no real ones.
 
-This is the one thing a reader can't reconstruct from the plan later, and it's what stops Phase 6 building against something that isn't there.
+This is the one thing a reader can't reconstruct from the plan later, and it's what stops Phase 5 building against something that isn't there.
 
 ## Rule 5 — Per-task references
 
-**Read the active-scope PRD and architecture once, here.** For each task, write the *specific references it needs* — named sections, **not whole documents**. Phase 6 then reads only what its target points to, which is what keeps implementation cheap and focused.
+**Read the active-scope PRD and architecture once, here.** For each task, write the *specific references it needs* — named sections, **not whole documents**. Phase 5 then reads only what its target points to, which is what keeps implementation cheap and focused.
 
-- **Every reference points at an active-scope doc** — `active-scope prd`, `active-scope architecture`, or `design-references/<file>`. Never the project docs: the active-scope PRD already refines them, so a project-level citation sends Phase 6 to the vaguer of two answers for the same fact.
+- **Every reference points at an active-scope doc** — `active-scope prd`, `active-scope architecture`, or `design-references/<file>`. Never the project docs: the active-scope PRD already refines them, so a project-level citation sends Phase 5 to the vaguer of two answers for the same fact.
 - References go on **tasks**, not groups. A group carries one line naming the active-scope PRD feature it delivers.
 - Cite the smallest section that carries the fact — `active-scope prd 3.1.2`, not "the PRD".
 - Cite `design-references/<file>` on any task building against a visual reference.
@@ -110,9 +110,9 @@ Nothing else validates this plan before code gets written, so the check happens 
 
 **Coverage — nothing dropped, nothing invented.** Walk every numbered functional requirement in `active-scope prd § 3` against the criteria, both directions. A requirement no criterion claims is the failure that survives to the end of the scope, because a plan that never mentioned something can't be seen to be missing it. A criterion delivering something the PRD doesn't ask for is scope creep — name it and propose cutting it.
 
-**Every criterion names a test.** Walk the checkboxes and check each one carries a named test that would fail if the behavior were absent. A criterion whose test is the task title restated, or a whole task sharing one vague test, is the same gap — Phase 6 has nothing to break in step 8 and the box gets ticked on a claim.
+**Every criterion names a test.** Walk the checkboxes and check each one carries a named test that would fail if the behavior were absent. A criterion whose test is the task title restated, or a whole task sharing one vague test, is the same gap — Phase 5 has nothing to break in step 8 and the box gets ticked on a claim.
 
-**References resolve.** `grep` every heading you cited, in the file you named. Check two things: the section exists, and it carries the fact the task needs it for. A reference pointing at a real section that doesn't say the thing is worse than a missing one, because Phase 6 will read it, find nothing, and assume instead. **Check all of them, not a sample.**
+**References resolve.** `grep` every heading you cited, in the file you named. Check two things: the section exists, and it carries the fact the task needs it for. A reference pointing at a real section that doesn't say the thing is worse than a missing one, because Phase 5 will read it, find nothing, and assume instead. **Check all of them, not a sample.**
 
 **Hollow tasks.** A hollow task is one that will look done without delivering what it claims. Four shapes:
 

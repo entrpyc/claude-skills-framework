@@ -5,7 +5,7 @@ description: Implement whatever the operator points at — one or more groups, t
 
 # Active-scope implementation
 
-Build what the operator aims you at. This is Phase 6, and unlike every phase before it, it runs many times per scope and **the operator chooses the target each time.**
+Build what the operator aims you at. This is Phase 5, and unlike every phase before it, it runs many times per scope and **the operator chooses the target each time.**
 
 The target is one or more of:
 
