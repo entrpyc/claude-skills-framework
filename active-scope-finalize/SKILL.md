@@ -151,6 +151,8 @@ Six rules:
 
 Then read the table back against the project PRD's feature list and confirm every feature appears exactly once.
 
+**Then count the project, once.** Across **every** functional requirement in the project PRD — all features, not just this scope's — count the ones now `complete` and divide by the total. `partial` and `not started` requirements count as not done; a requirement is never half-counted. Round to a whole percent and carry the raw counts, and count requirements only — feature rows are derived, so counting them too would double-count the same work. This number goes in the checkpoint as a single line.
+
 ### 7. Wipe `docs/active-scope/`
 
 Preconditions, all of them: every contradiction settled, every settled code fix landed with the suite green, the table written and checked. Then delete `prd.md` and `implementation-plan.md`.
@@ -161,7 +163,15 @@ The next scope starts when the operator pulls `active-scope-prd` themselves. **D
 
 ## Checkpoint
 
-Point at the Delivery status table. Then only what the operator wouldn't anticipate:
+Point at the Delivery status table, then give the project's progress as **one line and nothing more** — the percent of the project PRD's functional requirements now `complete`, with the counts behind it:
+
+```
+Project: 68% of functional requirements complete (34 of 50).
+```
+
+One line, whatever the number. No per-feature breakdown, no comparison to where the scope started, no comment on whether it's good progress — the table underneath already carries the detail.
+
+Then only what the operator wouldn't anticipate:
 
 - **every requirement whose text changed**, quoted — this is the one phase that can change what the product is meant to be, and it should never be discovered later;
 - **everything marked `partial`, and what's missing from each** — the most expensive thing here to lose;
