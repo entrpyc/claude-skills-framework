@@ -117,9 +117,7 @@ The interactive part is steps 2 and 4. Everywhere else, decide and move.
 
 6. **Self-check the plan** — see below. This is not optional and it is not a formality.
 
-7. **Write the Background to research list.** It comes last in the writing, first in the document.
-
-8. **Keep it product-legible.** A reader should follow the arc of what's being built, not drown in implementation detail.
+7. **Keep it product-legible.** A reader should follow the arc of what's being built, not drown in implementation detail.
 
 ## Self-check
 
@@ -155,10 +153,6 @@ _Planned: <YYYY-MM-DD>_
 <n>/<total> criteria met. Groups complete: <list, or none>.
 _Maintained by implementation — see the checkboxes for detail._
 
-## Background to research
-A plain list of the technical knowledge the operator needs to review this
-scope's work. One line each, nothing more — see below.
-
 ## Group 1 — <title>
 **Delivers:** what a user can do end-to-end once this group is done.
 **Feature:** <the active-scope PRD feature this delivers, e.g. active-scope prd 3.1>
@@ -190,26 +184,6 @@ _Filled during implementation — leave empty here._
 ```
 
 Two things to leave alone at planning time: **Status** starts at `0/<total>`, and every **Record** stays empty. What you already know belongs in *Out of scope*, *Prerequisites*, or a criterion — not in a section another phase owns.
-
-## Background to research
-
-**Control depends on the operator understanding what they're reviewing.** This section names the technical knowledge and skills this scope's work sits in, **as a plain list**.
-
-```
-## Background to research
-- Server-sent events
-- Postgres advisory locks
-- Optimistic UI updates and rollback
-- Cursor-based pagination
-```
-
-That's the whole shape. One topic per line, no explanation, no source, no depth rating, no "needed for". **If the operator wants detail on an entry, they'll ask.** Anything more is padding they have to read past.
-
-Three rules:
-
-1. **Only what this scope adds.** Something the existing codebase already uses doesn't come back unless this scope uses it in a genuinely new way — in which case name the new part.
-2. **Scope each entry to what the review needs.** "Postgres advisory locks" is an entry; "Postgres" is not.
-3. **Write it after the tasks exist**, so you're naming what the plan actually leans on. **An empty list is a real result** — say so rather than manufacturing entries.
 
 ## Checkpoint
 
