@@ -1,17 +1,18 @@
 ---
 name: active-scope-finalize
-description: Close out a delivered active scope — reconcile the codebase against the project PRD, put every contradiction to the operator as a choice between changing the PRD and fixing the code, apply what they choose and get the full test suite green, fold the delivered work into the project PRD as complete/partial/not started per feature and per functional requirement, then wipe docs/active-scope/. The last phase of a scope, and the only thing that leaves a durable trace that its work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "reconcile the code with the prd", "wrap up this scope".
+description: Close out a delivered active scope — reconcile the codebase against the project PRD, put every contradiction to the operator as a choice between changing the PRD and fixing the code, apply what they choose and get the tests covering them green, fold the delivered work into the project PRD as complete/partial/not started per feature and per functional requirement, hand over what deploying the scope takes — env vars, migrations, third-party configuration — then wipe docs/active-scope/. The last phase of a scope, and the only thing that leaves a durable trace that its work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "reconcile the code with the prd", "wrap up this scope".
 ---
 
 # Active-scope finalize
 
-Close out the delivered scope. This is Phase 6, it runs once per scope, and it does three things **in this order and never out of it**:
+Close out the delivered scope. This is Phase 6, it runs once per scope, and it does four things **in this order and never out of it**:
 
 1. **Reconcile** — find where the codebase and `docs/project/prd.md` now disagree, and let the operator settle each one.
 2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started`.
-3. **Wipe** — delete `docs/active-scope/prd.md` and `implementation-plan.md`.
+3. **Hand over** — collect what deploying this scope takes, from documents that are about to be deleted.
+4. **Wipe** — delete `docs/active-scope/prd.md` and `implementation-plan.md`.
 
-**The wipe is what makes the other two load-bearing.** Once it runs, the scope's PRD and plan are gone for good — the codebase and the project PRD's Delivery status table are the entire record of what was built and what is left (`dev-system` § *The scope cycle*). A scope wiped without a fold-back loses its only durable trace, so **the wipe is always the last act, and it does not run if anything above it is unsettled.**
+**The wipe is what makes the other three load-bearing.** Once it runs, the scope's PRD and plan are gone for good — the codebase and the project PRD's Delivery status table are the entire record of what was built and what is left (`dev-system` § *The scope cycle*). A scope wiped without a fold-back loses its only durable trace, so **the wipe is always the last act, and it does not run if anything above it is unsettled.**
 
 > Part of the **dev system** — see the `dev-system` skill for the pipeline, the artifact map, the refinement rule, references, question rules, and the principles that hold across every phase.
 
@@ -97,12 +98,14 @@ For each one:
 
 - Write the least code that satisfies the requirement, exactly as in `active-scope-implementation` § 3 — the requirement is the ceiling, and the edges it doesn't name are not yours to handle.
 - Cover it with a test that would fail if the fix weren't there, and **break the code on purpose to confirm that test goes red** (§ 7 there). A green test is a claim until you've seen it fail.
-- **Run the full suite, not the tests you touched.** Never narrow the run, never `.skip` anything to get green, and never report a suite you didn't run.
+- **Run what the fix touches — not the suite.** Its own test, plus the tests over the code paths it changed and anything that binds to what you edited. **Don't run the full suite here.** Phase 5 already gated it, every fix in this phase is bounded to under a task's worth of work, and a full run per fix is the most expensive way in the system to re-establish something already established. Never `.skip` anything to get green, and never report a test you didn't run.
 
-**The exit condition is a green full suite.** Red means the work is still in progress — keep going, don't fold, don't wipe, and don't report the run as finished. There are exactly two ways out of a red suite:
+**The exit condition is that every settled fix is green on the tests that cover it**, and that you have looked at what else reaches the code you changed rather than assuming nothing does. Red means the work is still in progress — keep going, don't fold, don't wipe, and don't report the run as finished. There are exactly two ways out of red:
 
 - **Fix it** — the normal case, and the one to exhaust first.
-- **Go back to the operator** — when the fix turns out bigger than the option promised, or a green suite would need a design change they didn't agree to. Say what it actually costs and offer the defer (§ 4's third option), then act on their answer. This is `active-scope-implementation` § 5 in miniature: put it as a question, don't pick the way out yourself.
+- **Go back to the operator** — when the fix turns out bigger than the option promised, or green would need a design change they didn't agree to. Say what it actually costs and offer the defer (§ 4's third option), then act on their answer. This is `active-scope-implementation` § 5 in miniature: put it as a question, don't pick the way out yourself.
+
+**The full suite is the operator's, not this phase's.** Where you landed any code fix at all, say so in the checkpoint as the one thing to run before the work is accepted — a narrow pass is narrow evidence, and it's theirs to price, not yours to skip silently.
 
 **Never weaken a test, a requirement, or a criterion to reach green.** That converts a real failure into a documented one, and the whole point of this phase is the opposite.
 
@@ -111,9 +114,31 @@ For each one:
 - **Numbering is immutable.** Never renumber, and never delete a requirement because it shipped or was dropped — every reference in the system points at numbers. A new requirement is appended with the next free number under its feature.
 - **Edit the requirement, not its neighbours.** Tidying the surrounding text turns a recorded decision into an untracked rewrite.
 
-**Nothing below this step starts until the suite is green and every settled fix and PRD edit has landed.** A fold or a wipe over a red suite leaves the docs describing something that doesn't run — and the scope documents that would have explained it are the ones about to be deleted.
+**Nothing below this step starts until every settled fix and PRD edit has landed, green on the tests that cover it.** A fold or a wipe over a red test leaves the docs describing something that doesn't run — and the scope documents that would have explained it are the ones about to be deleted.
 
 ### 6. Fold the status into the project PRD
+
+The fold is **two writes, and both are mandatory**: a marker on every requirement line where the requirement is stated, and the summary table at the end. They are one judgment written twice — a marker that disagrees with its table row is a bug, not a nuance. Skipping the markers is the common failure: the table is easy to write and easy to leave as the only record, and then the requirement a reader is actually looking at says nothing about whether it exists.
+
+**Markers on the requirement lines**
+
+`docs/project/prd.md` carries a status marker on each requirement, and on each feature heading:
+
+| Marker | Status | Means |
+|---|---|---|
+| ✅ | `complete` | Met and observable in the running code. |
+| 🔨 | `partial` | Some of it is met. The rest is named in the table's *Missing* column. |
+| 📝 | `not started` | None of it is met. |
+
+- **Match the file's existing convention exactly** — the same character, in the same position on the line, as the markers already there. Only where the PRD has none anywhere does the placement become yours: put it at the front of the line, before the requirement number, and use it uniformly.
+- **Every requirement carries one, not just this scope's.** A line with no marker is ambiguous — it reads as untracked rather than unbuilt. Requirements nothing has touched get 📝.
+- **Feature headings are derived**, the same rule as the table: ✅ only when every requirement under it is ✅, and one 🔨 makes the feature 🔨.
+- **The marker is the only thing that changes.** Adding or updating one never rewords the requirement, never renumbers it, and never touches the line's neighbours. The single exception is an edit the operator settled in step 5.
+- **Never downgrade quietly** — a ✅ from an earlier scope that is now 🔨 gets changed *and* named in the checkpoint.
+
+Then write the table.
+
+**The summary table**
 
 Record, in a **Delivery status** table at the end of `docs/project/prd.md` — appending the section if it isn't there yet:
 
@@ -153,9 +178,35 @@ Then read the table back against the project PRD's feature list and confirm ever
 
 **Then count the project, once.** Across **every** functional requirement in the project PRD — all features, not just this scope's — count the ones now `complete` and divide by the total. `partial` and `not started` requirements count as not done; a requirement is never half-counted. Round to a whole percent and carry the raw counts, and count requirements only — feature rows are derived, so counting them too would double-count the same work. This number goes in the checkpoint as a single line.
 
-### 7. Wipe `docs/active-scope/`
+### 7. Collect what deploying this scope takes
 
-Preconditions, all of them: every contradiction settled, every settled code fix landed with the suite green, the table written and checked. Then delete `prd.md` and `implementation-plan.md`.
+**The app is already deployed and running. This scope's code changes what it needs to run correctly, and nothing else in the system tells the operator what those changes are.** Every task's *Record* carries an **Operator steps** line, and `implementation-plan.md` — the only place they exist — is deleted in the next step. Gather them now or they are gone.
+
+Sweep three sources, in this order:
+
+- **Every task's *Operator steps*** in the plan, including tasks from earlier runs of this scope. These are the ones already known.
+- **The step-5 fixes**, which were written after those Records and can have introduced their own.
+- **The scope's diff**, for what nobody wrote down: a new variable read from the environment, a migration file, a new process or scheduled job, a dependency needing something installed on the host, a third-party credential or callback the code now expects.
+
+Then merge them into **one ordered list the operator can execute top to bottom.** De-duplicate — three tasks needing the same variable is one step — and drop anything already done in an earlier run, since some steps were needed to build and are already live.
+
+Each step carries three things and stays one line where it can:
+
+- **The exact thing to do** — the real variable name, the real command, the real setting. `Set STRIPE_WEBHOOK_SECRET in production` is a step; "configure the payment env vars" is a note that will be got wrong.
+- **When, relative to the deploy** — before the new code goes live, after, or either. A migration that the old code can't run against and a variable the new code reads at boot are both ordering failures, and they fail in production, not in tests.
+- **What breaks without it** — in what the operator would observe, the same as an edge case. This is what lets them decide whether to deploy at all tonight.
+
+Cover, where the scope touched them: environment variables and secrets (added, changed, removed — say which environments); database migrations and backfills; new processes, workers, queues, or scheduled jobs that must be started or registered; third-party configuration the code now depends on — keys, webhooks, callback and redirect URLs, permissions, DNS; runtime and build changes such as a new system dependency or a changed language version; feature flags to flip; and anything that must be seeded before a user hits it.
+
+Two rules. **Nothing invented** — every step traces to a Record, a step-5 fix, or the diff; a plausible-sounding deployment step the code doesn't need is worse than none, because the operator will run it. And **say "none" out loud** when the scope genuinely needs nothing: silence reads as an omission, and the operator has no way to tell the difference.
+
+**Where a step is irreversible or takes the app down** — a destructive migration, a rename that breaks in-flight requests, a credential rotation — say that on the step. It's theirs to sequence, but only if they know.
+
+The list goes in the checkpoint, where the operator acts on it. It is not written into `docs/project/prd.md`: that document is what the product is meant to be, not how this release gets rolled out.
+
+### 8. Wipe `docs/active-scope/`
+
+Preconditions, all of them: every contradiction settled, every settled code fix landed and green on the tests that cover it, the table written and checked, **and the deployment steps collected** — this is the last moment they exist. Then delete `prd.md` and `implementation-plan.md`.
 
 Leave `docs/design-references/` alone — it belongs to the operator and spans scopes. If `docs/active-scope/` holds anything else, leave it and name it in the checkpoint; it isn't yours.
 
@@ -178,6 +229,32 @@ Then only what the operator wouldn't anticipate:
 - anything downgraded from a previous scope's `complete`;
 - contradictions deferred rather than fixed, and what the operator lives with meanwhile;
 - pre-existing drift found outside the boundary, in a line — noted, not fixed here;
-- work the plan claimed done that the code doesn't do, said plainly.
+- work the plan claimed done that the code doesn't do, said plainly;
+- **if any code fix landed: that the full suite hasn't been run, and which tests were.** One line. It's the only verification this phase leaves to them, so it can't be the line that gets trimmed.
 
 Don't list the features back at them, don't recap what the scope built, and don't name what runs next.
+
+## Deployment handover
+
+Step 7's list, printed after the lines above. **Exempt from the five-line cap** — like phase 5's manual-validation checklist, it's an interaction rather than a record, and it is the only copy that will exist once the wipe runs.
+
+```
+## To deploy this scope
+
+The app is already running; these are the changes it needs around it.
+
+### Before the new code goes live
+1. <exact action> — without it: <what the operator would see>
+2. <exact action> — without it: <what the operator would see>
+
+### After
+1. <exact action> — without it: <what the operator would see>
+
+### Either order
+- <exact action> — without it: <what the operator would see>
+
+<!-- or, when the scope needs nothing: -->
+Nothing to do — this scope needs no environment, migration, or configuration change.
+```
+
+Mark any step that is destructive or takes the app down. Keep the ordering headings only where they have entries.

@@ -159,7 +159,7 @@ Then stop. Questions go through `AskUserQuestion`, not into the prose.
 
 Never: summarize sections you just wrote, recap the request back, narrate how you got there, list files touched, restate a decision because it's important (it's written down — point at it), or add a closing offer of what you could do next.
 
-Four things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 5), a **hard-to-reverse decision**, a **dead-end abort** with its options, and phase 6's list of **requirements whose text changed and features left `partial`**.
+Five things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 5), a **hard-to-reverse decision**, a **dead-end abort** with its options, phase 6's list of **requirements whose text changed and features left `partial`**, and phase 6's **deployment handover** — the env vars, migrations and configuration the running app needs, which exists nowhere else once the scope is wiped.
 
 ## The scope cycle
 
