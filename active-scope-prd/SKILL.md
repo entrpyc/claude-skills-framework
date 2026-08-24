@@ -1,6 +1,6 @@
 ---
 name: active-scope-prd
-description: Define the active scope with the operator and capture it as two documents — a detailed PRD, and the architecture the scope gets implemented against — each refining its full-scope counterpart without contradicting it. The operator names the features they want; four questions settle the boundary, what coverage outside the happy path is aimed for, how far the architecture should reach, and what reaches the user. Also handles the scope cycle — folding the delivered scope's status back into the project PRD before wiping docs/active-scope/. Runs once per scope, after the project PRD and architecture exist. Trigger on "define the active scope", "next scope", "scope prd", "scope architecture", "how do we build this scope", "I want these features in the active scope".
+description: Define the active scope with the operator and capture it as two documents — a detailed PRD, and the architecture the scope gets implemented against — each refining its full-scope counterpart without contradicting it. The operator names the features they want; four questions settle the boundary, what coverage outside the happy path is aimed for, how far the architecture should reach, and what reaches the user. Runs once per scope, after the project PRD and architecture exist and the previous scope has been closed out by active-scope-finalize. Trigger on "define the active scope", "next scope", "scope prd", "scope architecture", "how do we build this scope", "I want these features in the active scope".
 ---
 # Active-scope PRD and architecture
 
@@ -18,15 +18,15 @@ Three things define it:
 
 ```
 docs/
-  project/prd.md  architecture.md   <- full scope; read, and status-updated by this skill only
-  active-scope/                     <- wiped and re-seeded by this run
+  project/prd.md  architecture.md   <- full scope; read only — status is written by Phase 6
+  active-scope/                     <- empty when this runs; seeded by it
     prd.md                          <- this skill, step 5
     architecture.md                 <- this skill, step 7
     implementation-plan.md          <- Phase 4
   design-references/                <- read-only, operator-supplied
 ```
 
-The riskiest thing here is quietly scoping in more than the operator asked for. The second riskiest is wiping a scope whose delivery was never folded back. The third is overengineering the architecture — so for anything beyond the scope's needs, say why it earns its place now.
+The riskiest thing here is quietly scoping in more than the operator asked for. The second riskiest is seeding over a scope that was never closed out. The third is overengineering the architecture — so for anything beyond the scope's needs, say why it earns its place now.
 
 **The codebase is the previous architecture.** Delivered scopes are wiped (`dev-system` § *The scope cycle*), so from the second scope on there is no earlier scope document to read — what already runs is discovered by reading the code. That is the accepted cost of the wipe, and it makes step 6 real work rather than a formality. Budget for it.
 
@@ -34,32 +34,11 @@ The riskiest thing here is quietly scoping in more than the operator asked for. 
 
 ## Method
 
-### 1. Fold the delivered status back into the project PRD
+### 1. Check the previous scope was closed out
 
-This is the only durable trace that the finished work happened, so it runs **before** the wipe, never after.
+`docs/active-scope/` must be empty. If it still holds a PRD, architecture, or implementation plan, **stop** — that scope's delivery has not been folded into `docs/project/prd.md`, and its documents are the only description of it. Say so in a line and let the operator run `active-scope-finalize`, which reconciles the code with the project PRD, writes the Delivery status table, and does the wipe.
 
-Walk the delivered scope's features to the full-scope requirements they refined, and record the outcome in a **Delivery status** table at the end of `docs/project/prd.md` — appending the section if it isn't there yet:
-
-```
-## Delivery status
-_Status of the numbered requirements above, updated as each active scope is delivered._
-
-| Requirement | Status | Scope |
-|---|---|---|
-| 3.1.1–3.1.4 | built | checkout |
-| 3.2.1 | partial — guest checkout only; saved cards not built | checkout |
-| 5.2 | built | checkout |
-```
-
-Three rules:
-
-- **Status only.** Never change what a requirement says while folding, and never delete one because it shipped. The requirement text is full scope's; only the table is yours.
-- **`partial` carries what's missing**, in a phrase. A partial marked `built` is the single most expensive error in this system — the missing half then reads as delivered everywhere and nobody ever cuts a scope for it.
-- **Truth comes from the plan and the code, not from the scope PRD's intentions.** What the scope claimed it would do is not evidence. Check the plan's checked criteria, and where they're ambiguous, check the code.
-
-**This table is also the answer to "what's left."** Nothing else tracks remaining work, and no document maintains a separate list of it.
-
-Once the table is written, delete `docs/active-scope/prd.md`, `architecture.md`, and `implementation-plan.md`. Leave `docs/design-references/` alone — it belongs to the operator and spans scopes.
+**Neither the fold-back nor the wipe happens here.** A scope wiped without being finalized loses the only durable trace that its work happened (`dev-system` § *The scope cycle*).
 
 ### 2. Take stock — briefly
 
@@ -345,7 +324,7 @@ Link to both documents and the audit table. Beyond that, only what the operator 
 
 - **what the architecture changes in existing structure**, and anything there rated `medium` or `high` risk. The additive parts are cheap; the changes are where regressions live.
 - what the stock-take turned up that they'd be surprised by — work they thought was done and isn't, or the reverse;
-- **whether a fold-back marked anything `partial`**, and what's missing from it;
+- **anything the Delivery status table marks `partial`** that this scope is building on, and what's missing from it;
 - whether any divergence from the north star is deliberate, and any pre-existing drift step 6 found between the code and the north star.
 
 If the stock-take revealed `docs/project/prd.md` no longer describes what the project is becoming, say so in a line. Updating full scope is a separate, deliberate act.

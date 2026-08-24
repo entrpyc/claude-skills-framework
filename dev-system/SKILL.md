@@ -40,7 +40,7 @@ docs/
 
 `docs/` is the default root. Change it in each skill's *Working conventions* block if the project uses somewhere else.
 
-**`docs/active-scope/` holds exactly one scope at a time, and it is wiped when the next one starts.** The delivered work lives in two places instead: the codebase, and `docs/project/prd.md`, into which the delivery status is folded before the wipe. There is no per-scope archive — see *The scope cycle*.
+**`docs/active-scope/` holds exactly one scope at a time, and it is wiped when that scope is closed out.** The delivered work lives in two places instead: the codebase, and `docs/project/prd.md`, into which the delivery status is folded before the wipe. There is no per-scope archive — see *The scope cycle*.
 
 ### design-references
 
@@ -57,8 +57,9 @@ Each phase writes an artifact the next phase reads. **Every one is triggered by 
 | 3 | `active-scope-prd`            | project docs, the code, design-references        | `docs/active-scope/prd.md` **and** `architecture.md` | once per scope       |
 | 4 | `active-scope-plan`           | both PRDs, both architectures                    | `docs/active-scope/implementation-plan.md`   | once per scope       |
 | 5 | `active-scope-implementation` | only the references its target names             | code, tests, and the plan's status and records | many times per scope |
+| 6 | `active-scope-finalize`       | the code, project PRD, the delivered scope docs  | project PRD delivery status; settled code fixes; **deletes `docs/active-scope/`** | once per scope       |
 
-Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something.
+Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something. Phase 6 closes the scope and empties `docs/active-scope/` so phase 3 can start the next one.
 
 **Phase 3 writes both scope documents in one run** — the PRD first, then the architecture that refines it. They are two altitudes and stay two documents; they just no longer take two invocations.
 
@@ -138,13 +139,13 @@ Then stop. Questions go through `AskUserQuestion`, not into the prose.
 
 Never: summarize sections you just wrote, recap the request back, narrate how you got there, list files touched, restate a decision because it's important (it's written down — point at it), or add a closing offer of what you could do next.
 
-Three things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 5), a **hard-to-reverse decision**, and a **dead-end abort** with its options.
+Four things are exempt from the five-line cap, because each is an interaction rather than a record: the **manual-validation checklist** (phase 5), a **hard-to-reverse decision**, a **dead-end abort** with its options, and phase 6's list of **requirements whose text changed and features left `partial`**.
 
 ## The scope cycle
 
-A scope is delivered when every acceptance criterion in `docs/active-scope/implementation-plan.md` is checked. Starting the next one is a deliberate act by the operator, and `active-scope-prd` handles it in one move: **fold the delivered status back into `docs/project/prd.md`, then wipe `docs/active-scope/` and write the new PRD.**
+A scope is delivered when every acceptance criterion in `docs/active-scope/implementation-plan.md` is checked. Closing it out is a deliberate act by the operator, and `active-scope-finalize` (phase 6) does it in three steps, in this order: **reconcile the code against `docs/project/prd.md` and let the operator settle every contradiction, fold the delivered status back into that PRD, then wipe `docs/active-scope/`.** Phase 3 then starts the next scope on an empty folder.
 
-Folding back means marking, on the full-scope requirements the finished scope refined, that they are now built — nothing more. **It is a status update, not a rewrite:** never change what a full-scope requirement says while folding, and never delete one because it shipped.
+Folding back means recording, on the full-scope features and requirements the finished scope refined, whether they are now `complete`, `partial`, or `not started` — nothing more. **It is a status update, not a rewrite:** never change what a full-scope requirement says while folding, and never delete one because it shipped. The one thing licensed to change requirement text is phase 6's reconciliation, and only on an operator's explicit answer.
 
 The cost of this design is that a delivered scope's PRD, architecture, and plan are gone once wiped. That is accepted: **the code is the record of what was built, and `docs/project/prd.md` is the record of what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
 
@@ -170,8 +171,9 @@ The cost of this design is that a delivered scope's PRD, architecture, and plan 
 | `docs/active-scope/prd.md` or `architecture.md` | Phase 3 —`active-scope-prd`, which writes both                        |
 | `docs/active-scope/implementation-plan.md` | Phase 4 —`active-scope-plan`                                               |
 | nothing — all three present                 | Phase 5 —`active-scope-implementation`, on whatever the operator points at |
+| nothing — and every criterion in the plan is checked | Phase 6 —`active-scope-finalize`, which closes the scope out |
 
-If every criterion in the plan is checked, the scope is delivered and the operator decides whether to define the next one.
+A scope with every criterion checked is delivered, and closing it out is the operator's call — `active-scope-finalize` is what empties `docs/active-scope/`, so an empty folder means the last scope was closed and the next one is theirs to define.
 
 **Never pick the next implementation target yourself.** Phase 5 is aimed by the operator at a group, a task, or specific criteria. When asked where things stand, report the first group with unchecked criteria and stop — choosing what to build next is theirs, not a recommendation to volunteer.
 
