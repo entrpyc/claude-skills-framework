@@ -42,13 +42,19 @@ Then check the ordering, because a targeted build can land out of order in ways 
 - **Partial task.** The target is some but not all of a task's criteria. Fine and expected — but the task's *Record* stays open and its checkbox set stays mixed, so say so rather than leaving it looking abandoned.
 - **Nothing left.** Every criterion in the target is already checked. Say so in one line and stop.
 
-If the target list is large enough that its diff won't fit in the operator's head, say so before you start. That's the granularity knob showing up late, and it's cheaper to split the run than to hand over an unreviewable diff.
+**Size the target before you start, and stop if it's too big.** Two things make it too big, and either one is enough: a diff that won't fit in the operator's head, and a criterion count that makes step 7 expensive — the break pass scales with criteria, so a thirty-criterion target in a repo with a slow suite burns an hour before any code is reviewable. Both are the granularity knob showing up late.
+
+Don't absorb it. Ask with `AskUserQuestion` — the whole target in one run, or one task at a time with a checkpoint each — and price both: how many criteria, and roughly what the runs cost at the suite time you measure in step 7. **A task-sized target is nearly always the cheaper one**, because the break pass and the diff both shrink with it while the fixed costs are paid once either way.
 
 ### 2. Confirm prerequisites, then build
 
 The target's tasks list *Prerequisites* — operator-side things that must exist first. **Assume they're done**; the operator didn't aim you here otherwise. Only stop if one turns out to be genuinely missing in practice.
 
 Then implement. No permission-asking and no clarifying questions, *unless* the work needs a major architectural decision changed — that's step 4 or step 5.
+
+**Write each criterion's test before the code that satisfies it, and watch it go red.** A red observed on the behavior's genuine absence *is* step 7's deliberate break, at zero extra cost — it happens in a run you were making anyway, and every criterion that gets it needs no break later. Writing the code first doesn't save that run, it defers it to step 7 and multiplies it, because breaks then have to be staged, batched and restored one set at a time.
+
+Two conditions on the credit, and they're the same ones step 7 applies: you must have **seen** it red, and red **for the right reason** — the behavior missing, not a typo, an import error, or a fixture that hadn't been written yet. Note which criteria earned it as you go; that list is what step 7 starts from.
 
 ### 3. Prefer under-achieving to over-engineering
 
@@ -102,12 +108,21 @@ Checking your own work is the weakest form of this check — you'd have to find 
 
 **This runs before the full-suite gate, and that ordering is the point.** It is the step most likely to change the code, so putting it first means the expensive run happens once instead of once per rewrite.
 
-Four things keep it cheap. None of them reduce what gets checked:
+**Start from what step 2 already earned.** Every criterion whose test you watched fail before writing its code is done — it has been broken, on the strongest break there is. The pass below covers only what's left. In a run that followed step 2 properly, that is a short list and this step is nearly free.
 
-- **Run narrow.** A break check asserts exactly one thing — this criterion's test goes red. Run that test alone. Step 8's never-narrow rule is about the gate; it does not apply here, and paying a full suite to read one test's colour is pure waste.
-- **Batch the breaks.** Break several independent behaviors at once and run their tests in one go: if every corresponding test goes red and no other test's result moves, all of them passed. Bisect only what's ambiguous — a test that should have gone red and didn't, or an unrelated one that moved.
-- **An observed red already counts.** A test written before its code and watched fail on the behavior's genuine absence **is** the break, and repeating it buys nothing. Credit it only where you actually saw it red for the right reason — having written the test first is not the same as having watched it fail.
+Five things keep the remainder cheap. None of them reduce what gets checked:
+
+- **Know what a run costs before you plan the pass.** Time one narrow run and one full run, once. Where the repo builds the app or boots servers before the first test executes, a single test costs what the whole suite costs — and then narrowing buys nothing while batching buys everything. **Plan the pass around the number of runs, not the number of tests**, and say the per-run cost at the checkpoint if it shaped what you did.
+- **Run narrow — where narrow is actually cheaper.** A break check asserts exactly one thing: this criterion's test goes red. Where that test can run alone for less, run it alone. Step 8's never-narrow rule is about the gate; it does not apply here, and paying a full suite to read one test's colour is waste.
+- **Batch the breaks up to the point of conflict.** Break several independent behaviors at once and run their tests in one go: if every corresponding test goes red and no other test's result moves, all of them passed. The floor on runs is how many breaks interfere with each other's tests — never the criterion count. Where the fixed cost dominates, batch to that floor rather than to what's comfortable to read. Bisect only what's ambiguous.
+- **An observed red already counts.** See step 2 — this is the default path, not an exception. Credit it only where you actually saw it red for the right reason; having written the test first is not the same as having watched it fail.
 - **Restore mechanically, not by hand.** Revert with the VCS — `git stash` or `git checkout -- <file>` — and end the step with the diff back to what it was before the first break. Hand-editing a break back out is how a deliberate break ships.
+
+**Break the behavior, never the build — and read the run before you conclude.** A break run has three outcomes, and only one of them is a pass:
+
+- **The expected tests went red and nothing else moved.** Pass.
+- **Nothing ran.** A compile error, a type error, a setup failure — the run produced no test results, or an error where the results should be. **That is void, not green.** A break that stops the code compiling proves nothing about any test, and it costs a full run to learn nothing. Type-check or build first, cheaply, before spending the run.
+- **The expected test stayed green.** Ambiguous, never a pass — and never assume it's the hollow test. The break may simply have been absorbed: a `Map` that de-duplicates whatever you let through, a default that fills the value back in, a second code path reaching the same result. **A break needs the same care as the code** — change what the assertion actually reads, and confirm you changed it. Find out which of the two it was before you conclude anything; from outside the run they look identical.
 
 The shapes that survive a reasoning-based check and die to a deliberate break:
 
@@ -130,6 +145,8 @@ With the code settled by step 7: every targeted criterion implemented, covered b
 
 **Once per target, not once per criterion.** If it comes back red, fix and re-run; where the fix changes a criterion's behavior, redo that one criterion's break check narrowly rather than repeating step 7 wholesale.
 
+**And once, not twice.** Step 7 ends with the tree restored to its final state — the next full run *is* this gate. Don't spend one run to close step 7 and another to open step 8.
+
 ### 9. Write the result back into the plan
 
 `docs/active-scope/implementation-plan.md` is the scope's status, so leaving it stale is leaving the system without a state.
@@ -144,6 +161,8 @@ With the code settled by step 7: every targeted criterion implemented, covered b
 When the last unchecked criterion in a group gets ticked, the group is claimed as a working feature — and **nothing else in this system ever checks that.** Individually-passing tasks that were never wired together is the most common way a scope ends up half-built.
 
 Before reporting, do a short end-to-end pass: walk the group's *Delivers* line as a user would, using the real application, not the tests. Read the group's edge cases together — an edge that's tolerable per task can be a broken feature in aggregate.
+
+**One walkthrough, on an environment you don't build twice.** This is a fixed tax on any run that closes a group, so pay it once: reuse whatever the suite already stood up — the build, the servers, the seeded database — rather than migrating, seeding and tearing down from scratch, and walk the whole *Delivers* line in a single pass instead of one trip per task. The check is that the feature works end to end; repeating the setup around it doesn't make it more true.
 
 If the feature doesn't work end-to-end, **that is the result.** Say what's missing and which task should own it. Don't tick the last criterion to close the group out.
 
@@ -194,6 +213,7 @@ Present the checklist and wait. Beyond it, at most a few lines:
 - what the code hit that the plan didn't foresee;
 - **whether operator steps changed** — if you added or removed one, say which, because that's the part they act on;
 - the false-positive count from step 7, if it wasn't zero;
+- **what verification cost**, but only where it was the dominant cost of the run — the number of full runs and what one takes. A repo whose fixed setup makes every run expensive is something the operator can fix once and stop paying for; they can't act on it if it stays invisible;
 - if a group completed, whether it works end-to-end.
 
 Point at the Record without reproducing it. Don't list files touched, don't narrate the build, and don't name what runs next.
