@@ -17,7 +17,7 @@ One idea applied at four widths: describe the thing, then cut it down until a pi
 | Level                  | What it is                                                                                                                                                                                                 | Scope        |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | **Project**      | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral.                                                                                    | The project  |
-| **Active scope** | The features being built right now,**chosen by the operator**. Carries its own PRD, architecture, and implementation plan — each a *more detailed* view of full scope, never a contradicting one. | An increment |
+| **Active scope** | The features being built right now,**chosen by the operator**. Carries its own PRD and implementation plan — a *more detailed* view of full scope, never a contradicting one. Structure comes from the project architecture. | An increment |
 | **Group**        | One feature of the active scope, described end-to-end. The unit that has to work when its last task lands.                                                                                                 | A feature    |
 | **Task**         | One reviewable, independently testable piece of a group. Small on purpose. The unit of build.                                                                                                              | A change     |
 | **Criterion**    | One observable acceptance criterion of a task. The smallest addressable unit — implementation can be pointed at a single one.                                                                             | A behavior   |
@@ -33,7 +33,6 @@ docs/
     architecture.md           <- full scope, permanent
   active-scope/
     prd.md                    <- the current scope, in detail
-    architecture.md
     implementation-plan.md    <- groups -> tasks -> acceptance criteria, and their status
   design-references/          <- operator-supplied visual references
 ```
@@ -54,18 +53,18 @@ Each phase writes an artifact the next phase reads. **Every one is triggered by 
 | - | ------------------------------- | ------------------------------------------------ | ---------------------------------------------- | -------------------- |
 | 1 | `full-scope-prd`              | —                                               | `docs/project/prd.md`                        | once per project     |
 | 2 | `full-scope-architecture`     | project PRD                                      | `docs/project/architecture.md`               | once per project     |
-| 3 | `active-scope-prd`            | project docs, the code, design-references        | `docs/active-scope/prd.md` **and** `architecture.md` | once per scope       |
-| 4 | `active-scope-plan`           | both PRDs, both architectures                    | `docs/active-scope/implementation-plan.md`   | once per scope       |
+| 3 | `active-scope-prd`            | project PRD, design-references                   | `docs/active-scope/prd.md`                   | once per scope       |
+| 4 | `active-scope-plan`           | active-scope PRD, project architecture           | `docs/active-scope/implementation-plan.md`   | once per scope       |
 | 5 | `active-scope-implementation` | only the references its target names             | code, tests, and the plan's status and records | many times per scope |
 | 6 | `active-scope-finalize`       | the code, project PRD, the delivered scope docs  | project PRD delivery status; settled code fixes; **deletes `docs/active-scope/`** | once per scope       |
 
 Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something. Phase 6 closes the scope and empties `docs/active-scope/` so phase 3 can start the next one.
 
-**Phase 3 writes both scope documents in one run** — the PRD first, then the architecture that refines it. They are two altitudes and stay two documents; they just no longer take two invocations.
+**A scope has one document of its own: its PRD.** There is no per-scope architecture — `docs/project/architecture.md` is the structure every scope builds against, and Phase 4 cites it directly for anything structural.
 
 ## The refinement rule
 
-This is the spine of the system, and phases 3 and 4 both enforce it — across all three active-scope documents.
+This is the spine of the system, and phases 3 and 4 both enforce it — across both active-scope documents.
 
 **An active-scope document never contradicts its full-scope counterpart. It refines it.** Every statement in an active-scope doc stands in exactly one of three relationships to full scope:
 
@@ -168,7 +167,7 @@ A scope is delivered when every acceptance criterion in `docs/active-scope/imple
 
 Folding back means recording, on the full-scope features and requirements the finished scope refined, whether they are now `complete`, `partial`, or `not started` — nothing more. **It is a status update, not a rewrite:** never change what a full-scope requirement says while folding, and never delete one because it shipped. The one thing licensed to change requirement text is phase 6's reconciliation, and only on an operator's explicit answer.
 
-The cost of this design is that a delivered scope's PRD, architecture, and plan are gone once wiped. That is accepted: **the code is what was built, and `docs/project/prd.md` — its requirements plus the Delivery status table — is the record of what the product is meant to be and what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
+The cost of this design is that a delivered scope's PRD and plan are gone once wiped. That is accepted: **the code is what was built, and `docs/project/prd.md` — its requirements plus the Delivery status table — is the record of what the product is meant to be and what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
 
 ## Principles that hold across every phase
 
@@ -189,9 +188,9 @@ The cost of this design is that a delivered scope's PRD, architecture, and plan 
 | -------------------------------------------- | ----------------------------------------------------------------------------- |
 | `docs/project/prd.md`                      | Phase 1 —`full-scope-prd`                                                  |
 | `docs/project/architecture.md`             | Phase 2 —`full-scope-architecture`                                         |
-| `docs/active-scope/prd.md` or `architecture.md` | Phase 3 —`active-scope-prd`, which writes both                        |
+| `docs/active-scope/prd.md`                 | Phase 3 —`active-scope-prd`                                                |
 | `docs/active-scope/implementation-plan.md` | Phase 4 —`active-scope-plan`                                               |
-| nothing — all three present                 | Phase 5 —`active-scope-implementation`, on whatever the operator points at |
+| nothing — all four present                  | Phase 5 —`active-scope-implementation`, on whatever the operator points at |
 | nothing — and every criterion in the plan is checked | Phase 6 —`active-scope-finalize`, which closes the scope out |
 
 A scope with every criterion checked is delivered, and closing it out is the operator's call — `active-scope-finalize` is what empties `docs/active-scope/`, so an empty folder means the last scope was closed and the next one is theirs to define.

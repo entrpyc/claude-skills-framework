@@ -9,9 +9,9 @@ Close out the delivered scope. This is Phase 6, it runs once per scope, and it d
 
 1. **Reconcile** — find where the codebase and `docs/project/prd.md` now disagree, and let the operator settle each one.
 2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started`.
-3. **Wipe** — delete `docs/active-scope/prd.md`, `architecture.md`, and `implementation-plan.md`.
+3. **Wipe** — delete `docs/active-scope/prd.md` and `implementation-plan.md`.
 
-**The wipe is what makes the other two load-bearing.** Once it runs, the scope's PRD, architecture, and plan are gone for good — the codebase and the project PRD's Delivery status table are the entire record of what was built and what is left (`dev-system` § *The scope cycle*). A scope wiped without a fold-back loses its only durable trace, so **the wipe is always the last act, and it does not run if anything above it is unsettled.**
+**The wipe is what makes the other two load-bearing.** Once it runs, the scope's PRD and plan are gone for good — the codebase and the project PRD's Delivery status table are the entire record of what was built and what is left (`dev-system` § *The scope cycle*). A scope wiped without a fold-back loses its only durable trace, so **the wipe is always the last act, and it does not run if anything above it is unsettled.**
 
 > Part of the **dev system** — see the `dev-system` skill for the pipeline, the artifact map, the refinement rule, references, question rules, and the principles that hold across every phase.
 
@@ -23,8 +23,7 @@ docs/
   project/architecture.md              <- read only where a contradiction is architectural
   active-scope/prd.md                  <- read: what this scope claimed
   active-scope/implementation-plan.md  <- read: what was claimed done, and the Records
-  active-scope/architecture.md         <- read where a contradiction is architectural
-                                          all three deleted at the end
+                                          both deleted at the end
   design-references/                   <- never read, never written, never deleted here
 ```
 
@@ -154,7 +153,7 @@ Then read the table back against the project PRD's feature list and confirm ever
 
 ### 7. Wipe `docs/active-scope/`
 
-Preconditions, all of them: every contradiction settled, every settled code fix landed with the suite green, the table written and checked. Then delete `prd.md`, `architecture.md`, and `implementation-plan.md`.
+Preconditions, all of them: every contradiction settled, every settled code fix landed with the suite green, the table written and checked. Then delete `prd.md` and `implementation-plan.md`.
 
 Leave `docs/design-references/` alone — it belongs to the operator and spans scopes. If `docs/active-scope/` holds anything else, leave it and name it in the checkpoint; it isn't yours.
 

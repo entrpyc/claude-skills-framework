@@ -23,8 +23,8 @@ The target is one or more of:
 docs/
   active-scope/implementation-plan.md  <- read the target; write status and Record back
   active-scope/prd.md                  <- read only the sections the target's tasks cite
-  active-scope/architecture.md         <- same
-  project/prd.md  architecture.md      <- same
+  project/architecture.md              <- same
+  project/prd.md                       <- same
   design-references/                   <- read where a task cites one; never write here
 ```
 

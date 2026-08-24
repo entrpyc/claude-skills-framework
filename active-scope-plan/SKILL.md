@@ -1,6 +1,6 @@
 ---
 name: active-scope-plan
-description: Break the active scope into groups, tasks, and numbered acceptance criteria — each group one feature, each task one reviewable independently testable unit carrying references to named PRD and architecture sections, each criterion an observable behavior addressable on its own so implementation can be pointed at it. Generated interactively with the operator, self-checked for coverage and hollow tasks before it is handed over, and carrying the scope's status for the rest of its life. Runs once per scope, after the active-scope PRD and architecture exist. Trigger on "implementation plan", "plan the build", "break this into tasks", "scope plan".
+description: Break the active scope into groups, tasks, and numbered acceptance criteria — each group one feature, each task one reviewable independently testable unit carrying references to named PRD and architecture sections, each criterion an observable behavior addressable on its own so implementation can be pointed at it. Generated interactively with the operator, self-checked for coverage and hollow tasks before it is handed over, and carrying the scope's status for the rest of its life. Runs once per scope, after the active-scope PRD exists. Trigger on "implementation plan", "plan the build", "break this into tasks", "scope plan".
 ---
 
 # Active-scope plan
@@ -25,14 +25,14 @@ Every level is one-to-many: a scope has several groups, a group several tasks, a
 
 ```
 docs/
-  project/prd.md  architecture.md      <- not read here; the scope docs refine them
+  project/prd.md                       <- not read here; the scope PRD refines it
+  project/architecture.md              <- read in full; the structure tasks build against
   active-scope/prd.md                  <- read in full
-  active-scope/architecture.md         <- read in full
   active-scope/implementation-plan.md  <- this skill
   design-references/                   <- read-only; cite where a task builds against one
 ```
 
-**References** are plain labels — `active-scope prd 3.1.2`, `active-scope architecture § 6 Data model` — never links. Confirm every heading with `grep` before writing it down.
+**References** are plain labels — `active-scope prd 3.1.2`, `project architecture § 6 Data model` — never links. Confirm every heading with `grep` before writing it down.
 
 ## Rule 1 — Groups are features, not work packages
 
@@ -71,9 +71,9 @@ This is the one thing a reader can't reconstruct from the plan later, and it's w
 
 ## Rule 5 — Per-task references
 
-**Read the active-scope PRD and architecture once, here.** For each task, write the *specific references it needs* — named sections, **not whole documents**. Phase 5 then reads only what its target points to, which is what keeps implementation cheap and focused.
+**Read the active-scope PRD and the project architecture once, here.** For each task, write the *specific references it needs* — named sections, **not whole documents**. Phase 5 then reads only what its target points to, which is what keeps implementation cheap and focused.
 
-- **Every reference points at an active-scope doc** — `active-scope prd`, `active-scope architecture`, or `design-references/<file>`. Never the project docs: the active-scope PRD already refines them, so a project-level citation sends Phase 5 to the vaguer of two answers for the same fact.
+- **Behavior comes from `active-scope prd`, structure from `project architecture`, visuals from `design-references/<file>`.** Never cite `project prd` for behavior — the active-scope PRD already refines it, so a project-level citation sends Phase 5 to the vaguer of two answers for the same fact.
 - References go on **tasks**, not groups. A group carries one line naming the active-scope PRD feature it delivers.
 - Cite the smallest section that carries the fact — `active-scope prd 3.1.2`, not "the PRD".
 - Cite `design-references/<file>` on any task building against a visual reference.
@@ -82,7 +82,7 @@ This is the one thing a reader can't reconstruct from the plan later, and it's w
 
 The interactive part is steps 2 and 4. Everywhere else, decide and move.
 
-1. **Read** `docs/active-scope/prd.md` and `docs/active-scope/architecture.md` in full. Those two are the whole reading list — the project docs are not read here, and nothing in the plan cites them. Note the PRD's *Requirements depth* (§ 1.2) — it bounds how much the plan is allowed to leave to assumption.
+1. **Read** `docs/active-scope/prd.md` and `docs/project/architecture.md` in full. Those two are the whole reading list — `docs/project/prd.md` is not read here, and nothing in the plan cites it. Note the PRD's *Requirements depth* (§ 1.2) — it bounds how much the plan is allowed to leave to assumption.
 
 2. **Agree the group split before writing tasks.** Draft the groups from the PRD's features and put the genuinely contestable calls to the operator with `AskUserQuestion` — at most 5, options labeled **future-proof** and **cheaper now**. Worth asking about:
 
