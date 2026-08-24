@@ -44,7 +44,7 @@ The riskiest thing here is quietly scoping in more than the operator asked for. 
 
 Read `docs/project/prd.md`, including the Delivery status table, and skim what actually exists in the codebase. Two things matter and nothing else does:
 
-- **Claimed is not shipped.** Where the table and the code disagree, the code wins — say so.
+- **Claimed is not shipped.** Where the Delivery status table and the code disagree, the *status* is wrong — the code is what actually runs. Say so, and correct the status. That is evidence about what exists, not authority about what's correct: a code behavior that contradicts a project-PRD requirement is a divergence, and it goes to the operator as a question (`dev-system` § *The source of truth*), not into your read of the scope.
 - **The missing half of anything marked `partial`** is the easiest thing here to lose, because a partial feature reads as done everywhere else.
 
 This is a skim for context, not the architecture read — that's step 6. And it is not a proposal: **don't produce a recommended scope**, the operator brings that.
@@ -96,7 +96,7 @@ Read `docs/project/architecture.md` in full, and write `docs/active-scope/archit
 Five rules:
 
 - **Simplify to the scope.** Drop or stub anything the scope's features don't require. Fewer moving parts is the goal, not fidelity to the full design.
-- **Stay compatible in both directions.** Don't make a choice the full-scope architecture would have to undo, *and* don't make one that fights what's already running. When the two disagree, **reality wins for this scope and you flag the drift** — some divergence from the north star is expected and healthy; nobody noticing isn't.
+- **Stay compatible in both directions.** Don't make a choice the full-scope architecture would have to undo, *and* don't make one that fights what's already running. When the two disagree, **reality wins for this scope and you flag the drift** — some divergence from the north star is expected and healthy; nobody noticing isn't. **This holds for structure only.** The project PRD is never overruled by what the code happens to do; a divergence there is a question for the operator (`dev-system` § *The source of truth*).
 - **Mark the extension points.** Where full scope's remaining features will later attach, leave a clear seam and a note on how it plugs in. **Write these for a reader who will only have the code** — the next scope's step 6 reads the codebase, not this file, so a seam that isn't obvious from the code needs a name in the code, not just a paragraph here.
 - **Resist overengineering.** No abstraction, layer, or generality the scope's features don't currently need. If you're adding it "for later," a marked extension point is enough — build it later.
 - **Draw it.** One mermaid flowchart, per *Diagram conventions*. If it has as many boxes as the full-scope one, you didn't scope it — go back and simplify.

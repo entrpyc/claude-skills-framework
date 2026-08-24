@@ -81,6 +81,8 @@ Put it to the operator with `AskUserQuestion`: two to four concrete approaches, 
 
 Whatever they choose that changes the plan — a criterion reworded, a task added, a dependency introduced — **edit `implementation-plan.md` to match.** A plan that no longer describes what's being built stops being the record.
 
+**A divergence from the PRD is the same stop.** If the only way to satisfy a criterion is to make the code contradict `active-scope prd` — or the project requirement it refines — that is not an implementation detail to absorb. Ask it the same way, with the two options `dev-system` § *The source of truth* requires: change the approach so the code matches, or change the requirement. **The second is the operator's alone**, and you never take it by writing the code and letting the doc fall behind.
+
 ### 6. Log every uncovered case as an edge case
 
 One line each, in the task's *Record*, naming what isn't handled and **what the operator would see if it happened**. This is where the "just in case" code went instead of into the codebase, and it is what makes under-achieving safe rather than sloppy.

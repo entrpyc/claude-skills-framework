@@ -75,6 +75,27 @@ This is the spine of the system, and phases 3 and 4 both enforce it — across a
 
 The detail test, applied line by line: **if a line could be deleted and its full-scope parent would still carry the same information, delete it and cite the parent instead.** An active-scope doc that reads as a summary of full scope has failed — it is meant to be the more detailed document, not the shorter one.
 
+## The source of truth
+
+The refinement rule governs documents against documents. This one governs documents against code, and it holds in every phase:
+
+**`docs/project/prd.md` is the source of truth for what the product is — at all times.** Not the codebase, not the implementation plan, not what a scope claimed it would do. Everything else is downstream: the active-scope docs refine it, the plan schedules it, the code implements it.
+
+**The codebase is evidence, never authority.** It is the only reliable answer to *what the software currently does* — a checked criterion is a claim, and the code is what settles it. It is never an answer to *what the software is supposed to do*. "The code does X" is a fact about the present, never a reason for X to be correct.
+
+**Divergence is a question, never a verdict.** When the code and the PRD disagree — in any phase, at any altitude — you have found an open decision, not an answer. Never close it by picking the side that looks more sensible, and never close it by declaring the code right because it exists and runs. It goes to the operator through `AskUserQuestion`, with two options always on the table:
+
+- **Update the project PRD** — the requirement is stale or wrong, and what the code does is what the product should do. Show it as an edit: what the requirement says now, and what it would say instead.
+- **Change the code** — the requirement holds and the software is wrong. Say in one or two sentences how the fix is done and where it lands, so the operator can price it.
+
+Whichever they pick, **one of the two actually changes.** A divergence is not closed by recording it somewhere and moving on: a known gap between the PRD and the code stops the PRD being the truth just as effectively as an unknown one. The single legitimate middle answer is a deliberate deferral — they choose the code fix, it becomes later work, and the requirement carries `partial` in the Delivery status table until it lands.
+
+Three things this rule does not license:
+
+- **Editing a requirement on your own.** Changing what the project PRD says is the operator's decision every time, never a side effect of scoping, planning, implementing, or tidying.
+- **Treating unbuilt as divergent.** A requirement nothing has built yet doesn't contradict anything — it's status, and the Delivery status table carries it. Don't ask a question about it.
+- **Widening the sweep.** Each phase keeps its bounded read; **phase 6 is the systematic reconciliation.** Everywhere else, raise the divergence you trip over, in the phase you trip over it.
+
 ## References
 
 **No links.** A reference is a plain label naming the document and the section — nothing more:
@@ -147,12 +168,12 @@ A scope is delivered when every acceptance criterion in `docs/active-scope/imple
 
 Folding back means recording, on the full-scope features and requirements the finished scope refined, whether they are now `complete`, `partial`, or `not started` — nothing more. **It is a status update, not a rewrite:** never change what a full-scope requirement says while folding, and never delete one because it shipped. The one thing licensed to change requirement text is phase 6's reconciliation, and only on an operator's explicit answer.
 
-The cost of this design is that a delivered scope's PRD, architecture, and plan are gone once wiped. That is accepted: **the code is the record of what was built, and `docs/project/prd.md` is the record of what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
+The cost of this design is that a delivered scope's PRD, architecture, and plan are gone once wiped. That is accepted: **the code is what was built, and `docs/project/prd.md` — its requirements plus the Delivery status table — is the record of what the product is meant to be and what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
 
 ## Principles that hold across every phase
 
 1. **Checkpoints, not deliveries.** Every phase ends by presenting its work, naming what's open, and handing control back. Never roll into the next phase, and **don't suggest one** — the operator decides what runs next and pulls it themselves.
-2. **Refine, never contradict.** See *The refinement rule*. A contradiction found anywhere — in a doc, in a plan, in code — is raised, not resolved by quietly picking a side.
+2. **Refine, never contradict.** See *The refinement rule*. A contradiction found anywhere — in a doc, in a plan, in code — is raised, not resolved by quietly picking a side. **The project PRD is what everything is checked against** (*The source of truth*): code that disagrees with it is a question for the operator, never evidence that the PRD is the thing that's wrong.
 3. **Altitude discipline.** Each phase works at one level. A PRD is *what and why*, never *how*. An architecture is structure and load-bearing choices, not detailed design. The implementation plan is product-legible groups and tasks, not implementation. Writing below your altitude pre-empts a decision the next phase should be making.
 4. **The doc holds the work; the chat holds only what would otherwise be missed** — see above. This is the rule most often eroded.
 5. **Never invent to paper over a gap.** A missing requirement, an ambiguous reference, an unstated assumption — surface it and ask. A fabricated answer propagates silently through every phase downstream.
