@@ -9,6 +9,8 @@ Produce `docs/scope/plan.md` — the implementation of the current scope, split 
 
 The plan carries the scope's status for the rest of its life: the build phase checks its acceptance criteria off, and the scope is delivered when they are all checked.
 
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+
 ## How it runs
 
 1. **Pull the scope.** Read `docs/scope/prd.md` and `docs/scope/tdd.md`. They are the only source for what the plan covers — the plan adds no requirement of its own.
@@ -39,7 +41,7 @@ The plan carries the scope's status for the rest of its life: the build phase ch
 
 Three levels: a **step** is one feature of the scope, a **substep** is one reviewable, independently testable piece of it, and an **acceptance criterion** is one observable behavior of a substep.
 
-References are plain labels, never links: `scope prd 3.1.1`, `scope tdd 1.2`.
+References follow `conventions` § Citing — plain labels: `scope prd 3.1.1`, `scope tdd 1.2`.
 
 Every criterion is a checkbox — `[ ]` unbuilt, `[x]` met. This skill writes them all unchecked; the build phase checks them off and keeps *Status* current.
 
@@ -94,4 +96,3 @@ _Maintained by the build phase — see the checkboxes for detail._
 - **A substep is one unit of work, not a phase.** Reviewable on its own, testable on its own. If it carries a large chunk of work, it is cut wrong — split it.
 - **Cover everything once.** Every requirement in the scope PRD appears in some substep's *References*. A requirement covered nowhere is a hole; one covered in two substeps is a boundary in the wrong place.
 - **Name the test, and name one that could fail.** Every acceptance criterion says what verifies it. If you cannot name a test that would go **red** with the behavior absent, the criterion is too vague to build against — sharpen it, split it, or drop it. The build phase breaks each one on purpose to prove it.
-- **Never invent.** A substep that implements something the scope docs do not ask for does not belong in the plan.
