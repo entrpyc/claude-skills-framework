@@ -1,16 +1,17 @@
 ---
 name: session-analyze
-description: Analyse the session that is running right now. Locates this session's own transcript, cuts it into the steps it actually took, puts a wall clock on each one, names and quotes the rule of the skills invoked this session that ordered it, and lists separately every step no rule ordered. Reports in the chat and changes nothing — it ends in a paste-ready prompt that asks a fresh session to make the edits, and the edits themselves are that session's or refine-dev-system's job. Trigger on "analyse session", "session analyze", "what took so long", "how long did each step take", "what parts of the skill caused this", "what steps did you take that the skill didn't ask for", "give me a prompt to fix it".
+description: Analyse the session that is running right now. Locates this session's own transcript, cuts it into the steps it actually took, puts a wall clock on each one, names and quotes the rule of the skills invoked this session that ordered it, lists separately every step no rule ordered, and lists every action that failed with what it cost and whether a rule steered into it. Reports in the chat and changes nothing — it ends in a paste-ready prompt that asks a fresh session to make the edits, and the edits themselves are that session's or refine-dev-system's job. Trigger on "analyse session", "session analyze", "what took so long", "how long did each step take", "what parts of the skill caused this", "what steps did you take that the skill didn't ask for", "what failed", "what went wrong", "list the errors", "which actions failed", "give me a prompt to fix it".
 ---
 # Analyse this session
 
-Answer three questions about **the session running right now**, from its own transcript:
+Answer four questions about **the session running right now**, from its own transcript:
 
 1. **Where did the wall clock go**, step by step — every step with a duration on it.
 2. **Which rule caused each step** — quoted from the skills this session invoked.
 3. **Which steps no rule ordered** — the work that happened anyway.
+4. **Which actions failed** — what broke, what the detour cost, and what the next session has to be told so it does not break the same way.
 
-This is a diagnostic, pulled mid-run or at the end of one. It reads the transcript, the skills and nothing else; it writes nothing and applies no edits. The one thing it hands over is **the prompt that asks for them** — step 8. Edits to the skills go through `refine-dev-system`, which works across many sessions and can tell a pattern from an incident. This skill sees exactly one session, and one session is not enough evidence to change a skill on.
+This is a diagnostic, pulled mid-run or at the end of one. It reads the transcript, the skills and nothing else; it writes nothing and applies no edits. The one thing it hands over is **the prompt that asks for them** — step 9. Edits to the skills go through `refine-dev-system`, which works across many sessions and can tell a pattern from an incident. This skill sees exactly one session, and one session is not enough evidence to change a skill on.
 
 > **Read the `conventions` skill first.** *Never invent* and *Checkpoints* bind. § *What goes in the chat* does **not**: this phase produces no artifact, so the report **is** the deliverable and it goes in the chat — the same exemption the manual steps and the deployment handover have.
 
@@ -22,7 +23,7 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
    node <this skill's directory>/analyze.js --marker <TOKEN-YOU-JUST-INVENTED>
    ```
 
-   The command line you type is written to the transcript before it runs, so the file containing the token is this session — that is the whole trick. The script prints the wall clock split four ways, the skills invoked, every operator prompt, a timeline with an offset and a duration on every call, the rollups, and an inventory of what the session touched.
+   The command line you type is written to the transcript before it runs, so the file containing the token is this session — that is the whole trick. The script prints the wall clock split four ways, the skills invoked, every operator prompt, a timeline with an offset and a duration on every call and a ✗ on every one that failed, the failed calls grouped with the attempts that followed them, the rollups, and an inventory of what the session touched.
 
    - If the marker matches nothing, the script falls back to the newest transcript for this working directory and **says so** — check the first operator prompt it prints is the one you remember before trusting a word of it.
    - `--session <id or path>` analyses a named transcript instead. Use it only when the operator points at one.
@@ -31,7 +32,7 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
    **The turn running this analysis is not in the transcript yet.** Say so in the report rather than presenting a partial tail as the whole session.
 2. **Read the skills this session invoked** — every one in the scan's *Skills invoked* list, in full, plus `conventions`. The attribution in step 4 quotes them, and a quote from memory is a fabrication. Read the installed copy that actually ran, under `~/.claude/skills/`.
 
-   **If no skill ran**, say so first: there is no rule to attribute anything to, the whole session is unordered work by definition, and the finding is which phase should have been pulled and was not. Report the steps and their durations, and stop there.
+   **If no skill ran**, say so first: there is no rule to attribute anything to, the whole session is unordered work by definition, and the finding is which phase should have been pulled and was not. Report the steps, their durations and the failures, and stop there.
 3. **Cut the timeline into steps.** A step is **one piece of work with one purpose** — not one tool call, and not one skill instruction. Cut at:
 
    - an operator prompt, or a Skill call;
@@ -54,21 +55,36 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
    - a **hole** — the step was necessary and no rule covers it;
    - a **drift** — the step was not necessary and the skill neither asked for it nor forbade it.
 
-   Both are findings for `refine-dev-system`. Say which, and stop there: no proposed wording, no edit. They come back in step 8 as something to fix, still without a sentence written for them.
-6. **Name the three biggest costs**, in minutes, and say for each what would have removed it. A cost with no remedy is still worth naming — some sessions are slow because the work was large, and saying so plainly is the honest result.
-7. **Report in the chat**, in the format below. Save it to a file only if the operator asks.
-8. **Draft the prompt that fixes it.** The report ends in a **paste-ready prompt** for a fresh session pointed at the skills, written so it works with **no editing and no memory of this run** — every fact it needs is in it. It is a handover, not an edit: it says what happened, what it cost and what the fix has to achieve, and leaves the wording to the session that writes it.
+   Both are findings for `refine-dev-system`. Say which, and stop there: no proposed wording, no edit. They come back in step 9 as something to fix, still without a sentence written for them.
+6. **List the actions that failed.** The third deliverable, separate from the table: the operator reads it to change the skills so the next session does not walk into the same wall. The scan groups every failed call with the attempts that followed it — take each episode and say:
+
+   - **what failed and what it said** — the command and the error, quoted. Never *"an error occurred"*: the wording of the error is what names the fix.
+   - **what it cost** — the failed call plus the attempts until the work got past it, and whether it ever did.
+   - **who owns it** — one of four:
+     - **rule-steered** — a rule ordered the action that failed. Quote it. This is the one that changes a skill.
+     - **habit** — no rule ordered it: a guess about a tool, a path or a shell that this machine does not support.
+     - **environment** — a standing fact about this machine or this repo that a skill could state once and never hit again: a runtime that is not installed, a shell that eats a heredoc, a directory that does not exist here.
+     - **operator refused** — the operator rejected the call. The finding is the rule that ordered a call the operator would not allow, never the refusal.
+   - **whether it stands** — would a fresh session hit it again today, or was it a one-off slip? Only what stands reaches the fix prompt. Say which each one is, and why.
+
+   Two things this step does not do. **The operator's time is not a failure cost** — a rejected call sat waiting on the operator before it was refused, and the scan reports that time separately for exactly that reason. And **a failure the transcript does not explain is not guessed at**: say the error printed nothing and move on.
+
+   The scan's grouping is a guess — it links a failed call to the next attempt aimed at the same thing. Where the timeline says otherwise, the timeline wins.
+7. **Name the three biggest costs**, in minutes, and say for each what would have removed it. A failure detour is a cost like any other — it competes for these three places on its minutes, not on how bad it looked. A cost with no remedy is still worth naming — some sessions are slow because the work was large, and saying so plainly is the honest result.
+8. **Report in the chat**, in the format below. Save it to a file only if the operator asks.
+9. **Draft the prompt that fixes it.** The report ends in a **paste-ready prompt** for a fresh session pointed at the skills, written so it works with **no editing and no memory of this run** — every fact it needs is in it. It is a handover, not an edit: it says what happened, what it cost and what the fix has to achieve, and leaves the wording to the session that writes it.
 
    It carries these and nothing else:
 
    - **One block per finding, biggest cost first** — the minutes, what actually ran, and **who owns it**: the skill and section quoted where a rule ordered it, or *no rule ordered this* where it is a hole or a drift.
+   - **Every failure that stands** — what was run, the error in its own words, what the detour cost, and who owns it. The error is quoted so the fixing session can recognise it without this transcript. A one-off slip is not carried.
    - **What the fix has to achieve**, one sentence each — a rule that does not exist, a rule that over-serves, two instructions pulling different ways. Never the replacement sentence itself.
    - **What must not change.** Where a finding sits against a rule that exists for a reason, name the rule and say it stands — otherwise the next session buys the minutes back by deleting the guarantee that cost them.
-   - **What not to fix** — the costs step 6 found no remedy for. Left out, they read as work, and a rule gets invented for a session that was simply large.
+   - **What not to fix** — the costs step 7 found no remedy for, and the failures that do not stand. Left out, they read as work, and a rule gets invented for a session that was simply large or for a typo that will never recur.
    - **The constraint**: the fixing session decides the wording, puts each edit to the operator before applying it, and touches the skill files only.
 
    **One prompt per analysis, covering every finding, in one fenced block** so it can be copied whole. Never split it per skill, and never fold the findings table into it — the report is for the operator, the prompt is for the next session.
-9. **Checkpoint.** Stop. Do not edit a skill, do not edit the project, and do not roll into `refine-dev-system` — say what the findings are and let the operator pull it.
+10. **Checkpoint.** Stop. Do not edit a skill, do not edit the project, and do not roll into `refine-dev-system` — say what the findings are and let the operator pull it.
 
 ## Format
 
@@ -77,6 +93,7 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
 
 **Wall clock <n>m** — model <n>m · tool <n>m · operator wait <n>m · idle <n>m
 **Skills invoked:** `<skill>` at +<offset>, …
+**Failed:** <n> calls in <n> episodes · <n>m to get past them
 **Not in the data:** the turn running this analysis.
 
 ## Steps
@@ -98,6 +115,22 @@ _Steps sum to <n>m of <n>m wall clock._
 
 - **<step> — <n>m** — <what it did>. <Why it happened.> **Hole** / **drift**.
 
+## Actions that failed
+
+**<n> calls failed** in <n> episodes · <n>m to get past them · <n> still standing conditions.
+
+| # | ✗ What failed | At | Cost | Owner | Stands? |
+| - | ------------- | -- | ---- | ----- | ------- |
+| 1 | `<the call, short>` — <the error, quoted short> | +12:03 | 2.4m over 3 attempts | rule-steered `<skill>` § <section> | stands |
+
+### ✗ <what failed> — <n>m
+
+**What ran:** `<the call>`
+**The error:** "<quoted, in its own words>"
+**Owner:** rule-steered — `<skill>` § <section> — "<the rule, quoted>" / habit / environment / operator refused
+**How it ended:** <the attempt that got past it and what it changed> / never got past it here.
+**Would it happen again:** stands — <the condition that is still true> / one-off — <why it cannot recur>.
+
 ## The three biggest costs
 
 1. **<n>m — <what>** — ordered by "<rule>" / ordered by nothing. <What would have removed it.>
@@ -111,10 +144,11 @@ The dev-system skills cost <n>m of avoidable wall clock in one session. Fix the 
 
 1. <n>m — <what ran>. Ordered by `<skill>` § <section> — "<the rule, quoted>". <What the fix has to achieve, one sentence.>
 2. <n>m — <what ran>. No rule ordered it — <hole or drift>. <What the fix has to achieve, one sentence.>
-3. …
+3. ✗ <what ran> failed with "<the error, quoted>". <n>m over <n> attempts. Ordered by `<skill>` § <section> — "<the rule, quoted>" / no rule ordered it — <habit or environment>. <What the fix has to achieve, one sentence.>
+4. …
 
 Do not change: <the rule that stands, and why>.
-Do not fix: <the cost with no remedy, and why it is not one>.
+Do not fix: <the cost with no remedy, and why it is not one>; <the failure that cannot recur, and why>.
 
 Decide the wording yourself, put each edit to me before you apply it, and change nothing outside the skill files.
 ```
@@ -126,6 +160,9 @@ Decide the wording yourself, put each edit to me before you apply it, and change
 - **Every step carries a wall clock, and the steps sum to the session's.** A step with no number on it is a description, not an analysis.
 - **Quote the rule; never paraphrase it.** If no sentence in the skill covers the step, the answer is *"no rule ordered this"* — which is the finding this skill exists to produce.
 - **Never bill the operator's waiting to the skill** — but do bill the asking that caused it. `AskUserQuestion` time is the operator's, and it is reported separately for that reason.
+- **Quote the error, not your reading of it.** *"Python was not found"* names the fix; *"the command failed"* names nothing, and the session that reads the prompt cannot recognise the wall it is being warned about.
+- **A failure is a finding when a rule steered into it, the operator refused it, or the condition that caused it is still true.** A typo fixed on the next call is none of those — report it in the table and leave it out of the prompt, or a rule gets written against a slip.
+- **A failed call is not automatically wasted time.** Some failures are how a thing is found out; what the analysis costs out is the detour after them — the attempts, the switch of approach, the re-read that followed.
 - **This session only.** Another session, another day, or a pattern across runs is `refine-dev-system`'s job.
 - **Findings only, no edits.** Nothing is changed here — not the skills, not the project, not the transcript. The fix prompt is the exception that proves it: it **asks** for the edits and never writes one.
 - **The fix prompt stands alone.** Whoever pastes it has not read the report and was not in this session. A reference to "the step above", a number with no unit, or a skill named without its section makes it unusable exactly where it is meant to be used.
