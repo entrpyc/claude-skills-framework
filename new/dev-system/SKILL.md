@@ -47,7 +47,7 @@ Product requirements, technical decisions, and implementation plan for the speci
 | `docs/scope/prd.md`      | Same as project PRD, but lists only the requirements for this scope, refined and more detailed. Never contradicts the full-scope PRD. |
 | `docs/scope/tdd.md`      | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD.    |
 | `docs/scope/diagram.svg` | What this scope adds, drawn. |
-| `docs/scope/plan.md`     | Implementation plan for this scope — and the record of the edge cases the build phase leaves uncovered.                              |
+| `docs/scope/plan.md`     | Implementation plan for this scope — and the record of what the build phase assumed and what it left uncovered.                      |
 
 ### `docs/design-references`
 
@@ -80,7 +80,7 @@ The system is five phase skills, plus `conventions`, which all of them read firs
 | `project`        | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | once per project     |
 | `scope`          | Defines the slice to build now, refining the project docs                    | project PRD, project TDD, design references | `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`       | once per scope       |
 | `plan`           | Breaks the scope into implementable steps                                    | scope PRD, scope TDD, design references     | `docs/scope/plan.md`                                                         | once per scope       |
-| `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status and edge cases                                     | many times per scope |
+| `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status, assumptions and edge cases                        | many times per scope |
 | `finalize`       | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`                                    | once per scope       |
 | `conventions` | The rules every phase follows — asking, major assumptions, design references, reference numbers, citing, status markers, diagrams, chat | — | nothing | read by every phase |
 
