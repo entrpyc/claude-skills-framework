@@ -1,6 +1,6 @@
 ---
 name: active-scope-finalize
-description: Close out a delivered active scope — reconcile the codebase against the project PRD, put every contradiction to the operator as a choice between changing the PRD and fixing the code, apply what they choose and get the tests covering them green, fold the delivered work into the project PRD as complete/partial/not started per feature and per functional requirement, hand over what deploying the scope takes — env vars, migrations, third-party configuration — then wipe docs/active-scope/. The last phase of a scope, and the only thing that leaves a durable trace that its work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "reconcile the code with the prd", "wrap up this scope".
+description: Close out a delivered active scope — reconcile the codebase against the project PRD, put every contradiction to the operator as a choice between changing the PRD and fixing the code, apply what they choose and get the tests covering them green, fold the delivered work into the project PRD as complete/partial/not started per feature and per functional requirement with the blockers listed under every partial one, hand over what deploying the scope takes — env vars, migrations, third-party configuration — then wipe docs/active-scope/. The last phase of a scope, and the only thing that leaves a durable trace that its work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "reconcile the code with the prd", "wrap up this scope".
 ---
 
 # Active-scope finalize
@@ -8,7 +8,7 @@ description: Close out a delivered active scope — reconcile the codebase again
 Close out the delivered scope. This is Phase 6, it runs once per scope, and it does four things **in this order and never out of it**:
 
 1. **Reconcile** — find where the codebase and `docs/project/prd.md` now disagree, and let the operator settle each one.
-2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started` — as a marker on every requirement line, and as the summary table.
+2. **Fold** — record, per feature and per functional requirement, what is now `complete`, `partial`, or `not started` — as a marker on every requirement line, with the blockers listed beneath every `partial` one, and as the summary table.
 3. **Hand over** — collect what deploying this scope takes, from documents that are about to be deleted.
 4. **Wipe** — delete `docs/active-scope/prd.md` and `implementation-plan.md`.
 
@@ -28,7 +28,7 @@ docs/
   design-references/                   <- never read, never written, never deleted here
 ```
 
-The riskiest thing here is marking something `complete` that is `partial` — it reads as delivered everywhere afterwards and nobody ever cuts a scope for the missing half. The second riskiest is wiping before the fold is written — both the markers on the requirement lines and the table. The third is quietly picking a side on a contradiction instead of asking.
+The riskiest thing here is marking something `complete` that is `partial` — it reads as delivered everywhere afterwards and nobody ever cuts a scope for the missing half. The second riskiest is wiping before the fold is written — the markers on the requirement lines, the blockers under the partial ones, and the table. The third is quietly picking a side on a contradiction instead of asking.
 
 **This phase is where `dev-system` § *The source of truth* gets enforced, so hold its distinction exactly.** `docs/project/prd.md` is the truth about what the product is meant to be. The code is evidence of what it currently does — a checked criterion is a claim, and the code is what settles it — and it is never an argument that a requirement is wrong. **The operator is the only one who decides which side changes.** You bring the disagreement and the two options; you don't bring a verdict.
 
@@ -118,7 +118,7 @@ For each one:
 
 ### 6. Fold the status into the project PRD
 
-The fold is **two writes, and both are mandatory**: a marker on every requirement line where the requirement is stated, and the summary table at the end. They are one judgment written twice — a marker that disagrees with its table row is a bug, not a nuance. Skipping the markers is the common failure: the table is easy to write and easy to leave as the only record, and then the requirement a reader is actually looking at says nothing about whether it exists.
+The fold is **two writes, and both are mandatory**: a marker on every requirement line where the requirement is stated — with its blockers as sub-points beneath it wherever that marker is 🔨 — and the summary table at the end. They are one judgment written twice — a marker that disagrees with its table row is a bug, not a nuance. Skipping the markers is the common failure: the table is easy to write and easy to leave as the only record, and then the requirement a reader is actually looking at says nothing about whether it exists.
 
 **Markers on the requirement lines**
 
@@ -127,14 +127,32 @@ The fold is **two writes, and both are mandatory**: a marker on every requiremen
 | Marker | Status | Means |
 |---|---|---|
 | ✅ | `complete` | Met and observable in the running code. |
-| 🔨 | `partial` | Some of it is met. The rest is named in the table's *Missing* column. |
+| 🔨 | `partial` | Some of it is met. **What's blocking the rest is listed as sub-points under the requirement**, and named in the table's *Missing* column. |
 | 📝 | `not started` | None of it is met. |
 
 - **Match the file's existing convention exactly** — the same character, in the same position on the line, as the markers already there. Only where the PRD has none anywhere does the placement become yours: put it at the front of the line, before the requirement number, and use it uniformly.
 - **Every requirement carries one, not just this scope's.** A line with no marker is ambiguous — it reads as untracked rather than unbuilt. Requirements nothing has touched get 📝.
 - **Feature headings are derived**, the same rule as the table: ✅ only when every requirement under it is ✅, and one 🔨 makes the feature 🔨.
-- **The marker is the only thing that changes.** Adding or updating one never rewords the requirement, never renumbers it, and never touches the line's neighbours. The single exception is an edit the operator settled in step 5.
+- **The marker and its blockers are the only things that change.** Adding or updating either never rewords the requirement, never renumbers it, and never touches the line's neighbours — the blockers go under the requirement they belong to and nowhere else. The single exception is an edit the operator settled in step 5.
 - **Never downgrade quietly** — a ✅ from an earlier scope that is now 🔨 gets changed *and* named in the checkpoint.
+
+**Blockers under every 🔨**
+
+A 🔨 is a promise with a hole in it, and the marker alone doesn't say what the hole is — a reader sitting on the requirement line has to go find the table, and the table only has room for a phrase. So **every `partial` requirement carries its blockers as sub-points directly beneath it**:
+
+```
+🔨 3.2.4 A user can pay with a card saved on their account.
+  - Blocked: no card vault — nothing stores a reusable token against a user, so a card can be charged but not kept.
+  - Blocked: the payment step has no saved-card picker, so a stored card would be unreachable anyway.
+```
+
+- **One sub-point per blocker, not one per requirement.** Two independent things standing in the way are two lines, because they get cut as two pieces of work.
+- **Say what is missing and what it stops**, in what the operator would observe — the same register as an edge case. "Card vault not built, so nothing can be stored" is a blocker; "partially implemented" is the marker restated.
+- **A blocker is whatever stands between the code and the requirement**: behavior nobody built, a dependency that isn't there, or a contradiction the operator deferred in step 4 rather than fixed — name the deferral as the blocker where that's what it is.
+- **They must agree with the table's *Missing* column** for that requirement. The column carries the phrase, the sub-points carry the detail behind it; neither may name something the other doesn't.
+- **✅ and 📝 carry none, and neither do feature headings.** A `not started` requirement's blocker is that none of it was built, and a feature's blockers live on the requirements underneath it.
+- **Rewrite them each fold rather than appending.** When a later scope clears a blocker that line goes, and when the requirement reaches ✅ all of them go — blockers left under a requirement that no longer has them are worse than none, because they read as current.
+- **Match the file's list convention** — the bullet character and indentation the PRD already uses for sub-points under a requirement.
 
 Then write the table.
 
@@ -168,13 +186,13 @@ Three statuses and nothing else:
 Six rules:
 
 - **A feature is derived, never asserted.** It is `complete` only when every requirement under it is `complete`; one `partial` requirement makes the feature `partial`. Don't round up.
-- **`partial` always names what's missing.** A partial marked `complete` is the single most expensive error in this system — the missing half then reads as delivered everywhere and nobody ever cuts a scope for it.
+- **`partial` always names what's missing** — in a phrase here, and in full as the blockers under the requirement line. A partial marked `complete` is the single most expensive error in this system — the missing half then reads as delivered everywhere and nobody ever cuts a scope for it.
 - **Every feature in the project PRD gets a row**, including untouched ones — that is what makes this table the answer to "what's left". Requirements get their own rows individually or as contiguous ranges sharing a status; a feature that is entirely `not started` needs no requirement rows under it.
 - **Evidence is the code**, not the plan's checkboxes and not what the scope PRD intended. Where a claim and the code disagree, believe the code and write the status it supports — say so plainly rather than folding the claim. **That is evidence about what exists, never authority about what's right**; a behavior that contradicts a requirement was settled in step 4, and its outcome — not your reading of the code — is what the row records.
 - **Status only.** The requirement text is full scope's; only this table is yours. The single exception is an edit the operator settled in step 5.
 - **Never downgrade quietly.** If something a previous scope marked `complete` is now `partial` — a regression, or a step-5 fix that took a piece back out — change it and put it in the checkpoint.
 
-Then read the table back against the project PRD's feature list and confirm every feature appears exactly once — **and walk the requirement lines to confirm each one carries a marker that matches its row.** A requirement in the table with no marker on its line, or a ✅ line sitting over a `partial` row, means the fold is half-done.
+Then read the table back against the project PRD's feature list and confirm every feature appears exactly once — **and walk the requirement lines to confirm each one carries a marker that matches its row.** A requirement in the table with no marker on its line, a ✅ line sitting over a `partial` row, a 🔨 with no blockers under it, or blockers still sitting under a line that is no longer 🔨 — each of those means the fold is half-done.
 
 **Then count the project, once.** Across **every** functional requirement in the project PRD — all features, not just this scope's — count the ones now `complete` and divide by the total. `partial` and `not started` requirements count as not done; a requirement is never half-counted. Round to a whole percent and carry the raw counts, and count requirements only — feature rows are derived, so counting them too would double-count the same work. This number goes in the checkpoint as a single line.
 
@@ -206,7 +224,7 @@ The list goes in the checkpoint, where the operator acts on it. It is not writte
 
 ### 8. Wipe `docs/active-scope/`
 
-Preconditions, all of them: every contradiction settled, every settled code fix landed and green on the tests that cover it, **the markers and the table both written and checked against each other**, **and the deployment steps collected** — this is the last moment they exist. Then delete `prd.md` and `implementation-plan.md`.
+Preconditions, all of them: every contradiction settled, every settled code fix landed and green on the tests that cover it, **the markers, their blockers, and the table all written and checked against each other**, **and the deployment steps collected** — this is the last moment they exist. Then delete `prd.md` and `implementation-plan.md`.
 
 Leave `docs/design-references/` alone — it belongs to the operator and spans scopes. If `docs/active-scope/` holds anything else, leave it and name it in the checkpoint; it isn't yours.
 
@@ -225,7 +243,7 @@ One line, whatever the number. No per-feature breakdown, no comparison to where 
 Then only what the operator wouldn't anticipate:
 
 - **every requirement whose text changed**, quoted — this is the one phase that can change what the product is meant to be, and it should never be discovered later;
-- **everything marked `partial`, and what's missing from each** — the most expensive thing here to lose;
+- **everything marked `partial`, and what's missing from each** — the most expensive thing here to lose; a phrase each, since the blockers themselves are now in the PRD under the requirement;
 - anything downgraded from a previous scope's `complete`;
 - contradictions deferred rather than fixed, and what the operator lives with meanwhile;
 - pre-existing drift found outside the boundary, in a line — noted, not fixed here;
