@@ -1,6 +1,6 @@
 ---
 name: finalize
-description: Close out a delivered scope — reconcile the code this scope wrote against the requirements it claimed and put every divergence to the operator as a choice between changing the code and updating the docs, move each project requirement's status to ✅ 🔨 or 📝 against what the code actually does, never downgrading a previous scope's ✅ without saying so, sweep the plan and the diff for what deploying the scope takes, hand that over, and only then wipe docs/scope/. The only phase that leaves a durable trace the scope's work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "wrap up this scope".
+description: Close out a delivered scope — reconcile the code this scope wrote against the requirements it claimed and put every divergence to the operator as a choice between changing the code and updating the docs, move the status of each requirement this scope claimed to ✅ 🔨 or 📝 against what the code actually does, sweep the plan and the diff for what deploying the scope takes, hand that over, and only then wipe docs/scope/. The only phase that leaves a durable trace the scope's work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "wrap up this scope".
 ---
 
 # Finalize
@@ -40,9 +40,9 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
    Apply whatever they choose, and get the tests covering it green (`conventions` § Reaching green).
 
-2. **Update the statuses.** Set the marker on every project PRD feature and requirement against what the code actually does, per `conventions` § Status markers. Under each 🔨, list what is still missing — one line per blocker, in what the operator would observe. **This is the only phase that moves a marker.**
+2. **Update the statuses.** Set the marker on the project PRD requirements **this scope claimed** — the boundary above, and no wider — against what the code actually does, per `conventions` § Status markers, then re-derive the marker of every feature holding one of them. Under each 🔨, list what is still missing — one line per blocker, in what the operator would observe. **This is the only phase that moves a marker.**
 
-   **Never downgrade quietly.** A ✅ from an earlier scope that this scope's work has broken or taken a piece back out of gets moved to 🔨 — **and named in the checkpoint.** A marker that walks backwards without anyone being told is a regression the system has recorded and nobody has read.
+   A requirement outside the claimed set is not looked at here, whatever this scope's code may have done to it. It keeps the marker it had, and it is re-checked by whichever later scope claims it.
 
    This is a status update. **Never change what a requirement says here, never renumber, and never delete a requirement because it shipped** — every reference in the system points at numbers. The only edits to requirement text are the ones the operator chose in step 1.
 
@@ -91,7 +91,6 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 - **The wipe is last.** A scope wiped before the fold-back loses the only durable trace its work happened, and a scope wiped before the deployment sweep takes the prerequisites with it.
 - **Status is not a rewrite.** Requirements are not deleted because they shipped, not renumbered, and not tidied while you are in there.
 - **Say what is left.** Every 🔨 carries what is still missing from it. A partial requirement with no blocker listed reads as done to whoever comes next.
-- **Never downgrade quietly.** A previous scope's ✅ that is now 🔨 is changed and said out loud.
 
 ## Deployment handover
 

@@ -1,6 +1,6 @@
 ---
 name: conventions
-description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
+description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from every dev-system skill.
 ---
 # Conventions
 
@@ -12,13 +12,15 @@ Questions are **asked, not printed.** Every phase uses `AskUserQuestion` — nev
 
 Four rules hold for every question set, in every phase:
 
-1. **At most 5 questions per set.** More than that and the extras are not major — decide them yourself. Ask in one pass rather than trickling.
-2. **Every question carries options, and two labels always exist:**
+1. **At most 4 questions per set** — the tool's ceiling. More than that and the extras are not major — decide them yourself. Ask in one pass rather than trickling.
+2. **Every question carries options. Where the choice is a trade-off between building it well and building it fast, two labels exist:**
 
    - **future-proof** — costs more now, cheaper to live with as the codebase grows.
    - **cheaper now** — gets the work done fastest.
 
    More options are welcome without a label. If one option is genuinely both, say so on it and still offer a distinct alternative.
+
+   **Where the options are not on that axis, the labels are not forced** — different cuts of the same work, which of two requirements stands, which of several approaches to take. Rule 3 still binds: labelled or not, every option says what it commits to.
 3. **Each option says what it commits to** — what it makes easy later, and what it forecloses.
 4. **Only ask what gates the work.** A question you could answer from the docs is reading you skipped.
 
@@ -135,7 +137,7 @@ Every feature and requirement in `docs/project/prd.md` carries one:
 Every phase that writes code proves it the same way.
 
 - **Never weaken a test, a criterion, or a requirement to reach green.** That turns a real gap into a documented one, which is the opposite of the point. If an honest test is red, the work is not done — report it red.
-- **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it.
+- **Always take the narrowest run that covers the change** — the set the bullet above names, and no more. A broader run proves nothing the coverage does not already prove, and every phase that writes code pays for it in full.
 - **An assertion never compares against the code's own exported constant.** Pin the literal. An assertion that reads its expectation out of the module under test agrees with whatever that module holds, including the wrong value — so it goes green on the bug instead of catching it.
 - **A red that predates your change is reported, not triaged.** Before diagnosing a failure in a file your change does not touch, find out whether it was already failing — `git log` and `git diff` over the test and over what it exercises, or run it against a copy of the committed file set aside. If it was red in the committed tree, say so in one line and carry on. It is not part of proving this change, and whether it gets fixed is the operator's call, not a detour inside a build.
 - **Never `git stash` to isolate a run.** Under `core.autocrlf` it rewrites the line endings of every file it touches, and it destroys the working tree you are trying to measure. Re-run against the tree as it stands, or copy the file aside.
@@ -159,7 +161,7 @@ A checkpoint carries only:
 
 Then stop. Never summarize sections you just wrote, recap the request, narrate how you got there, list files touched, or offer what you could do next.
 
-Three things are exempt, because each is an interaction rather than a record: a **dead-end or divergence question** with its options, the **manual steps** the operator has to take after a build, and the **deployment handover** at finalize.
+Four things are exempt. Three are interactions rather than records: a **dead-end or divergence question** with its options, the **manual steps** the operator has to take after a build, and the **deployment handover** at finalize. The fourth is **`session-analyze`'s report**, which is exempt for the opposite reason — that phase writes no artifact, so the report in the chat *is* the deliverable rather than a second copy of one.
 
 ## Never invent
 

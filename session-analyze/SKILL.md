@@ -13,7 +13,7 @@ Answer four questions about **the session running right now**, from its own tran
 
 This is a diagnostic, pulled mid-run or at the end of one. It reads the transcript, the skills and nothing else; it writes nothing and applies no edits. The one thing it hands over is **the prompt that asks for them** — step 9. Edits to the skills go through `refine-dev-system`, which works across many sessions and can tell a pattern from an incident. This skill sees exactly one session, and one session is not enough evidence to change a skill on.
 
-> **Read the `conventions` skill first.** *Never invent* and *Checkpoints* bind. § *What goes in the chat* does **not**: this phase produces no artifact, so the report **is** the deliverable and it goes in the chat — the same exemption the manual steps and the deployment handover have.
+> **Read the `conventions` skill first.** *Never invent* and *Checkpoints* bind. § *What goes in the chat* binds too, and **exempts this phase's report by name**: it produces no artifact, so the report **is** the deliverable rather than a second copy of one.
 
 ## How it runs
 
