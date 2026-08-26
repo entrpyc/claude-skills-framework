@@ -1,9 +1,9 @@
 ---
-name: active-scope-implementation
-description: Implement whatever the operator points at — one or more groups, tasks, or individual acceptance criteria from the active-scope implementation plan. Reads only the references its target names, writes the least code that satisfies the criteria, logs what it doesn't cover as edge cases, confirms major assumptions with the operator, aborts and re-plans on a dead end, checks its own tests for false positives with a deliberate-break pass, runs the tests covering the work rather than the whole suite until a group's last task lands, writes the result back into the plan, and hands over a manual-validation checklist. Runs as often as the operator aims it. Trigger on "implement 2.3", "build group 1", "implement these criteria", "go ahead and code it".
+name: scope-implementation
+description: Implement whatever the operator points at — one or more groups, tasks, or individual acceptance criteria from the scope implementation plan. Reads only the references its target names, writes the least code that satisfies the criteria, logs what it doesn't cover as edge cases, confirms major assumptions with the operator, aborts and re-plans on a dead end, checks its own tests for false positives with a deliberate-break pass, runs the tests covering the work rather than the whole suite until a group's last task lands, writes the result back into the plan, and hands over a manual-validation checklist. Runs as often as the operator aims it. Trigger on "implement 2.3", "build group 1", "implement these criteria", "go ahead and code it".
 ---
 
-# Active-scope implementation
+# Scope implementation
 
 Build what the operator aims you at. This is Phase 5, and unlike every phase before it, it runs many times per scope and **the operator chooses the target each time.**
 
@@ -23,12 +23,12 @@ The target is one or more of:
 
 ```
 docs/
-  active-scope/implementation-plan.md  <- read the target; write status, the
-                                          requirement check-off, and Record back
-  active-scope/prd.md                  <- read only the sections the target's tasks cite
-  project/architecture.md              <- same
-  project/prd.md                       <- same
-  design-references/                   <- read where a task cites one; never write here
+  scope/implementation-plan.md  <- read the target; write status, the
+                                   requirement check-off, and Record back
+  scope/prd.md                  <- read only the sections the target's tasks cite
+  project/architecture.md       <- same
+  project/prd.md                <- same
+  design-references/            <- read where a task cites one; never write here
 ```
 
 **Read narrowly.** The plan gave each task its references precisely so this phase doesn't re-read four documents. Read what the target's tasks name, plus the group's *Delivers* line for the feature the work is part of. Reading more isn't thoroughness — it's how implementation drifts toward scope the criteria don't cover.
@@ -79,7 +79,7 @@ An assumption here is anything the code needed that the plan didn't settle — i
 
 A major assumption that invalidates the planned approach isn't an assumption any more — that's step 5.
 
-**Where the target sits changes what you'll be asking about, not how much you ask.** The groups labeled `(Foundational)` are the plan's foundation (`active-scope-plan` Rule 8) — the shapes, boundaries and names every later group binds to — so that is where the major assumptions actually live, and where the operator expects to be close to the work. After them, most decisions are already settled by what the foundation fixed, and the run should mostly need nothing.
+**Where the target sits changes what you'll be asking about, not how much you ask.** The groups labeled `(Foundational)` are the plan's foundation (`scope-plan` Rule 8) — the shapes, boundaries and names every later group binds to — so that is where the major assumptions actually live, and where the operator expects to be close to the work. After them, most decisions are already settled by what the foundation fixed, and the run should mostly need nothing.
 
 **Which makes a later group needing new shape a signal, not a chore.** A second data shape for something the foundation already models, a boundary it doesn't have, a name other code will bind to: that is the foundation coming up short, and it doesn't get absorbed quietly because the group is meant to be routine. Ask it here, or — where it changes the planned approach — stop at step 5. Then say it at the checkpoint, because it is the plan being wrong, not the code.
 
@@ -96,7 +96,7 @@ Put it to the operator with `AskUserQuestion`: two to four concrete approaches, 
 
 Whatever they choose that changes the plan — a criterion reworded, a task added, a dependency introduced — **edit `implementation-plan.md` to match.** A plan that no longer describes what's being built stops being the record.
 
-**A divergence from the PRD is the same stop.** If the only way to satisfy a criterion is to make the code contradict `active-scope prd` — or the project requirement it refines — that is not an implementation detail to absorb. Ask it the same way, with the two options `dev-system` § *The source of truth* requires: change the approach so the code matches, or change the requirement. **The second is the operator's alone**, and you never take it by writing the code and letting the doc fall behind.
+**A divergence from the PRD is the same stop.** If the only way to satisfy a criterion is to make the code contradict `scope prd` — or the project requirement it refines — that is not an implementation detail to absorb. Ask it the same way, with the two options `dev-system` § *The source of truth* requires: change the approach so the code matches, or change the requirement. **The second is the operator's alone**, and you never take it by writing the code and letting the doc fall behind.
 
 ### 6. Log every uncovered case as an edge case
 
@@ -162,7 +162,7 @@ If it comes back red, fix and re-run; where the fix changes a criterion's behavi
 
 ### 9. Write the result back into the plan
 
-`docs/active-scope/implementation-plan.md` is the scope's status, so leaving it stale is leaving the system without a state.
+`docs/scope/implementation-plan.md` is the scope's status, so leaving it stale is leaving the system without a state.
 
 **If this run finishes a group, step 10 happens first.** The last tick is what claims the group, so it goes in after the suite is green and the feature walks — not before.
 

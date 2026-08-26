@@ -1,6 +1,6 @@
 ---
 name: dev-system
-description: Explain and navigate the dev system — the controlled Claude Code workflow that runs a project from a full-scope PRD and architecture, through an operator-defined active scope, down to targeted implementation of groups, tasks, and individual acceptance criteria. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what runs next"), or to start a project on the system. Every other dev-system skill points here for the whole picture. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in".
+description: Explain and navigate the dev system — the controlled Claude Code workflow that runs a project from a project PRD and architecture, through an operator-defined scope, down to targeted implementation of groups, tasks, and individual acceptance criteria. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what runs next"), or to start a project on the system. Every other dev-system skill points here for the whole picture. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in".
 ---
 # The dev system
 
@@ -14,24 +14,24 @@ This skill is the map. It doesn't produce an artifact of its own — it tells yo
 
 One idea applied at four widths: describe the thing, then cut it down until a piece is small enough to build and review in one sitting.
 
-| Level                  | What it is                                                                                                                                                                                                 | Scope        |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
-| **Project**      | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral.                                                                                    | The project  |
-| **Active scope** | The features being built right now,**chosen by the operator**. Carries its own PRD and implementation plan — a *more detailed* view of full scope, never a contradicting one, with a hard limit on what it will not do. Structure comes from the project architecture. | An increment |
-| **Group**        | One feature of the active scope, described end-to-end. The unit that has to work when its last task lands. The groups labeled `(Foundational)` come first — the fifth of the scope that fixes what every later group binds to.   | A feature    |
-| **Task**         | One reviewable, independently testable piece of a group. Small on purpose. The unit of build.                                                                                                              | A change     |
-| **Criterion**    | One observable acceptance criterion of a task. The smallest addressable unit — implementation can be pointed at a single one.                                                                             | A behavior   |
+| Level         | What it is                                                                                                                                                                                                                                                                   | Width        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| **Project**   | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral.                                                                                                                                                      | The project  |
+| **Scope**     | The features being built right now,**chosen by the operator**. Carries its own PRD and implementation plan — a *more detailed* view of the project docs, never a contradicting one, with a hard limit on what it will not do. Structure comes from the project architecture. | An increment |
+| **Group**     | One feature of the scope, described end-to-end. The unit that has to work when its last task lands. The groups labeled `(Foundational)` come first — the fifth of the scope that fixes what every later group binds to.                                                      | A feature    |
+| **Task**      | One reviewable, independently testable piece of a group. Small on purpose. The unit of build.                                                                                                                                                                                | A change     |
+| **Criterion** | One observable acceptance criterion of a task. The smallest addressable unit — implementation can be pointed at a single one.                                                                                                                                                | A behavior   |
 
-Active scopes repeat until full scope is delivered.
+Scopes repeat until the project is delivered.
 
 ## Artifacts
 
 ```
 docs/
   project/
-    prd.md                    <- full scope, permanent
-    architecture.md           <- full scope, permanent
-  active-scope/
+    prd.md                    <- whole project, permanent
+    architecture.md           <- whole project, permanent
+  scope/
     prd.md                    <- the current scope, in detail
     implementation-plan.md    <- groups -> tasks -> acceptance criteria, the
                                  requirements checked off against them, and their status
@@ -40,46 +40,46 @@ docs/
 
 `docs/` is the default root. Change it in each skill's *Working conventions* block if the project uses somewhere else.
 
-**`docs/active-scope/` holds exactly one scope at a time, and it is wiped when that scope is closed out.** The delivered work lives in two places instead: the codebase, and `docs/project/prd.md`, into which the delivery status is folded before the wipe. There is no per-scope archive — see *The scope cycle*.
+**`docs/scope/` holds exactly one scope at a time, and it is wiped when that scope is closed out.** The delivered work lives in two places instead: the codebase, and `docs/project/prd.md`, into which the delivery status is folded before the wipe. There is no per-scope archive — see *The scope cycle*.
 
 ### design-references
 
-Operator-supplied visual references — screenshots, mockups, brand and UI material. **No skill ever writes here.** Read it when the work is visual: the active-scope PRD reads it for what the interface is meant to be, implementation reads it for what to build against. A reference here outranks your own taste, and is cited like any other section (`design-references/checkout-mock.png`). If the folder is empty, that is not a gap to fill by inventing one.
+Operator-supplied visual references — screenshots, mockups, brand and UI material. **No skill ever writes here.** Read it when the work is visual: the scope PRD reads it for what the interface is meant to be, implementation reads it for what to build against. A reference here outranks your own taste, and is cited like any other section (`design-references/checkout-mock.png`). If the folder is empty, that is not a gap to fill by inventing one.
 
 ## The pipeline
 
 Each phase writes an artifact the next phase reads. **Every one is triggered by the operator.**
 
-| # | Skill                           | Reads                                            | Writes                                         | Runs                 |
-| - | ------------------------------- | ------------------------------------------------ | ---------------------------------------------- | -------------------- |
-| 1 | `full-scope-prd`              | —                                               | `docs/project/prd.md`                        | once per project     |
-| 2 | `full-scope-architecture`     | project PRD                                      | `docs/project/architecture.md`               | once per project     |
-| 3 | `active-scope-prd`            | project PRD, design-references                   | `docs/active-scope/prd.md`                   | once per scope       |
-| 4 | `active-scope-plan`           | active-scope PRD, project architecture           | `docs/active-scope/implementation-plan.md`   | once per scope       |
-| 5 | `active-scope-implementation` | only the references its target names             | code, tests, and the plan's status and records | many times per scope |
-| 6 | `active-scope-finalize`       | the code, project PRD, the delivered scope docs  | project PRD delivery status; settled code fixes; **deletes `docs/active-scope/`** | once per scope       |
+| # | Skill                  | Reads                                           | Writes                                                                     | Runs                 |
+| - | ---------------------- | ----------------------------------------------- | -------------------------------------------------------------------------- | -------------------- |
+| 1 | `project-prd`          | —                                               | `docs/project/prd.md`                                                      | once per project     |
+| 2 | `project-architecture` | project PRD                                     | `docs/project/architecture.md`                                             | once per project     |
+| 3 | `scope-prd`            | project PRD, design-references                  | `docs/scope/prd.md`                                                        | once per scope       |
+| 4 | `scope-plan`           | scope PRD, project architecture                 | `docs/scope/implementation-plan.md`                                        | once per scope       |
+| 5 | `scope-implementation` | only the references its target names            | code, tests, and the plan's status and records                             | many times per scope |
+| 6 | `scope-finalize`       | the code, project PRD, the delivered scope docs | project PRD delivery status; settled code fixes; **deletes `docs/scope/`** | once per scope       |
 
-Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something. Phase 6 closes the scope and empties `docs/active-scope/` so phase 3 can start the next one.
+Phases 1–2 happen once. Phases 3–4 run once per scope. Phase 5 runs as often as the operator points it at something. Phase 6 closes the scope and empties `docs/scope/` so phase 3 can start the next one.
 
 **A scope has one document of its own: its PRD.** There is no per-scope architecture — `docs/project/architecture.md` is the structure every scope builds against, and Phase 4 cites it directly for anything structural.
 
 ## The refinement rule
 
-This is the spine of the system, and phases 3 and 4 both enforce it — across both active-scope documents.
+This is the spine of the system, and phases 3 and 4 both enforce it — across both scope documents.
 
-**An active-scope document never contradicts its full-scope counterpart. It refines it.** Every statement in an active-scope doc stands in exactly one of three relationships to full scope:
+**A scope document never contradicts its project counterpart. It refines it.** Every statement in a scope doc stands in exactly one of three relationships to the project docs:
 
-- **Refines** — it narrows a full-scope statement into something buildable, adding the detail full scope deliberately doesn't carry. It cites its parent by number or label. **This is what nearly every line should be.**
-- **Contradicts** — full scope says otherwise. **Never allowed to stand silently.** Either the active-scope doc is wrong and gets fixed, or full scope is out of date and the operator is told. Updating full scope is a separate, deliberate act — never a side effect of scoping.
-- **Uncovered** — nothing in full scope is its parent. Either full scope has a gap (raise it) or scope crept in (drop it). **Never invent a full-scope parent to make it resolve.**
+- **Refines** — it narrows a project-level statement into something buildable, adding the detail the project docs deliberately don't carry. It cites its parent by number or label. **This is what nearly every line should be.**
+- **Contradicts** — the project docs say otherwise. **Never allowed to stand silently.** Either the scope doc is wrong and gets fixed, or the project doc is out of date and the operator is told. Updating a project doc is a separate, deliberate act — never a side effect of scoping.
+- **Uncovered** — nothing in the project docs is its parent. Either the project docs have a gap (raise it) or scope crept in (drop it). **Never invent a project parent to make it resolve.**
 
-The detail test, applied line by line: **if a line could be deleted and its full-scope parent would still carry the same information, delete it and cite the parent instead.** An active-scope doc that reads as a summary of full scope has failed — it is meant to be the more detailed document, not the shorter one.
+The detail test, applied line by line: **if a line could be deleted and its project parent would still carry the same information, delete it and cite the parent instead.** A scope doc that reads as a summary of the project docs has failed — it is meant to be the more detailed document, not the shorter one.
 
 ## The source of truth
 
 The refinement rule governs documents against documents. This one governs documents against code, and it holds in every phase:
 
-**`docs/project/prd.md` is the source of truth for what the product is — at all times.** Not the codebase, not the implementation plan, not what a scope claimed it would do. Everything else is downstream: the active-scope docs refine it, the plan schedules it, the code implements it.
+**`docs/project/prd.md` is the source of truth for what the product is — at all times.** Not the codebase, not the implementation plan, not what a scope claimed it would do. Everything else is downstream: the scope docs refine it, the plan schedules it, the code implements it.
 
 **The codebase is evidence, never authority.** It is the only reliable answer to *what the software currently does* — a checked criterion is a claim, and the code is what settles it. It is never an answer to *what the software is supposed to do*. "The code does X" is a fact about the present, never a reason for X to be correct.
 
@@ -103,7 +103,7 @@ Three things this rule does not license:
 ```
 project prd 3.2.4
 project architecture § Key technology choices
-active-scope prd 5 § Interface detail → Checkout
+scope prd 5 § Interface detail → Checkout
 design-references/checkout-mock.png
 ```
 
@@ -164,9 +164,9 @@ Five things are exempt from the five-line cap, because each is an interaction ra
 
 ## The scope cycle
 
-A scope is delivered when every acceptance criterion in `docs/active-scope/implementation-plan.md` is checked. Closing it out is a deliberate act by the operator, and `active-scope-finalize` (phase 6) does it in three steps, in this order: **reconcile the code against `docs/project/prd.md` and let the operator settle every contradiction, fold the delivered status back into that PRD, then wipe `docs/active-scope/`.** Phase 3 then starts the next scope on an empty folder.
+A scope is delivered when every acceptance criterion in `docs/scope/implementation-plan.md` is checked. Closing it out is a deliberate act by the operator, and `scope-finalize` (phase 6) does it in three steps, in this order: **reconcile the code against `docs/project/prd.md` and let the operator settle every contradiction, fold the delivered status back into that PRD, then wipe `docs/scope/`.** Phase 3 then starts the next scope on an empty folder.
 
-Folding back means recording, on the full-scope features and requirements the finished scope refined, whether they are now `complete`, `partial`, or `not started` — plus, under each `partial` requirement, the blockers standing between the code and it. Nothing more. **It is a status update, not a rewrite:** never change what a full-scope requirement says while folding, and never delete one because it shipped. The one thing licensed to change requirement text is phase 6's reconciliation, and only on an operator's explicit answer.
+Folding back means recording, on the project-PRD features and requirements the finished scope refined, whether they are now `complete`, `partial`, or `not started` — plus, under each `partial` requirement, the blockers standing between the code and it. Nothing more. **It is a status update, not a rewrite:** never change what a project-PRD requirement says while folding, and never delete one because it shipped. The one thing licensed to change requirement text is phase 6's reconciliation, and only on an operator's explicit answer.
 
 The cost of this design is that a delivered scope's PRD and plan are gone once wiped. That is accepted: **the code is what was built, and `docs/project/prd.md` — its requirements plus the Delivery status table — is the record of what the product is meant to be and what is left.** It also makes the fold-back load-bearing — a scope wiped without folding back loses the only durable trace that its work happened, so **the wipe never runs first.**
 
@@ -185,16 +185,16 @@ The cost of this design is that a delivered scope's PRD and plan are gone once w
 
 **The artifacts are the state.** Orientation is reading the filesystem. Stop at the first thing missing:
 
-| If this is missing                           | You're at                                                                     |
-| -------------------------------------------- | ----------------------------------------------------------------------------- |
-| `docs/project/prd.md`                      | Phase 1 —`full-scope-prd`                                                  |
-| `docs/project/architecture.md`             | Phase 2 —`full-scope-architecture`                                         |
-| `docs/active-scope/prd.md`                 | Phase 3 —`active-scope-prd`                                                |
-| `docs/active-scope/implementation-plan.md` | Phase 4 —`active-scope-plan`                                               |
-| nothing — all four present                  | Phase 5 —`active-scope-implementation`, on whatever the operator points at |
-| nothing — and every criterion in the plan is checked | Phase 6 —`active-scope-finalize`, which closes the scope out |
+| If this is missing                                   | You're at                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------- |
+| `docs/project/prd.md`                                | Phase 1 —`project-prd`                                              |
+| `docs/project/architecture.md`                       | Phase 2 —`project-architecture`                                     |
+| `docs/scope/prd.md`                                  | Phase 3 —`scope-prd`                                                |
+| `docs/scope/implementation-plan.md`                  | Phase 4 —`scope-plan`                                               |
+| nothing — all four present                           | Phase 5 —`scope-implementation`, on whatever the operator points at |
+| nothing — and every criterion in the plan is checked | Phase 6 —`scope-finalize`, which closes the scope out               |
 
-A scope with every criterion checked is delivered, and closing it out is the operator's call — `active-scope-finalize` is what empties `docs/active-scope/`, so an empty folder means the last scope was closed and the next one is theirs to define.
+A scope with every criterion checked is delivered, and closing it out is the operator's call — `scope-finalize` is what empties `docs/scope/`, so an empty folder means the last scope was closed and the next one is theirs to define.
 
 **Never pick the next implementation target yourself.** Phase 5 is aimed by the operator at a group, a task, or specific criteria. When asked where things stand, report the first group with unchecked criteria and stop — choosing what to build next is theirs, not a recommendation to volunteer.
 
