@@ -1,8 +1,7 @@
 ---
 name: session-analyze
-description: Analyse the session that is running right now. Locates this session's own transcript, cuts it into the steps it actually took, puts a wall clock on each one, names and quotes the rule of the skills invoked this session that ordered it, and lists separately every step no rule ordered. Reports in the chat and changes nothing — the edits it argues for are refine-dev-system's job. Trigger on "analyse this session", "what took so long", "how long did each step take", "what parts of the skill caused this", "what steps did you take that the skill didn't ask for".
+description: Analyse the session that is running right now. Locates this session's own transcript, cuts it into the steps it actually took, puts a wall clock on each one, names and quotes the rule of the skills invoked this session that ordered it, and lists separately every step no rule ordered. Reports in the chat and changes nothing — the edits it argues for are refine-dev-system's job. Trigger on "analyse session", "session analyze", "what took so long", "how long did each step take", "what parts of the skill caused this", "what steps did you take that the skill didn't ask for".
 ---
-
 # Analyse this session
 
 Answer three questions about **the session running right now**, from its own transcript:
