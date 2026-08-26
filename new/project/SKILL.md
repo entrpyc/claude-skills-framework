@@ -33,9 +33,22 @@ Ask with `AskUserQuestion`. Never print a numbered list of questions into chat f
 
 Nothing undecided gets written. A document records decisions, never open questions.
 
+## The source of truth
+
+`docs/project/prd.md` and `docs/project/tdd.md` outrank everything, **the codebase included**. The code is the answer to what the software currently does; it is never the answer to what the software is supposed to do.
+
+So when this skill runs on a project that already has code, and the code and the documents disagree, that is a **difference to reconcile, not a fact to write down**. Take it to the operator with two options on the table:
+
+- **Update the document** — what the code does is what the product should do.
+- **Change the code** — the requirement or decision holds and the software is wrong. Say in a line how the fix is done, so they can price it.
+
+One of the two actually changes. Never close a difference by picking the side that looks more sensible, and never write a requirement that describes code you have not been told is correct.
+
 ## Format
 
 ### `docs/project/prd.md` — the what
+
+Every feature and every requirement is prefixed with its status: **📝 not started**, **🔨 partially done**, **✅ done**. This skill writes 📝 on everything — nothing is built yet. Later phases move them.
 
 ```markdown
 # <Product> — PRD
@@ -45,21 +58,21 @@ What the product is, who it is for, and the problem it solves. A few paragraphs.
 
 ## 2. Features
 
-### 2.1 <Feature name>
+### 📝 2.1 <Feature name>
 One or two lines on what this feature is and why it exists.
 
 **Functional requirements**
 
-- **2.1.1** <One observable behavior, stated so it can be tested.>
-- **2.1.2** ...
+- 📝 **2.1.1** <One observable behavior, stated so it can be tested.>
+- 📝 **2.1.2** ...
 
-### 2.2 <Feature name>
+### 📝 2.2 <Feature name>
 ...
 
 ## 3. Non-functional requirements
 
-- **3.1** <Quality the product has to hold to — performance, security, accessibility, availability.>
-- **3.2** ...
+- 📝 **3.1** <Quality the product has to hold to — performance, security, accessibility, availability.>
+- 📝 **3.2** ...
 ```
 
 ### `docs/project/tdd.md` — the how

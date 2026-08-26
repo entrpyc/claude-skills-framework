@@ -44,6 +44,12 @@ Product requirements, technical decisions, and implementation plan for the speci
 | `docs/scope/tdd.md`  | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD.    |
 | `docs/scope/plan.md` | Implementation plan for this scope.                                                                                                   |
 
+## The source of truth
+
+`docs/project/prd.md` and `docs/project/tdd.md` are the single source of truth **over the codebase too**. The code is evidence of what the software currently does. It is never authority for what the software is supposed to do — "the code does X" is a fact about the present, never a reason for X to be correct.
+
+A difference between the code and the project documents is therefore an open decision, not an answer. It is never closed by picking the side that looks more sensible. It goes to the operator, in whatever phase trips over it, with two options: **update the document**, or **change the code** — and one of the two actually changes.
+
 ## System flow
 
 Every phase is pulled by the operator. Never chain one into the next.
