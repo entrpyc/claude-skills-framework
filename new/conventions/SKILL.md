@@ -1,6 +1,6 @@
 ---
 name: conventions
-description: The rules every dev-system phase follows — how to ask the operator, how documents are numbered and cited, what the status markers mean, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
+description: The rules every dev-system phase follows — how to ask the operator, what makes an assumption major enough to ask about, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
 ---
 # Conventions
 
@@ -23,6 +23,34 @@ Four rules hold for every question set, in every phase:
 4. **Only ask what gates the work.** A question you could answer from the docs is reading you skipped.
 
 Nothing undecided is written down. A document records decisions, never open questions.
+
+## Major assumptions
+
+An assumption is **anything the work needs that the documents do not settle.** Every phase that makes one classifies it the same way.
+
+**Major** — any one of these is enough:
+
+- it **changes what the product costs** to run or to maintain;
+- it is **user-facing** — it changes what someone sees or does;
+- it **changes the technical decisions** the TDD carries;
+- it **produces code later steps will not anticipate**;
+- it is **hard to change later** — a data shape, a boundary, a naming or ownership convention, an interface other code will bind to. Cheap now, expensive once twenty files depend on it.
+
+**Minor** — everything else: not covered, but it contradicts nothing, is not user-facing, is not cost-impacting, and stays cheap to reverse.
+
+**Major assumptions are asked** — with `AskUserQuestion`, before anything is built on them. **Minor ones are decided without asking.** When a call sits on the line, treat it as major.
+
+**Every assumption is written down, major and minor alike**, in the phase's assumptions record — `scope prd § 6` for the scope, the substep's *Assumptions* block in the plan for a build. The classification decides whether the operator is **asked**, never whether they can **find it**: an assumption nobody recorded is indistinguishable later from something the documents actually said, which is how a decision Claude made ends up being read as a requirement.
+
+## Design references
+
+`docs/design-references/` holds the operator's visual material — screenshots, mockups, brand and UI assets.
+
+- **No skill ever writes here, and finalize never deletes it.** It belongs to the operator and it spans scopes.
+- **Read it whenever the work is visual.** `scope` reads it for what the interface is meant to be, `plan` names the file on each substep that builds a surface, `build` reads the files its target names.
+- **A reference here outranks your own taste.** Where a mockup covers the surface being built, the mockup is the requirement.
+- **Cite it by filename**, like any other reference: `design-references/checkout-mock.png`.
+- **An empty folder is not a gap to fill by inventing one.** It means the interface is unspecified — that is a question for the operator, not a licence to design.
 
 ## Reference numbers
 
@@ -52,6 +80,7 @@ project prd 3.2.4
 project tdd 2.1
 scope prd 3.1.1
 scope tdd 1.2
+design-references/checkout-mock.png
 ```
 
 Line-anchored links rot the moment anything above them shifts, and a stale link reads as checked when it is not.
