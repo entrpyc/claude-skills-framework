@@ -134,7 +134,6 @@ Every feature and requirement in `docs/project/prd.md` carries one:
 
 Every phase that writes code proves it the same way.
 
-- **Run the tests covering the change** — its own tests, plus the tests over the callers of what you changed and anything binding to a name, shape, route or schema you edited. **Go and look rather than assuming nothing else touches it.**
 - **Never weaken a test, a criterion, or a requirement to reach green.** That turns a real gap into a documented one, which is the opposite of the point. If an honest test is red, the work is not done — report it red.
 - **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it.
 - **An assertion never compares against the code's own exported constant.** Pin the literal. An assertion that reads its expectation out of the module under test agrees with whatever that module holds, including the wrong value — so it goes green on the bug instead of catching it.
