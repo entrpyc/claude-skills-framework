@@ -84,8 +84,9 @@ The system is five phase skills, plus `conventions`, which all of them read firs
 | `finalize`       | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`                                    | once per scope       |
 | `conventions` | The rules every phase follows — asking, reconciling, major assumptions, the ceiling, design references, reference numbers, citing, status markers, reaching green, diagrams, chat | — | nothing | read by every phase |
 | `refine-dev-system` | Refines the skills themselves against how they actually ran | past session transcripts, the skill files | its findings, and the skill edits the operator chooses | whenever the operator pulls it |
+| `session-analyze` | Explains where the session running right now spent its wall clock, and which rule caused each step | this session's transcript, the skills it invoked | nothing — it reports in the chat | whenever the operator pulls it |
 
-Three skills sit alongside the five: **`conventions`** — the rules every phase follows, read before any of them run — **`dev-system`**, this skill, the map over the whole thing, and **`refine-dev-system`**, which turns past runs into edits to the skills. The first two write nothing. The third is the only skill that changes the system rather than the product, and it is outside the flow — it is pulled whenever the operator wants the system tightened, never as part of delivering a scope.
+Four skills sit alongside the five, and none of them is part of delivering a scope: **`conventions`** — the rules every phase follows, read before any of them run — **`dev-system`**, this skill, the map over the whole thing, **`session-analyze`**, which explains where one run's time went and what ordered it, and **`refine-dev-system`**, which turns many past runs into edits to the skills. Only the last one changes anything, and only the skills — never the product.
 
 ## Where am I?
 
@@ -107,7 +108,7 @@ Report where you landed in one line, then stop. **Never pick the next step to bu
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | **operator**               | The user performing the prompts. Executes user-only operations, controls the system steps.                                                      |
 | **claude**                 | Claude Code. Executes the skills the operator pulls, writes the documents and the code.                                                         |
-| **skill** | One phase of the system — `project`, `scope`, `plan`, `build`, `finalize` — pulled by the operator, never chained automatically. `conventions` and `dev-system` are read, not pulled; `refine-dev-system` is pulled, but sits outside the flow. |
+| **skill** | One phase of the system — `project`, `scope`, `plan`, `build`, `finalize` — pulled by the operator, never chained automatically. `conventions` and `dev-system` are read, not pulled; `session-analyze` and `refine-dev-system` are pulled, but sit outside the flow. |
 | **project**                | The full product: everything it is ever meant to be.                                                                                            |
 | **scope**                  | The slice of the project being implemented right now, chosen by the operator.                                                                   |
 | **prd**                    | Product requirements document — the**what**.                                                                                             |
