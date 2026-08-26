@@ -19,11 +19,11 @@ docs/
   project/
     prd.md          <- the whole project, the what
     tdd.md          <- the whole project, the how
-    diagram.svg     <- the tdd's system diagram, drawn
+    diagram.svg     <- the system, drawn
   scope/
     prd.md          <- the current scope, the what, refined
     tdd.md          <- the current scope, the how, refined
-    diagram.svg     <- the scope tdd's diagram, drawn
+    diagram.svg     <- what this scope adds, drawn
     plan.md         <- the steps that implement the current scope
 ```
 
@@ -35,7 +35,7 @@ Full project product requirements and technical decisions.
 | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/project/prd.md`                                     | Product requirements document. Overview, functional requirements, non-functional requirements. This is the**what** of the project.                                         |
 | `docs/project/tdd.md`                                     | Technical decisions document. High level overview, infrastructure, tech stack, services, tools, running cost, performance requirements. This is the**how** of the project. |
-| `docs/project/diagram.svg`                                | The system diagram from the project TDD, drawn as SVG. Always matches it.                                                                                                        |
+| `docs/project/diagram.svg` | The project system, drawn. |
 
 ### `docs/scope`
 
@@ -45,7 +45,7 @@ Product requirements, technical decisions, and implementation plan for the speci
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/scope/prd.md`      | Same as project PRD, but lists only the requirements for this scope, refined and more detailed. Never contradicts the full-scope PRD. |
 | `docs/scope/tdd.md`      | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD.    |
-| `docs/scope/diagram.svg` | The diagram from the scope TDD, drawn as SVG. Always matches it.                                                                      |
+| `docs/scope/diagram.svg` | What this scope adds, drawn. |
 | `docs/scope/plan.md`     | Implementation plan for this scope.                                                                                                   |
 
 ## The source of truth
@@ -68,7 +68,7 @@ Every phase is pulled by the operator. Never chain one into the next.
 
 ## Skills
 
-The system is five skills. Each one is a phase; each writes what the next one reads.
+The system is five phase skills, plus `conventions`, which all of them read first.
 
 | Skill         | Does                                                                         | Reads                                       | Writes                                                                         | Runs                 |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------ | -------------------- |
@@ -77,8 +77,9 @@ The system is five skills. Each one is a phase; each writes what the next one re
 | `plan`           | Breaks the scope into implementable steps                                    | scope PRD, scope TDD                        | `docs/scope/plan.md`                                                         | once per scope       |
 | `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status                                                    | many times per scope |
 | `finalize`       | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`                                    | once per scope       |
+| `conventions` | The rules every phase follows — asking, reference numbers, citing, status markers, diagrams, chat | — | nothing | read by every phase |
 
-`dev-system` — this skill — is the map over them. It writes nothing.
+Two skills sit alongside the five and write nothing: **`conventions`** — the rules every phase follows, read before any of them run — and **`dev-system`**, this skill, the map over the whole thing.
 
 ## Where am I?
 
@@ -88,7 +89,6 @@ The artifacts are the state. Read the filesystem and stop at the first thing mis
 | ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
 | `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | Step 1 —`project`                                             |
 | `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`       | Step 2 —`scope`                                               |
-| `docs/scope/diagram.svg`                                                     | The diagram from the scope TDD, drawn as SVG. Always matches it. |
 | `docs/scope/plan.md`                                                         | Step 3 —`plan`                                                |
 | nothing — all five present                                                    | Step 4 —`build`, on whatever steps the operator points at     |
 | nothing — and the plan is complete                                            | Step 5 —`finalize`                                            |
@@ -101,7 +101,7 @@ Report where you landed in one line, then stop. **Never pick the next step to bu
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | **operator**               | The user performing the prompts. Executes user-only operations, controls the system steps.                                                      |
 | **claude**                 | Claude Code. Executes the skills the operator pulls, writes the documents and the code.                                                         |
-| **skill**                  | One phase of the system —`project`, `scope`, `plan`, `build`, `finalize` — pulled by the operator, never chained automatically.     |
+| **skill** | One phase of the system — `project`, `scope`, `plan`, `build`, `finalize` — pulled by the operator, never chained automatically. `conventions` and `dev-system` are read, not pulled. |
 | **project**                | The full product: everything it is ever meant to be.                                                                                            |
 | **scope**                  | The slice of the project being implemented right now, chosen by the operator.                                                                   |
 | **prd**                    | Product requirements document — the**what**.                                                                                             |
