@@ -98,7 +98,7 @@ For each one:
 
 - Write the least code that satisfies the requirement, exactly as in `active-scope-implementation` § 3 — the requirement is the ceiling, and the edges it doesn't name are not yours to handle.
 - Cover it with a test that would fail if the fix weren't there, and **break the code on purpose to confirm that test goes red** (§ 7 there). A green test is a claim until you've seen it fail.
-- **Run what the fix touches — not the suite.** Its own test, plus the tests over the code paths it changed and anything that binds to what you edited. **Don't run the full suite here.** Phase 5 already gated it, every fix in this phase is bounded to under a task's worth of work, and a full run per fix is the most expensive way in the system to re-establish something already established. Never `.skip` anything to get green, and never report a test you didn't run.
+- **Run what the fix touches — not the suite.** Its own test, plus the tests over the code paths it changed and anything that binds to what you edited. **Don't run the full suite here.** Phase 5 gated it as each group closed, every fix in this phase is bounded to under a task's worth of work, and a full run per fix is the most expensive way in the system to re-establish something already established. Never `.skip` anything to get green, and never report a test you didn't run.
 
 **The exit condition is that every settled fix is green on the tests that cover it**, and that you have looked at what else reaches the code you changed rather than assuming nothing does. Red means the work is still in progress — keep going, don't fold, don't wipe, and don't report the run as finished. There are exactly two ways out of red:
 
