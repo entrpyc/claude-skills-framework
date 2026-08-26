@@ -1,6 +1,6 @@
 ---
 name: conventions
-description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
+description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, which suite a run is allowed to touch, how a failure whose output explains nothing is probed, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
 ---
 # Conventions
 
@@ -135,11 +135,31 @@ Every feature and requirement in `docs/project/prd.md` carries one:
 Every phase that writes code proves it the same way.
 
 - **Run the tests covering the change** — its own tests, plus the tests over the callers of what you changed and anything binding to a name, shape, route or schema you edited. **Go and look rather than assuming nothing else touches it.**
+- **Know which suites exist before you run one.** A project that has been through `compact-tests` has two: the **local** suite the default test script runs — one happy-path test per built functional requirement — and a **pipeline** suite, everything else, owned by a job in `.github/workflows/` and **never run on the operator's machine.** Read the test scripts in `package.json` and the jobs in `.github/workflows/` **once, before the phase's first run**, and know which command is which. That split is a decision the operator already made; no phase re-opens it by typing the other command, and it binds whether or not `compact-tests` is the skill running.
+
+  So **the tests covering the change means the local tests covering it**, and the callers you go and look for are the ones the local suite reaches. The pipeline half — the edge cases, the boundary and error branches, the second and third tests of a behavior already proved — **is not invoked here.** Not to check a criterion, not to sweep a blast radius, not once at the end of a step, not "just to be sure". A named script, project, tag, directory or config that exists to run the moved tests is not yours to type, and neither is a bare runner invocation that picks them up by default. **A local run measured in minutes means you have reached across the line** — kill it and look at what you invoked rather than waiting it out. Its reds are not results either: a suite built for the pipeline's one-test-at-a-time machine returns timeouts under a loaded laptop, and triaging those is a second cost on top of the run.
+
+  One exception, and it belongs to one skill: `compact-tests` § How it runs 6 runs the moved suite by hand exactly once, to prove the pipeline has something that works to call.
 - **Never weaken a test, a criterion, or a requirement to reach green.** That turns a real gap into a documented one, which is the opposite of the point. If an honest test is red, the work is not done — report it red.
-- **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it.
+- **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it. **Staying inside the local suite is not narrowing** — that line was drawn once, by the operator, and a workflow runs everything on the far side of it on every push. Reaching across it is the failure, not declining to.
 - **Every test is written before the code it covers, and first run once that code is there.** Writing it first is what keeps the test honest about the behavior rather than about the implementation. **Running it before the code exists is not part of proving it** — the red is known in advance, nothing is decided by seeing it, and the run is paid for in full.
 - **An assertion never compares against the code's own exported constant.** Pin the literal. An assertion that reads its expectation out of the module under test agrees with whatever that module holds, including the wrong value — so it goes green on the bug instead of catching it.
+- **A red that predates your change is reported, not triaged.** Before diagnosing a failure in a file your change does not touch, find out whether it was already failing — `git log` and `git diff` over the test and over what it exercises, or run it against a copy of the committed file set aside. If it was red in the committed tree, say so in one line and carry on. It is not part of proving this change, and whether it gets fixed is the operator's call, not a detour inside a build.
 - **Never `git stash` to isolate a run.** Under `core.autocrlf` it rewrites the line endings of every file it touches, and it destroys the working tree you are trying to measure. Re-run against the tree as it stands, or copy the file aside.
+
+## Probing a failure
+
+A test is red and its output does not name the cause. Working that out is real work — guessing at the fix costs a full run per guess, and on anything with a browser in it, several. It is also where a run budget disappears, so it is bounded.
+
+- **Start from the failing test, never from a blank file.** Copy it and cut it down. A probe written fresh gets a different fixture, a different sign-in, a different starting state — and then measures something the failing test never did, which is worse than no answer because it reads like one.
+- **One probe answers everything you might need.** Print the whole state you could plausibly ask about in a single run: the value, what produced it, and what the code actually saw. A probe that answers one question and raises the next has spent a run to move sideways.
+- **Never pipe a run whose output you have not decided you can lose.** A pipe that eats it buys a second identical run to get it back.
+- **Three probes, then ask.** If the cause still is not named, stop and put it to the operator with what each one ruled out. That is a dead end — `build` § How it runs 4 — not a fourth probe.
+- **Delete the probe before the criterion is checked off.** It is instrumentation, not a test; nothing else in this system sweeps for it, and left behind it runs on every push.
+
+## Writing files
+
+**A file written whole — a spec, a document, a new module — is written with `Write`, and a change inside an existing one with `Edit`.** A shell heredoc cannot carry backticks, dollar signs or nested quotes through without mangling them, so on the files these phases produce it fails and the write is paid for twice. Shell keeps what shell is for: running the tests, git, and looking around the codebase.
 
 ## Diagrams
 
