@@ -9,6 +9,8 @@ Produce `docs/project/prd.md` and `docs/project/tdd.md` from what the operator t
 
 These two documents are the single source of truth. Everything after them refines them, so they describe the **whole** product — no phasing, no deferral, nothing left for later.
 
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+
 ## How it runs
 
 1. **Read what the operator gave you.** The product is theirs. Never invent a feature they did not ask for.
@@ -21,17 +23,6 @@ These two documents are the single source of truth. Everything after them refine
    - **Duplicates** — two requirements that say the same thing in different words. Ask whether they are one requirement, or whether they differ in a way the wording lost.
 4. **Write both documents.**
 5. **Say where they are in one line, then stop.**
-
-## Asking
-
-Ask with `AskUserQuestion`. Never print a numbered list of questions into chat for the operator to answer in prose.
-
-- At most **5 questions per set**. Ask in one pass rather than trickling.
-- Every question carries options, and each option says **what it commits to** — what it makes easy later, what it forecloses.
-- Only ask what actually gates the document. Anything you can settle from what the operator already told you is not a question.
-- Decide the small things yourself.
-
-Nothing undecided gets written. A document records decisions, never open questions.
 
 ## The source of truth
 
@@ -48,7 +39,7 @@ One of the two actually changes. Never close a difference by picking the side th
 
 ### `docs/project/prd.md` — the what
 
-Every feature and every requirement is prefixed with its status: **📝 not started**, **🔨 partially done**, **✅ done**. This skill writes 📝 on everything — nothing is built yet. Later phases move them.
+Every feature and every requirement carries a status marker (see `conventions`). **This skill writes 📝 on everything** — nothing is built yet.
 
 A requirement that cannot be built until another one exists ends with **`Depends on:`** and the numbers of the requirements it needs. Only real build order — not every requirement it happens to be related to. A requirement that depends on nothing carries no line.
 
@@ -79,43 +70,35 @@ One or two lines on what this feature is and why it exists.
 
 ### `docs/project/tdd.md` — the how
 
-````markdown
+```markdown
 # <Product> — TDD
 
 ## 1. Overview
 The shape of the system in a few paragraphs — the parts and how they fit.
 
-## 2. System diagram
+## 2. Infrastructure
+- **2.1** <Where it runs and how it is deployed.>
 
-```mermaid
-flowchart TB
-    ...the parts of the system and what talks to what...
-```
+## 3. Tech stack
+- **3.1** <Language, framework, database, and why over the alternative.>
 
-## 3. Infrastructure
-- **3.1** <Where it runs and how it is deployed.>
+## 4. Services & tools
+- **4.1** <Third-party service or tool, what it is for, what it replaces building.>
 
-## 4. Tech stack
-- **4.1** <Language, framework, database, and why over the alternative.>
-
-## 5. Services & tools
-- **5.1** <Third-party service or tool, what it is for, what it replaces building.>
-
-## 6. Running costs
+## 5. Running costs
 | Item | Cost | Notes |
 | ---- | ---- | ----- |
 
-## 7. Performance requirements
-- **7.1** <Target, stated as a number.>
-````
+## 6. Performance requirements
+- **6.1** <Target, stated as a number.>
+```
 
 ### `docs/project/diagram.svg`
 
-Whenever you write the TDD, write the diagram beside it as `docs/project/diagram.svg` — **the same system, the same parts, the same connections** as the mermaid block in section 2. Hand-write the SVG: self-contained, no external fonts or images, labels as real text, and legible on a light and a dark background. If the mermaid diagram changes, this file changes with it.
+The system the TDD describes, drawn — written whenever the TDD is, per `conventions` § Diagrams. The TDD itself carries no diagram.
 
 ## Rules
 
 - **The PRD is what and why. The TDD is how.** A requirement that names a library is in the wrong document.
-- **Number everything.** Every requirement and decision is cited by number for the rest of the project's life, so each one stands alone and says one thing.
+- **Number everything.** Requirements and decisions are cited by number for the rest of the project's life, so each one stands alone and says one thing.
 - **Write what was decided, not what might be.** No alternatives, no "we could", no open questions left in the text.
-- **Never invent to fill a gap.** If something is missing, ask.
