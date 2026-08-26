@@ -45,6 +45,7 @@ Never pick the target yourself, and never build past it. Something outside the t
 
    > - Concurrent edits to the same record: last write wins silently — no conflict detection. Two people editing at once will lose one set of changes.
    > - An upload larger than the browser can buffer fails with a generic error, not a size message.
+   >
 
    Write what the operator would **observe**, not the internal reason. An edge that genuinely has to be handled becomes a criterion in a later substep — take it to the operator; the rest stay as known, accepted gaps. **List an edge belonging to a later substep too.** Nothing else in this system sweeps for them, so an unlisted one is simply lost.
 7. **Check off what is covered.** Tick `[x]` on every criterion whose test is green, and update the plan's *Status* line. Everything else stays unchecked.
