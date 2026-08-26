@@ -27,7 +27,7 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
    - it is **user-facing** — it changes what someone sees or does;
    - it is **hard to change later** — a data shape, a boundary, an interface other code will bind to.
 
-   Everything else is minor: decide it yourself and move on. When a decision sits on the line, treat it as major.
+   Everything else is minor: decide it yourself and move on. When a decision sits on the line, treat it as major. **Every major decision, once confirmed, is written into § 6 Edge cases** — that section is the record of what this scope decided that the project docs did not.
 7. **Write both documents**, then say where they are in one line and stop.
 
 ## Asking
@@ -80,6 +80,14 @@ _Refines: project prd 3.2_
 ## 5. Out of scope
 
 - **<Thing>** — why it is not here, and what it waits for.
+
+## 6. Edge cases
+
+Every assumption this scope makes that the project docs did not settle, and that is **hard to change later, changes what the product costs, changes the project architecture, or is user-facing**. These are the ones confirmed with the operator in step 6 — write each one as settled, with the test it trips.
+
+- **<The assumption, as a decision.>** — hard to change later: <what will bind to it>. Confirmed.
+- **<The assumption, as a decision.>** — user-facing: <what someone sees or does differently>. Confirmed.
+- **<The assumption, as a decision.>** — cost: <what it adds to running or maintaining the product>. Confirmed.
 ```
 
 ### `docs/scope/tdd.md`
