@@ -1,6 +1,6 @@
 ---
 name: conventions
-description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, which suite a run is allowed to touch, how a failure whose output explains nothing is probed, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
+description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
 ---
 # Conventions
 
