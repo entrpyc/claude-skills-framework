@@ -1,6 +1,6 @@
 ---
 name: compact-tests
-description: Split the test suite in two — locally only one happy-path test per acceptance criterion runs, and only where the criterion traces up to a functional requirement in docs/project/prd.md; everything else moves to a suite that runs on the GitHub pipeline and never on the operator's machine. Nothing is deleted, no source code and no test file changes. Runs only on a green suite, never to reach green, and reports what stopped being checked locally. Trigger on "compact the tests", "the suite is too slow", "trim the test suite", "cut the edge case tests", "leave only happy path tests", "move the slow tests to CI".
+description: Split the test suite in two — locally only one happy-path test per acceptance criterion runs, and only where the criterion traces up to a functional requirement in docs/project/prd.md; everything else moves to a suite that runs on the GitHub pipeline and never on the operator's machine. Nothing is deleted, no source code and no test file changes. Runs only on a green suite, never to reach green, and reports what stopped being checked locally. Read by finalize, which runs it over the scope's tests before wiping the plan, and pulled directly whenever the operator aims it at a slow suite. Trigger on "compact the tests", "the suite is too slow", "trim the test suite", "cut the edge case tests", "leave only happy path tests", "move the slow tests to CI".
 ---
 # Compact tests
 
@@ -14,6 +14,8 @@ Nothing is deleted and no test is rewritten. What changes is **where** a test ru
 The local suite exists to answer one question while someone waits on it: *does the product still do what it is required to do?* Every test that answers a different question — a boundary, an error branch, a second case of a behavior already covered — was being paid for on every local run, and answers it on the pipeline for free.
 
 > **Read the `conventions` skill before anything below.**
+
+**`finalize` runs this over every scope, at its step 4** — while the scope is green and `docs/scope/plan.md` still exists, because that plan is the only record of which test proves which criterion. Pulled on its own it works the same way, on whatever the operator aims it at.
 
 ## This is not a way to reach green
 

@@ -1,6 +1,6 @@
 ---
 name: finalize
-description: Close out a delivered scope — reconcile the code this scope wrote against the requirements it claimed and put every divergence to the operator as a choice between changing the code and updating the docs, move each project requirement's status to ✅ 🔨 or 📝 against what the code actually does, never downgrading a previous scope's ✅ without saying so, sweep the plan and the diff for what deploying the scope takes, hand that over, and only then wipe docs/scope/. The only phase that leaves a durable trace the scope's work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "wrap up this scope".
+description: Close out a delivered scope — reconcile the code this scope wrote against the requirements it claimed and put every divergence to the operator as a choice between changing the code and updating the docs, move each project requirement's status to ✅ 🔨 or 📝 against what the code actually does, never downgrading a previous scope's ✅ without saying so, sweep the plan and the diff for what deploying the scope takes, hand that over, compact this scope's tests so only the happy path still runs locally, and only then wipe docs/scope/. The only phase that leaves a durable trace the scope's work happened. Runs once per scope, after its criteria are met. Trigger on "finalize the scope", "close out the scope", "the scope is done", "wrap up this scope".
 ---
 
 # Finalize
@@ -75,9 +75,14 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
    The list goes in the chat in full (see *Deployment handover* below). It is never written into `docs/project/prd.md` — that document is what the product is meant to be, not how this release gets rolled out.
 
-4. **Wipe the scope.** Delete everything in `docs/scope/`. Only after steps 1, 2 and 3 are done — this is the last moment the plan exists. **Leave `docs/design-references/` alone**; it belongs to the operator and spans scopes.
+4. **Compact this scope's tests — before the wipe, for the same reason.** Everything this scope built is green and `docs/scope/plan.md` is the only thing that says which test proves which criterion. Once it is deleted that trace is gone, and the split can only be made by guesswork. **This is the last moment it can be made from the record.**
 
-5. **Report the progress**, in one line, measured against `docs/project/prd.md`:
+   Run `compact-tests` over **the tests this scope added or changed** — the same boundary as the rest of this phase (§ The sweep is bounded). Tests from earlier scopes were split at their own finalize and are not re-opened here.
+
+   Its rules hold unchanged, and two of them matter at this moment in particular: **the suite must be green before it runs** — if it is not, step 1 is unfinished, go back to it — and **the operator chooses what moves.** Nothing is deleted, and everything that leaves the local suite runs on the pipeline in the same run.
+5. **Wipe the scope.** Delete everything in `docs/scope/`. Only after steps 1 to 4 are done — this is the last moment the plan exists. **Leave `docs/design-references/` alone**; it belongs to the operator and spans scopes.
+
+6. **Report the progress**, in one line, measured against `docs/project/prd.md`:
 
    ```
    Project: 68% of functional requirements complete (34 of 50).
@@ -88,7 +93,7 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 ## Rules
 
 - **Stay inside the boundary.** Pre-existing drift is named at the end, never fixed here.
-- **The wipe is last.** A scope wiped before the fold-back loses the only durable trace its work happened — and a scope wiped before the deployment sweep takes the prerequisites with it.
+- **The wipe is last.** A scope wiped before the fold-back loses the only durable trace its work happened — a scope wiped before the deployment sweep takes the prerequisites with it, and a scope wiped before the tests are compacted takes with it the only record of which test proves which criterion.
 - **Status is not a rewrite.** Requirements are not deleted because they shipped, not renumbered, and not tidied while you are in there.
 - **Say what is left.** Every 🔨 carries what is still missing from it. A partial requirement with no blocker listed reads as done to whoever comes next.
 - **Never downgrade quietly.** A previous scope's ✅ that is now 🔨 is changed and said out loud.
