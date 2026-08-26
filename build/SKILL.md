@@ -17,7 +17,7 @@ Never pick the target yourself, and never build past it. Something outside the t
    Then look **behind** the target. The plan is sequential, but the operator can aim you anywhere in it, so a targeted build can land on ground that was never laid. Read the substeps before the target: **if the target needs something an earlier substep owns and that substep has unchecked criteria, stop and ask** — build the dependency first, or build against a stub and accept the rework. That is the operator's call, not yours.
 
    Where the target is a whole step or several substeps, take them in plan order.
-2. **Build it.** Read only the references the target names — the scope PRD requirements, the scope TDD decisions, and the design references where the target names one (`conventions` § Design references).
+2. **Build it.** Read only the references the target names — the scope PRD requirements, the scope TDD decisions, and the design references where the target names one (`conventions` § Design references) — **and the files the substep's *Touches:* line names.** That line is the survey, done once at plan time while the whole scope was in view, so no build rediscovers the same seam. Anything past it is discovery: if the build needed a file the line does not name, **add it to the line** before you check the criterion off.
 3. **Confirm the major assumptions, record all of them.** Building makes decisions the plan never made — it is the phase that hits reality. Classify each one by `conventions` § Major assumptions, ask the major ones before you build on them, decide the minor ones yourself — and **record both kinds in the substep's *Assumptions* block in `docs/scope/plan.md`**, marked major or minor, written as settled decisions.
 
    A major assumption that invalidates the planned approach is not an assumption any more — that is step 4.
@@ -34,7 +34,11 @@ Never pick the target yourself, and never build past it. Something outside the t
    **Then edit `docs/scope/plan.md` to match what they chose** — a criterion reworded, a substep added, an order changed. A plan that no longer describes what is being built has stopped being the record, and nothing else in the system will notice.
 
    **A divergence from the scope PRD is the same stop.** If the only way to satisfy a criterion is to make the code contradict `docs/scope/prd.md` or the project requirement behind it, take it to the operator per `conventions` § Reconciling — and where they choose the requirement, **edit `docs/scope/prd.md` yourself in the same run**, exactly as you edit the plan.
-5. **Reach green** — `conventions` § Reaching green. When a step's last substep lands, run the whole suite: that is the first time the substeps are measured together.
+5. **Reach green** — `conventions` § Reaching green. **Every criterion's test is written before its code and run expecting red**, and the red is read rather than counted: it has to be the failure the missing code would cause. A criterion whose test never had that run is not proved, however green it is now — go back and do it, in that order.
+
+   A criterion is proved by the **narrowest run that covers it.** The whole suite runs **once**, when the step's last substep lands: that is the first time the substeps are measured together, and it is not how an individual criterion is checked.
+
+   **Start that run in the background and write the step's records while it runs** — the *Assumptions*, *Edge cases* and *Manual steps* blocks, and the check-offs. **Wait on it with `Monitor`, never by re-reading its output file:** a piped run writes nothing until the process exits, so polling the file reads empty until the moment it does not.
 6. **Record the edges.** Write every case the code does not handle into the substep's **Edge cases** block in `docs/scope/plan.md` — one line each, naming what is not handled and **what the operator would see if it happened**. This is where the just-in-case code went instead of into the codebase, and it is what makes under-achieving safe rather than sloppy.
 
    > - Concurrent edits to the same record: last write wins silently — no conflict detection. Two people editing at once will lose one set of changes.

@@ -1,6 +1,6 @@
 ---
 name: plan
-description: Split the implementation of the current scope into sequential steps and capture them as docs/scope/plan.md — each step covering named scope PRD requirements and scope TDD decisions, ordered so nothing depends on a step that comes after it, and carrying acceptance criteria that are each a single testable unit. Runs once per scope, after the scope PRD and TDD exist. Trigger on "plan the scope", "implementation plan", "break this into steps", "scope plan".
+description: Split the implementation of the current scope into sequential steps and capture them as docs/scope/plan.md — each step covering named scope PRD requirements and scope TDD decisions, ordered so nothing depends on a step that comes after it, naming the files each substep touches so no build has to survey the codebase again, and carrying acceptance criteria that are each a single testable unit. Runs once per scope, after the scope PRD and TDD exist. Trigger on "plan the scope", "implementation plan", "break this into steps", "scope plan".
 ---
 
 # Plan
@@ -20,7 +20,7 @@ The plan carries the scope's status for the rest of its life: the build phase ch
    - **§ 5 Out of scope — the ceiling** (`conventions` § The ceiling). No step, substep or criterion may cover what it excludes, and **the plan is not what raises it.** A plan that covers what § 5 still excludes is the one outcome that is not allowed.
 
    Where the scope has a user interface, read `docs/design-references/` for the surfaces it puts in front of someone — see `conventions` § Design references — and name the file on each substep that builds against it.
-2. **Decide the steps.** One step per feature of the scope, then split each step into substeps small enough to build and review in one sitting. Every substep names the scope requirements and decisions it covers, and every functional requirement in the scope PRD is covered by exactly one substep.
+2. **Decide the steps.** One step per feature of the scope, then split each step into substeps small enough to build and review in one sitting. Every substep names the scope requirements and decisions it covers, **and the files and modules it touches**, and every functional requirement in the scope PRD is covered by exactly one substep.
 
    **Step 1 is the foundation, and it is chosen differently from the rest.** It is the 20% of the scope that carries 80% of its impact — the spine the other steps hang off. The test is what the operator gets from building it by hand: **after step 1 they should understand how the code works.** Every step after it builds on that spine and refines it.
 
@@ -74,6 +74,7 @@ _Maintained by the build phase — see the checkboxes for detail._
 
 **Delivers:** what this substep puts in place, in one sentence.
 **References:** scope prd 3.1.1, 3.1.2, 4.1; scope tdd 1.2, 2.1; design-references/<file>
+**Touches:** the files and modules this substep reads or changes — named here, while the whole scope is in view.
 **Out of scope:** what this substep deliberately leaves to a later one.
 **Prerequisites:** anything the operator has to do by hand first — an account, a key, a service enabled. Omit when there are none.
 
@@ -116,3 +117,5 @@ _Written by the build phase — leave empty here._
 - **Nothing in `Out of scope` gets planned** — `conventions` § The ceiling.
 - **Cite the design reference on every substep that builds a surface**, so the build phase reads it instead of inventing the interface.
 - **Name the test, and name one that could fail.** Every acceptance criterion says what verifies it. If you cannot name a test that would go **red** with the behavior absent, the criterion is too vague to build against — sharpen it, split it, or drop it. The build phase writes that test before the code and watches it fail, so a criterion no test can be red for cannot be built against.
+- **Name a test that does not need wall-clock timing to pass.** A cadence, duration or timeout spec passes on its own and flakes under a loaded suite, and every full run after it pays for a false red. Where the behavior genuinely is about time, name a test that controls the clock rather than one that waits on it.
+- **Name what each substep touches.** The *Touches:* line is the codebase survey, done **once here** while the whole scope is in view, rather than once per build by every build. Name the files and modules you already know the substep reads or changes — the build phase reads them instead of rediscovering the seam, and adds whatever it finds that you missed.

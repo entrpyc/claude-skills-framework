@@ -137,6 +137,11 @@ Every phase that writes code proves it the same way.
 - **Run the tests covering the change** — its own tests, plus the tests over the callers of what you changed and anything binding to a name, shape, route or schema you edited. **Go and look rather than assuming nothing else touches it.**
 - **Never weaken a test, a criterion, or a requirement to reach green.** That turns a real gap into a documented one, which is the opposite of the point. If an honest test is red, the work is not done — report it red.
 - **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it.
+- **Every test is first run expecting red.** The test is written before the code it covers and run once with that code absent — and **the red is read, not just seen: it has to be the failure the missing code would cause**, not an import that never resolved or a fixture that never loaded. A test that comes up **green** there is testing nothing; fix it and run it red again.
+
+  This is the run where a test earns the right to be believed, and it costs nothing — the code was not written yet. A test that skipped it is not evidence, and no amount of green afterwards makes it evidence.
+- **An assertion never compares against the code's own exported constant.** Pin the literal. An assertion that reads its expectation out of the module under test agrees with whatever that module holds, including the wrong value — and it goes red before the code exists for the wrong reason, so the red run does not catch it either.
+- **Never `git stash` to isolate a run.** Under `core.autocrlf` it rewrites the line endings of every file it touches, and it destroys the working tree you are trying to measure. Re-run against the tree as it stands, or copy the file aside.
 
 ## Diagrams
 
