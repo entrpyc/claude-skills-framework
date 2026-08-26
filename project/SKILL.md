@@ -78,8 +78,9 @@ The shape of the system in a few paragraphs — the parts and how they fit.
 - **4.1** <Third-party service or tool, what it is for, what it replaces building.>
 
 ## 5. Running costs
-| Item | Cost | Notes |
-| ---- | ---- | ----- |
+| # | Item | Cost | Notes |
+| :- | ---- | ---- | ----- |
+| **5.1** | <What is paid for.> | <Amount and period.> | <What drives it up.> |
 
 ## 6. Performance requirements
 - **6.1** <Target, stated as a number.>
@@ -92,5 +93,5 @@ The system the TDD describes, drawn — written whenever the TDD is, per `conven
 ## Rules
 
 - **The PRD is what and why. The TDD is how.** A requirement that names a library is in the wrong document.
-- **Number everything.** Requirements and decisions are cited by number for the rest of the project's life, so each one stands alone and says one thing.
+- **Number everything but the overview.** Requirements, decisions and running-cost lines are cited by number for the rest of the project's life, so each one stands alone and says one thing. § 1 of either document is prose and carries none — `conventions` § Reference numbers.
 - **Write what was decided, not what might be.** No alternatives, no "we could", no open questions left in the text.

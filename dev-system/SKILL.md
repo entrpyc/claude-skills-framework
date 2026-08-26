@@ -1,6 +1,6 @@
 ---
 name: dev-system
-description: Explain and navigate the dev system — the iterative Claude Code workflow that keeps docs/project/prd.md and docs/project/tdd.md as the single source of truth, and delivers the product through operator-defined scopes, plans, and builds that refine and reconcile against them. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what runs next"), or to start a project on the system. Every other dev-system skill points here for the whole picture. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in".
+description: Explain and navigate the dev system — the iterative Claude Code workflow that keeps docs/project/prd.md and docs/project/tdd.md as the single source of truth, and delivers the product through operator-defined scopes, plans, and builds that refine and reconcile against them. Use it to understand how the phases fit together, to orient when picking work back up ("where are we", "what runs next"), or to start a project on the system. Trigger on "dev system", "how does this workflow work", "where are we in the process", "what phase are we in".
 ---
 # The dev system
 
@@ -90,15 +90,15 @@ Four skills sit alongside the five phases, and none of them delivers a scope: **
 
 ## Where am I?
 
-The artifacts are the state. Read the filesystem and stop at the first thing missing.
+The artifacts are the state. Walk these checks in order and stop at the first one that matches.
 
-| If this is missing                                                             | You are at                                                       |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | Step 1 —`project`                                             |
-| `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`       | Step 2 —`scope`                                               |
-| `docs/scope/plan.md`                                                         | Step 3 —`plan`                                                |
-| nothing — all five present                                                    | Step 4 —`build`, on whatever steps the operator points at     |
-| nothing — and the plan is complete                                            | Step 5 —`finalize`                                            |
+| Check                                                                                       | You are at                                                   |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| Any of `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` is missing | Step 1 —`project`                                          |
+| Any of `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg` is missing       | Step 2 —`scope`                                            |
+| `docs/scope/plan.md` is missing                                                            | Step 3 —`plan`                                             |
+| All seven are present and the plan has unchecked criteria                                    | Step 4 —`build`, on whatever steps the operator points at  |
+| All seven are present and every criterion is checked                                         | Step 5 —`finalize`                                         |
 
 Report where you landed in one line, then stop. **Never pick the next step to build yourself** — the operator chooses what runs next and pulls it themselves.
 

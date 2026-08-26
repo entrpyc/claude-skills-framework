@@ -30,7 +30,7 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
    - `--collapse <sec>` and `--max-timeline <n>` control how much detail survives; raise them when a stretch of the run looks compressed.
 
    **The turn running this analysis is not in the transcript yet.** Say so in the report rather than presenting a partial tail as the whole session.
-2. **Read the skills this session invoked** — every one in the scan's *Skills invoked* list, in full, plus `conventions`. The attribution in step 4 quotes them, and a quote from memory is a fabrication. Read the installed copy that actually ran, under `~/.claude/skills/`.
+2. **Read the skills this session invoked** — every one in the scan's *Skills invoked* list, in full, plus `conventions`. The attribution in step 4 quotes them, and a quote from memory is a fabrication. Read the installed copy that actually ran, under `~/.claude/skills/` — **and find out where its source lives**, because the fix prompt has to name a directory a fresh session can edit. Where the two differ, say so: a finding against text that was not in the room is worthless, and an edit applied to the installed copy alone is overwritten the next time the source is installed.
 
    **If no skill ran**, say so first: there is no rule to attribute anything to, the whole session is unordered work by definition, and the finding is which phase should have been pulled and was not. Report the steps, their durations and the failures, and stop there.
 3. **Cut the timeline into steps.** A step is **one piece of work with one purpose** — not one tool call, and not one skill instruction. Cut at:
@@ -81,7 +81,7 @@ This is a diagnostic, pulled mid-run or at the end of one. It reads the transcri
    - **What the fix has to achieve**, one sentence each — a rule that does not exist, a rule that over-serves, two instructions pulling different ways. Never the replacement sentence itself.
    - **What must not change.** Where a finding sits against a rule that exists for a reason, name the rule and say it stands — otherwise the next session buys the minutes back by deleting the guarantee that cost them.
    - **What not to fix** — the costs step 7 found no remedy for, and the failures that do not stand. Left out, they read as work, and a rule gets invented for a session that was simply large or for a typo that will never recur.
-   - **The constraint**: the fixing session decides the wording, puts each edit to the operator before applying it, and touches the skill files only.
+   - **The constraint**: the fixing session decides the wording, puts each edit to the operator before applying it, and touches the skill files only. **Name the source directory it edits** — the one step 2 found, not `~/.claude/skills/`, unless that is where the source lives.
 
    **One prompt per analysis, covering every finding, in one fenced block** so it can be copied whole. Never split it per skill, and never fold the findings table into it — the report is for the operator, the prompt is for the next session.
 10. **Checkpoint.** Stop. Do not edit a skill, do not edit the project, and do not roll into `refine-dev-system` — say what the findings are and let the operator pull it.
@@ -140,7 +140,7 @@ _Steps sum to <n>m of <n>m wall clock._
 <one line: paste this into a fresh session in the skills directory>
 
 ```
-The dev-system skills cost <n>m of avoidable wall clock in one session. Fix the skills, not the project. The skills are in <path>.
+The dev-system skills cost <n>m of avoidable wall clock in one session. Fix the skills, not the project. The skill sources are in <path to the source directory>.
 
 1. <n>m — <what ran>. Ordered by `<skill>` § <section> — "<the rule, quoted>". <What the fix has to achieve, one sentence.>
 2. <n>m — <what ran>. No rule ordered it — <hole or drift>. <What the fix has to achieve, one sentence.>

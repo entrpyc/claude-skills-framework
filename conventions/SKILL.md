@@ -26,6 +26,8 @@ Four rules hold for every question set, in every phase:
 
 Nothing undecided is written down. A document records decisions, never open questions.
 
+**An empty block a named phase fills later is not an open question** — the plan's *Assumptions*, *Edge cases* and *Manual steps* are a form with an owner, and the phase that owns them is the only one that has the answers. Leave them empty rather than guessing at them.
+
 ## Reconciling
 
 `docs/project/prd.md` and `docs/project/tdd.md` are the source of truth **over the codebase too.** The code is evidence of what the software currently does; it is never authority for what the software is supposed to do — *"the code does X"* is a fact about the present, never a reason for X to be correct. The same holds one level down: a scope document refines the project docs, and the plan refines the scope docs.
@@ -95,6 +97,8 @@ Everything in the system is addressed by number, so the numbers are the interfac
 |                    | Substep                    | `1.1`   |
 |                    | Acceptance criterion       | `1.1.1` |
 
+**Everything a later phase cites is numbered, and the *Overview* section of a project document is the one thing that is not.** It is prose, it makes no decision of its own, and it is never cited — cite the numbered requirement or decision that carries the fact instead. Every other section numbers its items, the running-cost table included.
+
 **Numbers are immutable.** Once written, a number is never reused for something else and never renumbered — every reference in the system points at it, and a requirement that shipped is not deleted to tidy the list. Something new is appended with the next free number under its parent.
 
 ## Citing
@@ -128,7 +132,7 @@ Every feature and requirement in `docs/project/prd.md` carries one:
 | ✅     | **Done** — met and observable in the running code.                                                    |
 
 - **Every requirement carries one.** A line with no marker reads as untracked rather than unbuilt.
-- **Features are derived**, never asserted: ✅ only when every requirement under it is ✅, and one 🔨 makes the feature 🔨.
+- **Features are derived**, never asserted: ✅ only when every requirement under it is ✅, 📝 only when every requirement under it is 📝, and **everything in between is 🔨.** One ✅ beside one 📝 is a partially done feature as surely as a single 🔨 is.
 - **Only `finalize` moves a marker**, and only against what the code actually does. `project` writes 📝 on everything, because nothing is built when the PRD is written.
 - **Acceptance criteria in the plan use checkboxes instead** — `[ ]` unbuilt, `[x]` met — and only `build` ticks them.
 

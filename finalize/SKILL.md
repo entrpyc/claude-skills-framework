@@ -42,7 +42,7 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
 2. **Update the statuses.** Set the marker on the project PRD requirements **this scope claimed** — the boundary above, and no wider — against what the code actually does, per `conventions` § Status markers, then re-derive the marker of every feature holding one of them. Under each 🔨, list what is still missing — one line per blocker, in what the operator would observe. **This is the only phase that moves a marker.**
 
-   A requirement outside the claimed set is not looked at here, whatever this scope's code may have done to it. It keeps the marker it had, and it is re-checked by whichever later scope claims it.
+   **A requirement step 1 created counts as claimed** — an undocumented finding the operator turned into a requirement is marked here like any other, against the code that prompted it. A requirement outside the claimed set is not looked at, whatever this scope's code may have done to it: it keeps the marker it had, and it is re-checked by whichever later scope claims it.
 
    This is a status update. **Never change what a requirement says here, never renumber, and never delete a requirement because it shipped** — every reference in the system points at numbers. The only edits to requirement text are the ones the operator chose in step 1.
 
