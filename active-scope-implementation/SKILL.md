@@ -21,7 +21,8 @@ The target is one or more of:
 
 ```
 docs/
-  active-scope/implementation-plan.md  <- read the target; write status and Record back
+  active-scope/implementation-plan.md  <- read the target; write status, the
+                                          requirement check-off, and Record back
   active-scope/prd.md                  <- read only the sections the target's tasks cite
   project/architecture.md              <- same
   project/prd.md                       <- same
@@ -152,8 +153,9 @@ With the code settled by step 7: every targeted criterion implemented, covered b
 `docs/active-scope/implementation-plan.md` is the scope's status, so leaving it stale is leaving the system without a state.
 
 - **Tick each criterion you actually met** — `- [ ]` → `- [x]`. Only criteria whose test is green and survived step 7.
+- **Tick every requirement those criteria complete** — in the task's *Requirements* block and in the *Requirements coverage* table at the top, which have to agree. A requirement is ticked only when **every** criterion listed against it is checked, across every step listed for it, and the tests naming them are green. A requirement whose last criterion isn't yours to build stays unticked, however finished the step looks.
 - **Fill the task's Record** in the shape below.
-- **Update the Status line** at the top: the new `<n>/<total>`, and any group now complete.
+- **Update the Status line** at the top: the new criteria and requirements counts, and any group now complete.
 - **Correct the plan where reality diverged** — a criterion reworded after step 5, a dependency discovered, a prerequisite the plan missed. Note the change in *Notes* so the edit isn't silent.
 
 ### 10. If your run completes a group, check the feature works

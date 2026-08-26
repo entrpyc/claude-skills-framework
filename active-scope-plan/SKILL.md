@@ -1,11 +1,16 @@
 ---
 name: active-scope-plan
-description: Break the active scope into groups, tasks, and numbered acceptance criteria — each group one feature, each task one reviewable independently testable unit carrying references to named PRD and architecture sections, each criterion an observable behavior addressable on its own so implementation can be pointed at it. Generated interactively with the operator, self-checked for coverage and hollow tasks before it is handed over, and carrying the scope's status for the rest of its life. Runs once per scope, after the active-scope PRD exists. Trigger on "implementation plan", "plan the build", "break this into tasks", "scope plan".
+description: Chunk the active scope into steps — groups, tasks, and numbered acceptance criteria — and check every functional requirement in the scope PRD off against the step that covers it, with the test that proves it named. Each group is one feature, each task one reviewable independently testable unit carrying references to named PRD and architecture sections, each criterion an observable behavior addressable on its own so implementation can be pointed at it. Generated interactively with the operator, self-checked for coverage and hollow tasks before it is handed over, and carrying the scope's status for the rest of its life. Runs once per scope, after the active-scope PRD exists. Trigger on "implementation plan", "plan the build", "break this into tasks", "scope plan".
 ---
 
 # Active-scope plan
 
-Produce `docs/active-scope/implementation-plan.md`: the plan covering the whole active scope, broken into **groups**, then **tasks**, then **numbered acceptance criteria**. This is Phase 4, and it runs once per scope.
+Produce `docs/active-scope/implementation-plan.md`. It does two things, and the second is what makes the first accountable:
+
+- **Chunk the scope into steps** — **groups**, then **tasks**, then **numbered acceptance criteria**, each level small enough to build and review in one sitting.
+- **Check the scope's functional requirements off against those steps, with test coverage.** Every numbered requirement in `active-scope prd § 3` is assigned to the step that satisfies it and carries the tests that prove it (Rule 7). A requirement no step claims is the scope's most expensive failure, because a plan that never mentioned it can't be seen to be missing it.
+
+This is Phase 4, and it runs once per scope.
 
 Three levels, three jobs:
 
@@ -15,7 +20,7 @@ Three levels, three jobs:
 
 Every level is one-to-many: a scope has several groups, a group several tasks, a task several criteria. The numbering carries it — `2.3.1` is group 2, task 3, criterion 1.
 
-**This file outlives the planning phase.** It is also where the scope's status lives — every criterion carries a checkbox, and Phase 5 writes its record back into the task it worked on. Write it knowing it will be edited many times and read many more.
+**This file outlives the planning phase.** It is also where the scope's status lives — every criterion and every requirement carries a checkbox, and Phase 5 writes its record back into the task it worked on. Write it knowing it will be edited many times and read many more.
 
 **This phase is interactive.** The plan is the most expensive thing in the system to get wrong, so its shape is agreed with the operator while it's being made, not presented finished for approval.
 
@@ -59,7 +64,7 @@ As a feel, not a law: most groups land at two to five tasks, most tasks at two t
 Implementation can be aimed at a single criterion, which puts more weight on each one than in a plan where the task is the smallest unit.
 
 - **Observable.** A criterion that can be satisfied without anything visibly changing is a hollow criterion. Ask: when this is met, what is different that someone could look at?
-- **Test-covered — every criterion, no exceptions.** Each one names the test that proves it, written on the criterion itself — `verified by <test>`. A criterion with no named test does not go in the plan: Phase 5 ticks a box only when that test is green, so an untested criterion can never be marked met. If you cannot name a test that would *fail* when the criterion is not met, the criterion is too vague to implement against — sharpen it, split it, or drop it.
+- **Test-covered — every criterion, no exceptions.** Each one names the test that proves it, written on the criterion itself — `verified by <test>`. A criterion with no named test does not go in the plan: Phase 5 ticks a box only when that test is green, so an untested criterion can never be marked met. **This is also where the requirements' coverage comes from** — Rule 7 reads these names back per requirement, so a vague one weakens a requirement's coverage, not just a criterion's. If you cannot name a test that would *fail* when the criterion is not met, the criterion is too vague to implement against — sharpen it, split it, or drop it.
 - **Name the cheapest test that can genuinely observe it.** The level you write here is paid for many times over: Phase 5 runs each criterion's test to write it, to break it, and again at the gate, on every run that touches the task. A criterion a unit test could observe should not name an end-to-end one because that was the level you reached for first. Where it truly needs the whole stack — a criterion about three services agreeing, or about what the user sees — that's the right level, and pushing it down would only produce a test that asserts on stubs. **Check the split before you hand the plan over:** if most of a group's criteria only show through its slowest level, say so at the checkpoint, because that is the group's build cost and the operator may want it restructured or the harness made faster first.
 - **Self-contained.** Someone handed `2.3.1` alone must know what to build. Not "and the same for the other states" — write the other states as their own criteria.
 - **Sub-bullets say how it's achieved** — one line each, plain language, no code. These keep the operator in the loop on *how* without dropping the plan to implementation altitude, so they have to stay short enough to actually read.
@@ -91,15 +96,40 @@ Whatever they choose, the answer is written into the plan as **Depends on:** lin
 **Read the active-scope PRD and the project architecture once, here.** For each task, write the *specific references it needs* — named sections, **not whole documents**. Phase 5 then reads only what its target points to, which is what keeps implementation cheap and focused.
 
 - **Behavior comes from `active-scope prd`, structure from `project architecture`, visuals from `design-references/<file>`.** Never cite `project prd` for behavior — the active-scope PRD already refines it, so a project-level citation sends Phase 5 to the vaguer of two answers for the same fact.
+- **Phase 3 already pulled the product-side references** into `active-scope prd § 1.4`. Take them from there rather than searching full scope again; what you add here is the architecture, which that document deliberately doesn't carry. A reference the PRD pulled that no task needs is a signal worth a line at the checkpoint — either a feature is missing from the plan, or the scope pulled more than it builds against.
 - References go on **tasks**, not groups. A group carries one line naming the active-scope PRD feature it delivers.
 - Cite the smallest section that carries the fact — `active-scope prd 3.1.2`, not "the PRD".
 - Cite `design-references/<file>` on any task building against a visual reference.
+
+## Rule 7 — Every step checks off functional requirements, with test coverage
+
+The scope's functional requirements are what the plan is accountable for; groups, tasks and criteria are only how it gets there. So **the mapping between them is written down, not left to be reconstructed** — in two places, and they have to agree.
+
+**On each task**, a *Requirements* block naming every `active-scope prd § 3` requirement that step satisfies, with the criteria that satisfy it:
+
+```
+**Requirements**
+- [ ] **3.1.2** — met by 1.1.1, 1.1.2
+- [ ] **3.1.3** — met by 1.1.3
+```
+
+- **A requirement goes on the step that finishes it**, not on every step that brushes past it. Where two steps genuinely each deliver part of one requirement, list it on both and say which part — a requirement half-covered twice and finished nowhere is the exact gap this rule exists to close.
+- **Its box is ticked when every criterion under it is checked and the tests naming it are green**, by Phase 5 in the same pass that ticks the criteria. Nothing else ticks it: a requirement is met when the tests covering it pass, not when the step is over.
+- **Test coverage is per requirement, and it comes from the criteria.** Every criterion already names the test that proves it (Rule 3), so a requirement's coverage is the tests on the criteria listed against it. **Read it as a set once you've written it:** if none of those tests would fail with the requirement unimplemented, the requirement is uncovered no matter how many criteria point at it.
+- **A step covering no requirement is a step to justify.** Shared foundations (Rule 5) are the legitimate case, and they say so: `**Requirements:** none — foundation for 2.1, 3.1`. Anything else that covers nothing is work the scope didn't ask for.
+- **Never invent a requirement number**, and never stretch one to fit. A step that delivers something `active-scope prd § 3` doesn't ask for is scope creep against the hard limit (`active-scope prd § 7`) — cut it, or take it to the operator.
+
+**And once at the top of the plan**, the *Requirements coverage* table: every numbered requirement in the scope PRD, the step that covers it, and its box. That table is the plan's answer to *what does this scope still owe*, in one place, without reading every group — and it's where Phase 6 starts when it walks the claims against the code.
 
 ## Method
 
 The interactive part is steps 2 and 4. Everywhere else, decide and move.
 
-1. **Read** `docs/active-scope/prd.md` and `docs/project/architecture.md` in full. Those two are the whole reading list — `docs/project/prd.md` is not read here, and nothing in the plan cites it. Note the PRD's *Requirements depth* (§ 1.2) — it bounds how much the plan is allowed to leave to assumption.
+1. **Read** `docs/active-scope/prd.md` and `docs/project/architecture.md` in full. Those two are the whole reading list — `docs/project/prd.md` is not read here, and nothing in the plan cites it. Three parts of the PRD do specific work before you draft anything:
+
+   - **§ 3 the functional requirements** — the list the plan is accountable for. **Write them out first, as the coverage table's rows, before there are any tasks to put in it.** Starting from the requirements and finding steps for them is what makes coverage a property of the plan; starting from tasks and checking coverage afterwards is what makes it a thing you discover at the end of the scope.
+   - **§ 1.2 requirements depth** — how much the plan is allowed to leave to assumption.
+   - **§ 7 the hard limit** — the ceiling. **No group, task, or criterion may cover what it excludes**, and the plan is not the place that raises it. Something the scope plainly needs that § 7 excludes goes to the operator as a question, and the PRD is what changes.
 
 2. **Agree the group split and the placement of shared foundations before writing tasks.** Draft the groups from the PRD's features, then walk the draft for anything two or more groups stand on (Rule 5). Both calls go to the operator in **one** `AskUserQuestion` pass — at most 5 questions in total, options labeled **future-proof** and **cheaper now**. Worth asking about:
 
@@ -116,15 +146,21 @@ The interactive part is steps 2 and 4. Everywhere else, decide and move.
 
 5. **Write the references** for each task (Rule 6).
 
-6. **Self-check the plan** — see below. This is not optional and it is not a formality.
+6. **Write the check-off** (Rule 7): the *Requirements* block on every task, then the *Requirements coverage* table from those blocks. Building the table from the blocks rather than in parallel is what keeps the two agreeing — a requirement that lands in the table without a step is one you invented a home for.
 
-7. **Keep it product-legible.** A reader should follow the arc of what's being built, not drown in implementation detail.
+7. **Self-check the plan** — see below. This is not optional and it is not a formality.
+
+8. **Keep it product-legible.** A reader should follow the arc of what's being built, not drown in implementation detail.
 
 ## Self-check
 
 Nothing else validates this plan before code gets written, so the check happens here — **as a separate pass, in a different posture.** Read the finished draft as if someone else wrote it and you have to find the flaw. Fix what you find; raise what needs the operator.
 
-**Coverage — nothing dropped, nothing invented.** Walk every numbered functional requirement in `active-scope prd § 3` against the criteria, both directions. A requirement no criterion claims is the failure that survives to the end of the scope, because a plan that never mentioned something can't be seen to be missing it. A criterion delivering something the PRD doesn't ask for is scope creep — name it and propose cutting it.
+**Coverage — nothing dropped, nothing invented.** The check-off (Rule 7) is what's being checked here, and it is read in both directions. **Down:** every numbered functional requirement in `active-scope prd § 3` appears exactly once in the coverage table, against a real step — a requirement no step claims is the failure that survives to the end of the scope, because a plan that never mentioned something can't be seen to be missing it. **Up:** every task's *Requirements* block resolves to a requirement that exists, and every step covering none says why. A step delivering something the PRD doesn't ask for is scope creep against the hard limit — name it and propose cutting it.
+
+**Coverage is claimed by tests, not by placement.** For each requirement, read the tests named on the criteria listed against it and ask whether one of them would fail if the requirement were unimplemented. A requirement whose criteria are all satisfiable with it absent is uncovered, and it is uncovered in the way that's hardest to see later — the boxes tick, the table fills, and nothing proves the behavior.
+
+**The hard limit holds.** Walk `active-scope prd § 7` against the groups and tasks. Anything the plan builds that § 7 excludes comes out — or goes to the operator, if it turns out the scope can't be delivered without it. This is the check that keeps the plan the size the scope was agreed at.
 
 **Every criterion names a test.** Walk the checkboxes and check each one carries a named test that would fail if the behavior were absent. A criterion whose test is the task title restated, or a whole task sharing one vague test, is the same gap — Phase 5 has nothing to break in step 7 and the box gets ticked on a claim.
 
@@ -151,8 +187,23 @@ Three things you don't fix on your own: **cutting scope** the operator hasn't ag
 _Planned: <YYYY-MM-DD>_
 
 ## Status
-<n>/<total> criteria met. Groups complete: <list, or none>.
+<n>/<total> criteria met. <n>/<total> requirements met.
+Groups complete: <list, or none>.
 _Maintained by implementation — see the checkboxes for detail._
+
+## Requirements coverage
+Every functional requirement in active-scope prd § 3, and the step that
+covers it. Ticked by implementation when the requirement's criteria are all
+checked and the tests naming it are green.
+
+| Requirement | Covered by | Met |
+|---|---|---|
+| 3.1.1 | Task 1.1 | [ ] |
+| 3.1.2 | Task 1.1, Task 1.3 (the expired case) | [ ] |
+| 3.2.1 | Task 2.1 | [ ] |
+
+_Every requirement in the PRD appears here exactly once. A requirement with_
+_no step is a hole in the plan, not a blank in the table._
 
 ## Group 1 — <title>
 **Delivers:** what a user can do end-to-end once this group is done.
@@ -166,6 +217,11 @@ isn't wanted — most often the rest of the group>
 **Prerequisites:** <what the operator must wire, configure, or provide before
 this can be built — or: none>
 **Depends on:** <task number, only where the order is real — otherwise omit>
+
+**Requirements**
+- [ ] **3.1.2** — met by 1.1.1, 1.1.2
+- [ ] **3.1.3** — met by 1.1.3
+<or, for a shared foundation: **Requirements:** none — foundation for 2.1, 3.1>
 
 **Acceptance criteria**
 - [ ] **1.1.1** <observable criterion> — verified by `<test>`
@@ -184,10 +240,12 @@ _Filled during implementation — leave empty here._
 ...
 ```
 
-Two things to leave alone at planning time: **Status** starts at `0/<total>`, and every **Record** stays empty. What you already know belongs in *Out of scope*, *Prerequisites*, or a criterion — not in a section another phase owns.
+Three things to leave alone at planning time: **Status** starts at `0/<total>` on both counts, every **checkbox** starts unticked — the requirement boxes included, however certain a step is to cover one — and every **Record** stays empty. What you already know belongs in *Out of scope*, *Prerequisites*, or a criterion — not in a section another phase owns.
 
 ## Checkpoint
 
-Link to the plan. Then the self-check result in at most three lines — what coverage, references, and hollow-task checks turned up, or "clean" for each. Then only what the operator wouldn't anticipate: a task that came out much larger than its neighbours, a dependency they wouldn't expect, a group that couldn't be made independently usable and why.
+Link to the plan. Then the self-check result in at most three lines — what coverage, references, and hollow-task checks turned up, or "clean" for each. **Coverage is the one that always gets a number:** how many of the scope PRD's functional requirements are checked off against a step, out of the total. Anything short of all of them is named, requirement by requirement, with why.
+
+Then only what the operator wouldn't anticipate: a task that came out much larger than its neighbours, a dependency they wouldn't expect, a group that couldn't be made independently usable and why, a requirement the hard limit forced you to leave uncovered.
 
 Don't list the groups back at them — they're in the plan — and don't name what runs next.

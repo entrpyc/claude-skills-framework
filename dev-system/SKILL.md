@@ -17,7 +17,7 @@ One idea applied at four widths: describe the thing, then cut it down until a pi
 | Level                  | What it is                                                                                                                                                                                                 | Scope        |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
 | **Project**      | Everything the project is ever meant to be. Its PRD and architecture are written once, with no phasing and no deferral.                                                                                    | The project  |
-| **Active scope** | The features being built right now,**chosen by the operator**. Carries its own PRD and implementation plan — a *more detailed* view of full scope, never a contradicting one. Structure comes from the project architecture. | An increment |
+| **Active scope** | The features being built right now,**chosen by the operator**. Carries its own PRD and implementation plan — a *more detailed* view of full scope, never a contradicting one, with a hard limit on what it will not do. Structure comes from the project architecture. | An increment |
 | **Group**        | One feature of the active scope, described end-to-end. The unit that has to work when its last task lands.                                                                                                 | A feature    |
 | **Task**         | One reviewable, independently testable piece of a group. Small on purpose. The unit of build.                                                                                                              | A change     |
 | **Criterion**    | One observable acceptance criterion of a task. The smallest addressable unit — implementation can be pointed at a single one.                                                                             | A behavior   |
@@ -33,7 +33,8 @@ docs/
     architecture.md           <- full scope, permanent
   active-scope/
     prd.md                    <- the current scope, in detail
-    implementation-plan.md    <- groups -> tasks -> acceptance criteria, and their status
+    implementation-plan.md    <- groups -> tasks -> acceptance criteria, the
+                                 requirements checked off against them, and their status
   design-references/          <- operator-supplied visual references
 ```
 
