@@ -64,7 +64,9 @@ Everything in the system is addressed by number, so the numbers are the interfac
 | `project/tdd.md` | Decision, per section      | `3.1`   |
 | `scope/prd.md`   | Feature                    | `3.1`   |
 |                    | Functional requirement     | `3.1.1` |
+|                    | Non-functional requirement | `4.1`   |
 | `scope/tdd.md`   | Decision                   | `1.1`   |
+|                    | Data entity                | `2.1`   |
 | `scope/plan.md`  | Step                       | `1`     |
 |                    | Substep                    | `1.1`   |
 |                    | Acceptance criterion       | `1.1.1` |
@@ -76,7 +78,7 @@ Everything in the system is addressed by number, so the numbers are the interfac
 A reference is a **plain label naming the document and the number** — never a link:
 
 ```
-project prd 3.2.4
+project prd 2.1.1
 project tdd 2.1
 scope prd 3.1.1
 scope tdd 1.2

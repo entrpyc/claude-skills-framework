@@ -57,7 +57,7 @@ One or two lines on what this feature is and why it exists.
 **Functional requirements**
 
 - 📝 **2.1.1** <One observable behavior, stated so it can be tested.>
-- 📝 **2.1.2** <Another one.> *Depends on: 2.1.1, 3.4.2*
+- 📝 **2.1.2** <Another one.> *Depends on: 2.1.1, 2.4.2*
 
 ### 📝 2.2 <Feature name>
 ...

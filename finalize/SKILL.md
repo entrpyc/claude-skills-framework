@@ -51,7 +51,7 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
    Sweep three sources, in this order:
 
-   - **`docs/scope/plan.md`** — every substep's *Prerequisites*, including substeps from earlier runs, and any manual step a build recorded.
+   - **`docs/scope/plan.md`** — every substep's *Prerequisites* block and every substep's *Manual steps* block, including substeps built in earlier runs.
    - **The fixes applied in step 1**, which came after those and can have introduced their own.
    - **The scope's diff**, for what nobody wrote down: a new variable read from the environment, a migration file, a new process or scheduled job, a dependency needing something installed on the host, a third-party credential or callback the code now expects.
 

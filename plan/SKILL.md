@@ -13,13 +13,14 @@ The plan carries the scope's status for the rest of its life: the build phase ch
 
 ## How it runs
 
-1. **Pull the scope.** Read `docs/scope/prd.md` and `docs/scope/tdd.md`. They are the only source for what the plan covers — the plan adds no requirement of its own. Two sections do specific work before you draft anything:
+1. **Pull the scope.** Read `docs/scope/prd.md` and `docs/scope/tdd.md`. They are the only source for what the plan covers — the plan adds no requirement of its own. Three sections do specific work before you draft anything:
 
    - **§ 3 the functional requirements** — the list the plan is accountable for. Every one of them is covered by exactly one substep.
-   - **§ 5 Out of scope — the ceiling.** No step, substep or criterion may cover what it excludes, and **the plan is not what raises it.** Something the scope plainly cannot be delivered without goes to the operator with `AskUserQuestion`, and the scope PRD is what changes.
+   - **§ 4 the non-functional requirements** — accountable the same way, but they constrain rather than deliver: each one is named in the *References* of every substep it binds, and at least one acceptance criterion somewhere tests it. A scope NFR no criterion tests is a requirement nothing will ever check.
+   - **§ 5 Out of scope — the ceiling.** No step, substep or criterion may cover what it excludes, and **the plan is not what raises it.** Something the scope plainly cannot be delivered without goes to the operator with `AskUserQuestion`, and the scope PRD is what changes — **raising the ceiling is theirs, editing `docs/scope/prd.md` to record what they chose is yours, in the same run.** A plan that covers what § 5 still excludes is the one outcome that is not allowed.
 
    Where the scope has a user interface, read `docs/design-references/` for the surfaces it puts in front of someone — see `conventions` § Design references — and name the file on each substep that builds against it.
-2. **Decide the steps.** One step per feature of the scope, then split each step into substeps small enough to build and review in one sitting. Every substep names the scope requirements and decisions it covers, and every requirement in the scope PRD is covered by exactly one substep.
+2. **Decide the steps.** One step per feature of the scope, then split each step into substeps small enough to build and review in one sitting. Every substep names the scope requirements and decisions it covers, and every functional requirement in the scope PRD is covered by exactly one substep.
 
    **Step 1 is the foundation, and it is chosen differently from the rest.** It is the 20% of the scope that carries 80% of its impact — the spine the other steps hang off. The test is what the operator gets from building it by hand: **after step 1 they should understand how the code works.** Every step after it builds on that spine and refines it.
 
@@ -51,7 +52,7 @@ References follow `conventions` § Citing — plain labels: `scope prd 3.1.1`, `
 
 Every criterion is a checkbox — `[ ]` unbuilt, `[x]` met. This skill writes them all unchecked; the build phase checks them off and keeps *Status* current.
 
-Every substep carries an empty **Assumptions** block and an empty **Edge cases** block — what the build phase decided that nothing settled for it, and what its code does not handle. **Leave both empty here.** The build phase owns them, and what you already know belongs in *Out of scope* or in a criterion, not in a section another phase writes.
+Every substep carries three empty blocks — **Assumptions**, **Edge cases** and **Manual steps**: what the build phase decided that nothing settled for it, what its code does not handle, and what the operator has to do by hand for its code to run. **Leave all three empty here.** The build phase owns them, and what you already know belongs in *Prerequisites*, in *Out of scope*, or in a criterion, not in a section another phase writes.
 
 ```markdown
 # <Product> — Implementation plan: <scope name>
@@ -72,7 +73,7 @@ _Maintained by the build phase — see the checkboxes for detail._
 ### 1.1 — <Substep name>
 
 **Delivers:** what this substep puts in place, in one sentence.
-**References:** scope prd 3.1.1, 3.1.2; scope tdd 1.2; design-references/<file>
+**References:** scope prd 3.1.1, 3.1.2, 4.1; scope tdd 1.2, 2.1; design-references/<file>
 **Out of scope:** what this substep deliberately leaves to a later one.
 **Prerequisites:** anything the operator has to do by hand first — an account, a key, a service enabled. Omit when there are none.
 
@@ -85,6 +86,9 @@ _Maintained by the build phase — see the checkboxes for detail._
 _Written by the build phase — leave empty here._
 
 **Edge cases**
+_Written by the build phase — leave empty here._
+
+**Manual steps**
 _Written by the build phase — leave empty here._
 
 ### 1.2 — <Substep name>
@@ -108,7 +112,7 @@ _Written by the build phase — leave empty here._
 - **Every step after the foundation carries a `Builds on:` line.** It names the shape step 1 fixed that the step takes as-is. A step that cannot write one is inventing its own shape — that work belongs in step 1, or step 1 was cut too thin.
 - **Substeps are sequential.** Their order is the build order, across steps as well as inside one. A reader should be able to start at 1.1 and never need something that has not been built yet.
 - **A substep is one unit of work, not a phase.** Reviewable on its own, testable on its own. If it carries a large chunk of work, it is cut wrong — split it.
-- **Cover everything once.** Every requirement in the scope PRD appears in some substep's *References*. A requirement covered nowhere is a hole; one covered in two substeps is a boundary in the wrong place.
+- **Cover everything once.** Every functional requirement in the scope PRD appears in exactly one substep's *References*. One covered nowhere is a hole; one covered in two substeps is a boundary in the wrong place. Non-functional requirements are the exception — they appear wherever they bind, and are covered when a criterion tests them.
 - **Nothing in `Out of scope` gets planned.** `docs/scope/prd.md` § 5 is the ceiling on the whole plan, and only the operator raises it. A substep covering something § 5 excludes is scope creep with a number on it.
 - **Cite the design reference on every substep that builds a surface.** Where `docs/design-references/` covers what the substep puts in front of a user, name the file in *References* so the build phase reads it instead of inventing the interface.
 - **Name the test, and name one that could fail.** Every acceptance criterion says what verifies it. If you cannot name a test that would go **red** with the behavior absent, the criterion is too vague to build against — sharpen it, split it, or drop it. The build phase writes that test before the code and watches it fail, so a criterion no test can be red for cannot be built against.

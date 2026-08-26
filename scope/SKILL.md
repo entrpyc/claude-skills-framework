@@ -33,7 +33,7 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
 
 ## Format
 
-References follow `conventions` § Citing — plain labels: `project prd 3.2.4`, `project tdd 2.1`.
+References follow `conventions` § Citing — plain labels: `project prd 2.1.1`, `project tdd 2.1`.
 
 ### `docs/scope/prd.md`
 
@@ -42,8 +42,8 @@ References follow `conventions` § Citing — plain labels: `project prd 3.2.4`,
 
 ## 1. What's in
 
-- **<Area>** — one line on what it covers. (project prd 3.2, 3.4.1–3.4.5)
-- **<Area>** — ... (project prd 4.1)
+- **<Area>** — one line on what it covers. (project prd 2.2, 2.4.1–2.4.5)
+- **<Area>** — ... (project prd 2.6)
 
 ## 2. What this scope delivers
 
@@ -55,18 +55,18 @@ A paragraph describing what exists at the end of it that did not exist before.
 
 ### 3.1 <Feature name>
 
-_Refines: project prd 3.2_
+_Refines: project prd 2.2_
 
 **Functional requirements**
 
-- **3.1.1** <The requirement, in this scope's detail.> (refines 3.2.1)
-- **3.1.2** <...> (refines 3.2.2)
+- **3.1.1** <The requirement, in this scope's detail.> (refines 2.2.1)
+- **3.1.2** <...> (refines 2.2.2)
 
 ## 4. Non-functional requirements
 
-| Category | Requirement | Refines |
-| :------- | :---------- | :------ |
-| <Performance, security, availability…> | <What it has to hold to here.> | project prd 4.1 |
+| # | Category | Requirement | Refines |
+| :- | :------- | :---------- | :------ |
+| **4.1** | <Performance, security, availability…> | <What it has to hold to here.> | project prd 3.1 |
 
 ## 5. Out of scope
 
@@ -99,9 +99,9 @@ Write each one as settled, marked **major** or **minor**, and the major ones wit
 
 ## 2. Data
 
-**<Entity>** _(new)_ — what it holds and who sets it.
+**2.1 <Entity>** _(new)_ — what it holds and who sets it.
 
-**<Entity>** _(existing, extended)_ — what this scope adds to it.
+**2.2 <Entity>** _(existing, extended)_ — what this scope adds to it.
 ```
 
 ### `docs/scope/diagram.svg`
