@@ -22,7 +22,13 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
    - **Update the project docs** — the project PRD or TDD is what changes, and the scope stands.
    - **Change the scope** — the project docs hold, and the scope requirement is fixed to match.
    - Whatever else fits.
-6. **Write both documents**, then say where they are in one line and stop.
+6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Put every **major** one to the operator with `AskUserQuestion` before it is written down. A decision is major if any one of these holds:
+   - it **changes what the product costs** to run or to maintain;
+   - it is **user-facing** — it changes what someone sees or does;
+   - it is **hard to change later** — a data shape, a boundary, an interface other code will bind to.
+
+   Everything else is minor: decide it yourself and move on. When a decision sits on the line, treat it as major.
+7. **Write both documents**, then say where they are in one line and stop.
 
 ## Asking
 
@@ -109,4 +115,4 @@ Whenever you write the scope TDD, write the diagram beside it as `docs/scope/dia
 - **Refine, never contradict.** A scope document says the same thing as its project parent, in more detail. If it says something different, that is step 5, not a sentence you write.
 - **Cite the parent.** Every refined requirement and decision names the project requirement or decision it came from. A requirement with no parent is uncovered — raise it, never invent a parent to make it resolve.
 - **More detail, not less.** If a line could be deleted and the project doc would still carry the same information, delete it and cite the parent instead. A scope PRD that reads as a summary of the project PRD has failed.
-- **Never widen the scope yourself.** What is in is the operator's decision, settled in steps 2 and 5. Everything you leave out goes in *Out of scope* so it is visible.
+- **Never widen the scope yourself.** What is in is the operator's decision, settled in steps 2, 5 and 6. Everything you leave out goes in *Out of scope* so it is visible.
