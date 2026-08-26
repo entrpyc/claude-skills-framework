@@ -50,6 +50,8 @@ One of the two actually changes. Never close a difference by picking the side th
 
 Every feature and every requirement is prefixed with its status: **📝 not started**, **🔨 partially done**, **✅ done**. This skill writes 📝 on everything — nothing is built yet. Later phases move them.
 
+A requirement that cannot be built until another one exists ends with **`Depends on:`** and the numbers of the requirements it needs. Only real build order — not every requirement it happens to be related to. A requirement that depends on nothing carries no line.
+
 ```markdown
 # <Product> — PRD
 
@@ -64,7 +66,7 @@ One or two lines on what this feature is and why it exists.
 **Functional requirements**
 
 - 📝 **2.1.1** <One observable behavior, stated so it can be tested.>
-- 📝 **2.1.2** ...
+- 📝 **2.1.2** <Another one.> *Depends on: 2.1.1, 3.4.2*
 
 ### 📝 2.2 <Feature name>
 ...
