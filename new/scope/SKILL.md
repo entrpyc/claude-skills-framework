@@ -78,13 +78,13 @@ _Refines: project prd 3.2_
 
 ### `docs/scope/tdd.md`
 
-```markdown
+````markdown
 # <Product> — Scope: <short-name> — TDD
 
 ## 1. Decisions
 
-- **1.1** <The decision, in this scope's detail.> (refines project tdd 3.1)
-- **1.2** <A decision this scope has to make that the project TDD leaves open.> (refines project tdd 2.1)
+- **1.1** <The decision, in this scope's detail.> (refines project tdd 4.1)
+- **1.2** <A decision this scope has to make that the project TDD leaves open.> (refines project tdd 3.1)
 
 ## 2. Data
 
@@ -94,8 +94,15 @@ _Refines: project prd 3.2_
 
 ## 3. Diagram
 
-Optional. A mermaid diagram of what this scope adds, when the change is structural.
+```mermaid
+flowchart TB
+    ...what this scope adds, and where it attaches to what already exists...
 ```
+````
+
+### `docs/scope/diagram.svg`
+
+Whenever you write the scope TDD, write the diagram beside it as `docs/scope/diagram.svg` — **the same parts and the same connections** as the mermaid block in section 3. Hand-write the SVG: self-contained, no external fonts or images, labels as real text, and legible on a light and a dark background. If the mermaid diagram changes, this file changes with it.
 
 ## Rules
 

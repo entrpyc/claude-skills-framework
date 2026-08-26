@@ -17,36 +17,40 @@ This skill is the map. It produces no artifact of its own — it tells you where
 ```
 docs/
   project/
-    prd.md      <- the whole project, the what
-    tdd.md      <- the whole project, the how
+    prd.md          <- the whole project, the what
+    tdd.md          <- the whole project, the how
+    diagram.svg     <- the tdd's system diagram, drawn
   scope/
-    prd.md      <- the current scope, the what, refined
-    tdd.md      <- the current scope, the how, refined
-    plan.md     <- the steps that implement the current scope
+    prd.md          <- the current scope, the what, refined
+    tdd.md          <- the current scope, the how, refined
+    diagram.svg     <- the scope tdd's diagram, drawn
+    plan.md         <- the steps that implement the current scope
 ```
 
 ### `docs/project`
 
 Full project product requirements and technical decisions.
 
-| File                            | Contents                                                                                                                                                                         |
-| :-------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|            `docs/project/prd.md`            | Product requirements document. Overview, functional requirements, non-functional requirements. This is the**what** of the project.                                         |
-|            `docs/project/tdd.md`            | Technical decisions document. High level overview, infrastructure, tech stack, services, tools, running cost, performance requirements. This is the**how** of the project. |
+| File | Contents |
+| ---- | -------- |
+| `docs/project/prd.md` | Product requirements document. Overview, functional requirements, non-functional requirements. This is the **what** of the project. |
+| `docs/project/tdd.md` | Technical decisions document. High level overview, infrastructure, tech stack, services, tools, running cost, performance requirements. This is the **how** of the project. |
+| `docs/project/diagram.svg` | The system diagram from the project TDD, drawn as SVG. Always matches it. |
 
 ### `docs/scope`
 
 Product requirements, technical decisions, and implementation plan for the specified scope of implementation.
 
-| File                   | Contents                                                                                                                              |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/scope/prd.md`  | Same as project PRD, but lists only the requirements for this scope, refined and more detailed. Never contradicts the full-scope PRD. |
-| `docs/scope/tdd.md`  | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD.    |
-| `docs/scope/plan.md` | Implementation plan for this scope.                                                                                                   |
+| File | Contents |
+| ---- | -------- |
+| `docs/scope/prd.md` | Same as project PRD, but lists only the requirements for this scope, refined and more detailed. Never contradicts the full-scope PRD. |
+| `docs/scope/tdd.md` | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD. |
+| `docs/scope/diagram.svg` | The diagram from the scope TDD, drawn as SVG. Always matches it. |
+| `docs/scope/plan.md` | Implementation plan for this scope. |
 
 ## The source of truth
 
-`docs/project/prd.md` and `docs/project/tdd.md` are the single source of truth **over the codebase too**. The code is evidence of what the software currently does. It is never authority for what the software is supposed to do — "the code does X" is a fact about the present, never a reason for X to be correct.
+`docs/project/prd.md` and `docs/project/tdd.md`, `docs/project/diagram.svg` are the single source of truth **over the codebase too**. The code is evidence of what the software currently does. It is never authority for what the software is supposed to do — "the code does X" is a fact about the present, never a reason for X to be correct.
 
 A difference between the code and the project documents is therefore an open decision, not an answer. It is never closed by picking the side that looks more sensible. It goes to the operator, in whatever phase trips over it, with two options: **update the document**, or **change the code** — and one of the two actually changes.
 
@@ -68,8 +72,8 @@ The system is five skills. Each one is a phase; each writes what the next one re
 
 | Skill        | Does                                                                         | Reads                                       | Writes                                           | Runs                 |
 | ------------ | ---------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------ | -------------------- |
-| `project`  | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md` | once per project     |
-| `scope`    | Defines the slice to build now, refining the project docs                    | project PRD, project TDD                    | `docs/scope/prd.md`, `docs/scope/tdd.md`     | once per scope       |
+| `project`  | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | once per project     |
+| `scope`    | Defines the slice to build now, refining the project docs                    | project PRD, project TDD                    | `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`     | once per scope       |
 | `plan`     | Breaks the scope into implementable steps                                    | scope PRD, scope TDD                        | `docs/scope/plan.md`                           | once per scope       |
 | `build`    | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status                      | many times per scope |
 | `finalize` | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`      | once per scope       |
@@ -82,8 +86,9 @@ The artifacts are the state. Read the filesystem and stop at the first thing mis
 
 | If this is missing                               | You are at                                                   |
 | ------------------------------------------------ | ------------------------------------------------------------ |
-| `docs/project/prd.md`, `docs/project/tdd.md` | Step 1 —`project`                                         |
-| `docs/scope/prd.md`, `docs/scope/tdd.md`     | Step 2 —`scope`                                           |
+| `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | Step 1 —`project`                                         |
+| `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`     | Step 2 —`scope`                                           |
+| `docs/scope/diagram.svg` | The diagram from the scope TDD, drawn as SVG. Always matches it. |
 | `docs/scope/plan.md`                           | Step 3 —`plan`                                            |
 | nothing — all five present                      | Step 4 —`build`, on whatever steps the operator points at |
 | nothing — and the plan is complete              | Step 5 —`finalize`                                        |
@@ -99,8 +104,8 @@ Report where you landed in one line, then stop. **Never pick the next step to bu
 | **skill**                  | One phase of the system —`project`, `scope`, `plan`, `build`, `finalize` — pulled by the operator, never chained automatically.     |
 | **project**                | The full product: everything it is ever meant to be.                                                                                            |
 | **scope**                  | The slice of the project being implemented right now, chosen by the operator.                                                                   |
-| **prd**                    | Product requirements document — the**what**.                                                                                             |
-| **tdd**                    | Technical decisions document — the**how**.                                                                                               |
+| **prd**                    | Product requirements document — the **what**.                                                                                             |
+| **tdd**                    | Technical decisions document — the **how**.                                                                                               |
 | **plan**                   | The steps that implement the current scope.                                                                                                     |
 | **single source of truth** | `project/prd.md` and `project/tdd.md` — what the product is and how it is built. Everything else is downstream of them.                    |
 | **refining**               | Restating something from the project docs in more detail for a scope, without contradicting it.                                                 |

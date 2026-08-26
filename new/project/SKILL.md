@@ -79,28 +79,39 @@ One or two lines on what this feature is and why it exists.
 
 ### `docs/project/tdd.md` — the how
 
-```markdown
+````markdown
 # <Product> — TDD
 
 ## 1. Overview
 The shape of the system in a few paragraphs — the parts and how they fit.
 
-## 2. Infrastructure
-- **2.1** <Where it runs and how it is deployed.>
+## 2. System diagram
 
-## 3. Tech stack
-- **3.1** <Language, framework, database, and why over the alternative.>
+```mermaid
+flowchart TB
+    ...the parts of the system and what talks to what...
+```
 
-## 4. Services & tools
-- **4.1** <Third-party service or tool, what it is for, what it replaces building.>
+## 3. Infrastructure
+- **3.1** <Where it runs and how it is deployed.>
 
-## 5. Running costs
+## 4. Tech stack
+- **4.1** <Language, framework, database, and why over the alternative.>
+
+## 5. Services & tools
+- **5.1** <Third-party service or tool, what it is for, what it replaces building.>
+
+## 6. Running costs
 | Item | Cost | Notes |
 | ---- | ---- | ----- |
 
-## 6. Performance requirements
-- **6.1** <Target, stated as a number.>
-```
+## 7. Performance requirements
+- **7.1** <Target, stated as a number.>
+````
+
+### `docs/project/diagram.svg`
+
+Whenever you write the TDD, write the diagram beside it as `docs/project/diagram.svg` — **the same system, the same parts, the same connections** as the mermaid block in section 2. Hand-write the SVG: self-contained, no external fonts or images, labels as real text, and legible on a light and a dark background. If the mermaid diagram changes, this file changes with it.
 
 ## Rules
 
