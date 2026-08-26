@@ -9,6 +9,8 @@ Produce `docs/scope/prd.md` and `docs/scope/tdd.md` — the requirements and tec
 
 The operator's ask comes in two shapes, and both land in the same place: a broad request about something to add, change or remove, or specific requirements or features named out of the project PRD.
 
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+
 ## How it runs
 
 1. **Pull the requirements.** Read `docs/project/prd.md` and pull the requirements the ask covers. A broad ask is mapped onto the requirements that carry it. Anything the ask needs that no requirement covers is a divergence — hold it for step 5.
@@ -30,19 +32,9 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
    Everything else is minor: decide it yourself and move on. When a decision sits on the line, treat it as major. **Every major decision, once confirmed, is written into § 6 Edge cases** — that section is the record of what this scope decided that the project docs did not.
 7. **Write both documents**, then say where they are in one line and stop.
 
-## Asking
-
-Ask with `AskUserQuestion`. Never print a numbered list of questions into chat for the operator to answer in prose.
-
-- At most **5 questions per set**. Ask in one pass rather than trickling.
-- Every question carries options, and each option says **what it commits to** — what it pulls into the scope, what it leaves for later.
-- Only ask what actually gates the document. Decide the small things yourself.
-
-Nothing undecided gets written. A document records decisions, never open questions.
-
 ## Format
 
-References to the project docs are plain labels, never links: `project prd 3.2.4`, `project tdd 2.1`.
+References follow `conventions` § Citing — plain labels: `project prd 3.2.4`, `project tdd 2.1`.
 
 ### `docs/scope/prd.md`
 
@@ -92,31 +84,24 @@ Every assumption this scope makes that the project docs did not settle, and that
 
 ### `docs/scope/tdd.md`
 
-````markdown
+```markdown
 # <Product> — Scope: <short-name> — TDD
 
 ## 1. Decisions
 
-- **1.1** <The decision, in this scope's detail.> (refines project tdd 4.1)
-- **1.2** <A decision this scope has to make that the project TDD leaves open.> (refines project tdd 3.1)
+- **1.1** <The decision, in this scope's detail.> (refines project tdd 3.1)
+- **1.2** <A decision this scope has to make that the project TDD leaves open.> (refines project tdd 2.1)
 
 ## 2. Data
 
 **<Entity>** _(new)_ — what it holds and who sets it.
 
 **<Entity>** _(existing, extended)_ — what this scope adds to it.
-
-## 3. Diagram
-
-```mermaid
-flowchart TB
-    ...what this scope adds, and where it attaches to what already exists...
 ```
-````
 
 ### `docs/scope/diagram.svg`
 
-Whenever you write the scope TDD, write the diagram beside it as `docs/scope/diagram.svg` — **the same parts and the same connections** as the mermaid block in section 3. Hand-write the SVG: self-contained, no external fonts or images, labels as real text, and legible on a light and a dark background. If the mermaid diagram changes, this file changes with it.
+What this scope adds and where it attaches to what already exists, drawn — written whenever the scope TDD is, per `conventions` § Diagrams.
 
 ## Rules
 
