@@ -79,9 +79,9 @@ An assumption here is anything the code needed that the plan didn't settle — i
 
 A major assumption that invalidates the planned approach isn't an assumption any more — that's step 5.
 
-**Where the target sits changes what you'll be asking about, not how much you ask.** Group 1 is the plan's foundation (`active-scope-plan` Rule 8) — the shapes, boundaries and names every later group binds to — so that is where the major assumptions actually live, and where the operator expects to be close to the work. After it, most decisions are already settled by what Group 1 fixed, and the run should mostly need nothing.
+**Where the target sits changes what you'll be asking about, not how much you ask.** The groups labeled `(Foundational)` are the plan's foundation (`active-scope-plan` Rule 8) — the shapes, boundaries and names every later group binds to — so that is where the major assumptions actually live, and where the operator expects to be close to the work. After them, most decisions are already settled by what the foundation fixed, and the run should mostly need nothing.
 
-**Which makes a later group needing new shape a signal, not a chore.** A second data shape for something Group 1 already models, a boundary the foundation doesn't have, a name other code will bind to: that is the foundation coming up short, and it doesn't get absorbed quietly because the group is meant to be routine. Ask it here, or — where it changes the planned approach — stop at step 5. Then say it at the checkpoint, because it is the plan being wrong, not the code.
+**Which makes a later group needing new shape a signal, not a chore.** A second data shape for something the foundation already models, a boundary it doesn't have, a name other code will bind to: that is the foundation coming up short, and it doesn't get absorbed quietly because the group is meant to be routine. Ask it here, or — where it changes the planned approach — stop at step 5. Then say it at the checkpoint, because it is the plan being wrong, not the code.
 
 ### 5. Abort and re-plan on a dead end — as a question, with options
 

@@ -45,8 +45,8 @@ Each group maps to a feature in `active-scope prd § 3`, and reads as something 
 
 - **A group must end in a working state.** When its last task is done, the operator can use the feature — not inspect a pile of half-wired parts.
 - **A group is not a layer.** "The database work" is not a group; "a user can save and reopen a draft" is.
-- If you can't say what a group lets someone do that they couldn't before, it isn't a group — it's a task that escaped. The one exception is a shared foundation the operator has chosen to give its own group — see Rule 5, and note that it can only be Group 1 (Rule 8).
-- **Group 1 is not just the first group, it's the foundation** — the fifth of the scope that fixes the shape everything else binds to. See Rule 8 before drafting the split.
+- If you can't say what a group lets someone do that they couldn't before, it isn't a group — it's a task that escaped. The one exception is a shared foundation the operator has chosen to give its own group — see Rule 5, and note that it can only be a foundational group (Rule 8).
+- **The groups labeled `(Foundational)` are not just the first ones, they're the foundation** — the fifth of the scope that fixes the shape everything else binds to, in Group 1 or in Groups 1 and 2. See Rule 8 before drafting the split.
 
 ## Rule 2 — Task granularity (the master knob)
 
@@ -84,7 +84,7 @@ Find them before writing tasks. Walk the drafted groups and name anything two or
 
 For each one, three placements, each with a real cost:
 
-- **Its own group, built first — which means Group 1** (Rule 8). *Future-proof*: one shape agreed once, every consumer built against it. It is a deliberate exception to Rule 1: the group ends in nothing a user can do, so its **Delivers** line names the groups it unblocks instead. Costs a group of review before any feature works, and one exception per scope is the ceiling — a plan with two of these is a plan of layers.
+- **Its own group, built first — which means a foundational group** (Rule 8), so Group 1, or Group 2 where the foundation takes two. *Future-proof*: one shape agreed once, every consumer built against it. It is a deliberate exception to Rule 1: the group ends in nothing a user can do, so its **Delivers** line names the groups it unblocks instead. Costs a group of review before any feature works, and Rule 8's ceiling still holds — a plan whose foundation keeps growing groups is a plan of layers.
 - **Split across the groups that need it** — *cheaper now*. Each group builds the slice it needs; the first consumer sets the shape and later groups extend it. Nothing is built before it's used, and the bill comes if the second consumer needs a different shape.
 - **Owned by one feature group, borrowed by the others** — built inside the group with the most demanding use, the rest depend on that task. Every group stays feature-shaped, at the price of coupling the others to that group landing first.
 
@@ -122,13 +122,13 @@ The scope's functional requirements are what the plan is accountable for; groups
 
 **And once at the top of the plan**, the *Requirements coverage* table: every numbered requirement in the scope PRD, the step that covers it, and its box. That table is the plan's answer to *what does this scope still owe*, in one place, without reading every group — and it's where Phase 6 starts when it walks the claims against the code.
 
-## Rule 8 — Group 1 is the foundation, and it's about a fifth of the scope
+## Rule 8 — The foundation comes first, labeled, and it's about a fifth of the scope
 
 The operator's attention is the scarcest thing in this system, and it is not spent evenly across a scope. **The plan decides where it goes**, and it goes to the front.
 
-So order the plan to front-load the shape: **Group 1 carries the work every later group binds to — roughly the first fifth of the scope's tasks — and every group after it extends that shape rather than setting a new one.** The operator stays close through Group 1, where a wrong shape is cheap to change and ruinous to discover late. What follows is refinement over decisions already made, which is the part Phase 5 can carry with far less of them in the loop.
+So order the plan to front-load the shape: **the foundation is Group 1 — or Groups 1 and 2 where the scope is too big for one group to hold it. Together they carry the work every later group binds to, roughly the first fifth of the scope's tasks, and every group after them extends that shape rather than setting a new one.** The operator stays close through the foundation, where a wrong shape is cheap to change and ruinous to discover late. What follows is refinement over decisions already made, which is the part Phase 5 can carry with far less of them in the loop.
 
-What belongs in Group 1 is whatever later code binds to and can't cheaply be moved afterwards:
+What belongs in the foundation is whatever later code binds to and can't cheaply be moved afterwards:
 
 - the **data shapes** the scope's features read and write;
 - the **module and service boundaries** — what owns what, what calls what;
@@ -136,13 +136,24 @@ What belongs in Group 1 is whatever later code binds to and can't cheaply be mov
 - **one path that goes end to end**, however thin, proving the pieces actually meet;
 - the **conventions later groups copy without thinking** — how errors surface, how input is validated, how a request is authorized.
 
-Three rules keep it from turning into a layer:
+**Say so in the heading, in these words:**
 
-- **Prefer the thinnest end-to-end slice of the most foundational feature.** Rule 1 still holds: Group 1 should end in something a user can do, even if it is one path with everything around it unbuilt. A skeleton that runs proves the boundaries meet; a pile of parts that never touch proves nothing and finds out at the end of the scope.
-- **A pure foundation group is allowed here, and only here.** Where the operator places a shared foundation in its own group (Rule 5), that group **is** Group 1, and its *Delivers* line names the groups it unblocks. One per scope is the ceiling.
-- **About a fifth, as a feel and not a law.** If Group 1 is half the plan it isn't a foundation, it's the scope — re-cut it and let a later group take whatever sets no shape. If it's one small task, the shape-setting work is probably hiding in Group 3; go and find it.
+```
+## Group 1 — Sessions and identity (Foundational)
+## Group 2 — Cart and line items (Foundational)
+## Group 3 — Promotion codes
+```
 
-**Every later group says what it inherits.** Each one after Group 1 carries a line naming the shape it builds on (see *Structure*). That line is what makes a group quietly inventing its own shape visible here, as a paragraph, instead of three groups later as a rewrite.
+The label is what the operator reads to know which groups they are staying close to and which they can hand over, so it is written where it can't be missed and it is written the same way every time. **A group without the label is a normal group, whatever its number** — an unlabeled Group 1 is the plan saying the scope has no foundation, which is almost never what you mean.
+
+Four rules keep the foundation from turning into a layer:
+
+- **Prefer the thinnest end-to-end slice of the most foundational feature.** Rule 1 still holds: a foundational group should end in something a user can do, even if it is one path with everything around it unbuilt. A skeleton that runs proves the boundaries meet; a pile of parts that never touch proves nothing, and finds out at the end of the scope.
+- **Two foundational groups where one genuinely won't hold it, and never three.** A fifth of a large scope can exceed what one group can carry without breaking Rule 2, or can span two features that each have to end usable under Rule 1 — then it is Group 1 and Group 2, both labeled, and the fifth is the two of them together. What does **not** license the split: wanting more of the scope up front, or a foundational group that got big by absorbing work which sets no shape. Three is a plan of layers wearing a label.
+- **A pure foundation group is allowed here, and only here.** Where the operator places a shared foundation in its own group (Rule 5), that group is a foundational one and its *Delivers* line names the groups it unblocks instead. It is still bound by the ceiling above.
+- **About a fifth, as a feel and not a law.** If the foundational groups are half the plan they aren't a foundation, they're the scope — re-cut and let a later group take whatever sets no shape. If it's one small task, the shape-setting work is probably hiding in Group 3; go and find it.
+
+**Every later group says what it inherits.** Each group after the foundation carries a line naming the shape it builds on (see *Structure*). That line is what makes a group quietly inventing its own shape visible here, as a paragraph, instead of three groups later as a rewrite.
 
 ## Method
 
@@ -156,7 +167,7 @@ The interactive part is steps 2 and 4. Everywhere else, decide and move.
 
 2. **Agree the group split and the placement of shared foundations before writing tasks.** Draft the groups from the PRD's features, then walk the draft for anything two or more groups stand on (Rule 5). Both calls go to the operator in **one** `AskUserQuestion` pass — at most 5 questions in total, options labeled **future-proof** and **cheaper now**. Worth asking about:
 
-   - **which feature's thin end-to-end slice becomes Group 1** (Rule 8), where more than one could carry the shape — this is the group the operator will be closest to, so it's their call, not yours;
+   - **which feature's thin end-to-end slice becomes the foundation** (Rule 8), where more than one could carry the shape — and, where a fifth of the scope won't fit in one group, whether it splits into two labeled `(Foundational)`. These are the groups the operator will be closest to, so it's their call, not yours;
    - a feature that could be one group or two, where the split changes what gets validated;
    - build order, where one order keeps the app working and another gets a risky piece proven earlier;
    - a feature the PRD names that has no clean end-to-end group;
@@ -199,7 +210,7 @@ Nothing else validates this plan before code gets written, so the check happens 
 
 **Shared foundations landed where the operator put them.** Take each foundation from step 2 and check the plan does what they chose, and that **every consuming group carries a `Depends on:` line to the task that builds it**. A foundation with no dependency lines is the same failure as no decision at all — Phase 5 can be aimed at any task in any order, so it will build the second consumer against a shape that isn't there yet. If a foundation surfaced only while writing the tasks, it was never asked about: go back and ask before handing over.
 
-**Foundation is front-loaded.** Read every group after Group 1 for shape it *introduces* rather than inherits: a second data shape for the same thing, a new module boundary, a name other code will bind to, its own convention for errors or permissions. Each one is either work that belongs in Group 1 or an admission the foundation was cut too thin — both are re-cuts, cheap here and expensive once the operator has reviewed Group 1 and stepped back. Check the share while you're there: roughly a fifth of the tasks, and if it's badly off, say so at the checkpoint with what you'd move.
+**Foundation is front-loaded, and labeled.** Every foundational group carries `(Foundational)` in its heading, they are the first groups in the plan with nothing unlabeled between them, and there are at most two (Rule 8). Then read every group after them for shape it *introduces* rather than inherits: a second data shape for the same thing, a new module boundary, a name other code will bind to, its own convention for errors or permissions. Each one is either work that belongs in the foundation or an admission it was cut too thin — both are re-cuts, cheap here and expensive once the operator has reviewed the foundation and stepped back. Check the share while you're there: roughly a fifth of the tasks across the labeled groups, and if it's badly off, say so at the checkpoint with what you'd move.
 
 **Granularity and group independence.** Against Rules 1 and 2: a task needing three paragraphs, or with an "and" in its title doing real work, or the only task in a non-trivial group. A group whose last task lands and still leaves nothing usable. A dependency the order violates.
 
@@ -231,7 +242,7 @@ checked and the tests naming it are green.
 _Every requirement in the PRD appears here exactly once. A requirement with_
 _no step is a hole in the plan, not a blank in the table._
 
-## Group 1 — <title>            (the foundation — Rule 8)
+## Group 1 — <title> (Foundational)
 **Delivers:** what a user can do end-to-end once this group is done, however
 thin the path. For a pure foundation group: the groups it unblocks.
 **Feature:** <the active-scope PRD feature this delivers, e.g. active-scope prd 3.1>
@@ -265,11 +276,13 @@ _Filled during implementation — leave empty here._
 ### Task 1.2 — <title>
 ...
 
-## Group 2 — <title>
+## Group 2 — <title>            <- carries "(Foundational)" too where the
+                                   foundation takes two groups (Rule 8), and
+                                   then a "Fixes for the scope:" line as well
 **Delivers:** ...
 **Feature:** ...
-**Builds on:** <what Group 1 fixed that this group takes as-is — one line.
-Anything it has to invent instead belongs in Group 1.>
+**Builds on:** <what the foundation fixed that this group takes as-is — one
+line. Anything it has to invent instead belongs in the foundation.>
 ...
 ```
 
@@ -279,7 +292,7 @@ Three things to leave alone at planning time: **Status** starts at `0/<total>` o
 
 Link to the plan. Then the self-check result in at most three lines — what coverage, references, and hollow-task checks turned up, or "clean" for each. **Coverage is the one that always gets a number:** how many of the scope PRD's functional requirements are checked off against a step, out of the total. Anything short of all of them is named, requirement by requirement, with why.
 
-Then **what Group 1 fixes for the scope and what share of the plan it is** — one line. That's the group they'll be closest to, and its size is how much of the scope they're choosing to stay hands-on for.
+Then **which groups are labeled `(Foundational)`, what they fix for the scope, and what share of the plan they are** — one line. Those are the groups they'll be closest to, and their size is how much of the scope they're choosing to stay hands-on for. If the foundation took two groups, say what made one too small to hold it.
 
 Then only what the operator wouldn't anticipate: a task that came out much larger than its neighbours, a dependency they wouldn't expect, a group that couldn't be made independently usable and why, a requirement the hard limit forced you to leave uncovered, shape a later group had to invent that you'd move into Group 1.
 
