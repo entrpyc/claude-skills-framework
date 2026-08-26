@@ -66,13 +66,13 @@ Every phase is pulled by the operator. Never chain one into the next.
 
 The system is five skills. Each one is a phase; each writes what the next one reads.
 
-| Skill           | Does                                                                         | Reads                                       | Writes                                           | Runs                 |
-| --------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------ | -------------------- |
-| `project`           | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md` | once per project     |
-| `scope`             | Defines the slice to build now, refining the project docs                    | project PRD, project TDD                    | `docs/scope/prd.md`, `docs/scope/tdd.md`     | once per scope       |
-| `plan`              | Breaks the scope into implementable steps                                    | scope PRD, scope TDD                        | `docs/scope/plan.md`                           | once per scope       |
-| `build`             | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status                      | many times per scope |
-| `finalize`          | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`      | once per scope       |
+| Skill        | Does                                                                         | Reads                                       | Writes                                           | Runs                 |
+| ------------ | ---------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------ | -------------------- |
+| `project`  | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md` | once per project     |
+| `scope`    | Defines the slice to build now, refining the project docs                    | project PRD, project TDD                    | `docs/scope/prd.md`, `docs/scope/tdd.md`     | once per scope       |
+| `plan`     | Breaks the scope into implementable steps                                    | scope PRD, scope TDD                        | `docs/scope/plan.md`                           | once per scope       |
+| `build`    | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status                      | many times per scope |
+| `finalize` | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`      | once per scope       |
 
 `dev-system` — this skill — is the map over them. It writes nothing.
 
