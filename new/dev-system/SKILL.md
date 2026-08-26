@@ -25,6 +25,7 @@ docs/
     tdd.md          <- the current scope, the how, refined
     diagram.svg     <- what this scope adds, drawn
     plan.md         <- the steps that implement the current scope
+  design-references/  <- the operator's visual material; read-only, never wiped
 ```
 
 ### `docs/project`
@@ -46,7 +47,11 @@ Product requirements, technical decisions, and implementation plan for the speci
 | `docs/scope/prd.md`      | Same as project PRD, but lists only the requirements for this scope, refined and more detailed. Never contradicts the full-scope PRD. |
 | `docs/scope/tdd.md`      | Same as project TDD, but lists only the decisions for this scope, refined and more detailed. Never contradicts the full-scope TDD.    |
 | `docs/scope/diagram.svg` | What this scope adds, drawn. |
-| `docs/scope/plan.md`     | Implementation plan for this scope.                                                                                                   |
+| `docs/scope/plan.md`     | Implementation plan for this scope — and the record of the edge cases the build phase leaves uncovered.                              |
+
+### `docs/design-references`
+
+The operator's visual material — screenshots, mockups, brand and UI assets. **No skill writes here and `finalize` never deletes it.** It is read whenever the work is visual, and a reference in it outranks your own taste. See `conventions` § Design references.
 
 ## The source of truth
 
@@ -73,11 +78,11 @@ The system is five phase skills, plus `conventions`, which all of them read firs
 | Skill         | Does                                                                         | Reads                                       | Writes                                                                         | Runs                 |
 | ------------------ | ---------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------ | -------------------- |
 | `project`        | Captures the full product with the operator                                  | —                                          | `docs/project/prd.md`, `docs/project/tdd.md`, `docs/project/diagram.svg` | once per project     |
-| `scope`          | Defines the slice to build now, refining the project docs                    | project PRD, project TDD                    | `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`       | once per scope       |
-| `plan`           | Breaks the scope into implementable steps                                    | scope PRD, scope TDD                        | `docs/scope/plan.md`                                                         | once per scope       |
-| `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status                                                    | many times per scope |
+| `scope`          | Defines the slice to build now, refining the project docs                    | project PRD, project TDD, design references | `docs/scope/prd.md`, `docs/scope/tdd.md`, `docs/scope/diagram.svg`       | once per scope       |
+| `plan`           | Breaks the scope into implementable steps                                    | scope PRD, scope TDD, design references     | `docs/scope/plan.md`                                                         | once per scope       |
+| `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code, and the plan's status and edge cases                                     | many times per scope |
 | `finalize`       | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`                                    | once per scope       |
-| `conventions` | The rules every phase follows — asking, reference numbers, citing, status markers, diagrams, chat | — | nothing | read by every phase |
+| `conventions` | The rules every phase follows — asking, major assumptions, design references, reference numbers, citing, status markers, diagrams, chat | — | nothing | read by every phase |
 
 Two skills sit alongside the five and write nothing: **`conventions`** — the rules every phase follows, read before any of them run — and **`dev-system`**, this skill, the map over the whole thing.
 
