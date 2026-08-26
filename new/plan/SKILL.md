@@ -17,7 +17,7 @@ The plan carries the scope's status for the rest of its life: the build phase ch
    **Step 1 is the foundation, and it is chosen differently from the rest.** It is the 20% of the scope that carries 80% of its impact — the spine the other steps hang off: the data, the boundaries, the path through the system that everything else extends. The test is what the operator gets from building it by hand: **after step 1 they should understand how the code works.** Every step after it builds on that spine and refines it.
 
 3. **Verify the order.** Walk the substeps in order and check that each one can be built with only what the substeps before it put in place. **Nothing may depend on a substep that comes after it.** If something does, reorder — and if reordering cannot fix it, the substeps are cut wrong: split or merge them.
-4. **Verify the acceptance criteria.** Each criterion is **one observable behavior, testable on its own**. If a criterion needs the word "and", it is two criteria. If it cannot be tested without knowing how it was built, it is written at the wrong level.
+4. **Verify the acceptance criteria.** Each criterion is **one observable behavior, testable on its own**. If a criterion needs the word "and", it is two criteria. If it cannot be tested without knowing how it was built, it is written at the wrong level. Name the test that verifies it.
 5. **Write the plan**, then say where it is in one line and stop.
 
 ## Format
