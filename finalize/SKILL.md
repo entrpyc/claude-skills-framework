@@ -9,7 +9,7 @@ Close out the delivered scope. This is step 5 of the dev system, it runs once pe
 
 The scope docs are wiped here. What survives is the codebase and `docs/project/prd.md` — so the reconciling and the status update happen **before** the wipe, never after.
 
-> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows, and they are not repeated here.
 
 ## The sweep is bounded
 
@@ -34,12 +34,11 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
 1. **Reconcile.** Read the code inside the boundary against `docs/project/prd.md` and `docs/project/tdd.md`, and **verify rather than trust** — walk each checked criterion in the plan to the code that satisfies it. A criterion whose behavior is not in the code is unbuilt whatever its box says.
 
-   Every contradiction and every undocumented finding goes to the operator with `AskUserQuestion`, most expensive to live with first. Options always include:
-   - **Change the code** — the requirement or decision holds and the software is wrong. Say in a line or two **how** the fix is done and where it lands, so they can price it. Usually the **future-proof** option.
-   - **Update the docs** — what the code does is what the product should do. Show it as an edit: what the requirement says now, and what it would say instead. Usually the **cheaper now** option.
+   Every contradiction and every undocumented finding goes to the operator per `conventions` § Reconciling, most expensive to live with first — **change the code** or **update the docs**, plus one option specific to this phase:
+
    - **Leave it and record the requirement as 🔨** — where the fix is more than one substep's worth of work. Say so on the option rather than promising a fix that needs its own scope.
 
-   Apply whatever they choose, and get the tests covering it green — proved the same way `build` proves any test.
+   Apply whatever they choose, and get the tests covering it green (`conventions` § Reaching green).
 
 2. **Update the statuses.** Set the marker on every project PRD feature and requirement against what the code actually does, per `conventions` § Status markers. Under each 🔨, list what is still missing — one line per blocker, in what the operator would observe. **This is the only phase that moves a marker.**
 
@@ -88,14 +87,11 @@ Internal structure, naming, and anything no requirement speaks to are not findin
 
 ## Rules
 
-- **Never close a divergence yourself.** Not by picking the side that looks more sensible, and not by writing it down somewhere and moving on. One of the two sides actually changes, and the operator picks which.
 - **Stay inside the boundary.** Pre-existing drift is named at the end, never fixed here.
 - **The wipe is last.** A scope wiped before the fold-back loses the only durable trace its work happened — and a scope wiped before the deployment sweep takes the prerequisites with it.
 - **Status is not a rewrite.** Requirements are not deleted because they shipped, not renumbered, and not tidied while you are in there.
 - **Say what is left.** Every 🔨 carries what is still missing from it. A partial requirement with no blocker listed reads as done to whoever comes next.
 - **Never downgrade quietly.** A previous scope's ✅ that is now 🔨 is changed and said out loud.
-- **Never weaken a test or a requirement to reach green.** A red test means the fix is not finished.
-
 
 ## Deployment handover
 
@@ -120,7 +116,3 @@ Nothing to do — this scope needs no environment, migration, or configuration c
 ```
 
 Keep the ordering headings only where they have entries, and mark any step that is destructive or takes the app down.
-
-## Asking
-
-Question sets follow `conventions` § Asking the operator. One caveat specific to this phase: the code fix is usually **future-proof** and the doc edit **cheaper now**, but say what is actually true — when a requirement is simply stale, changing it is both the cheap and the correct answer, and dressing that up as a trade-off pushes the operator toward pointless work.

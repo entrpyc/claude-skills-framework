@@ -9,7 +9,7 @@ Produce `docs/scope/prd.md` and `docs/scope/tdd.md` — the requirements and tec
 
 The operator's ask comes in two shapes, and both land in the same place: a broad request about something to add, change or remove, or specific requirements or features named out of the project PRD.
 
-> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows, and they are not repeated here.
 
 ## How it runs
 
@@ -22,13 +22,8 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
 
    **Where the scope puts anything in front of a user, read `docs/design-references/` in the same pass** — see `conventions` § Design references. What a mockup covers is what the requirement says, cited by filename; what it does not cover is unspecified interface, and that is a question in step 6, never something you design.
 4. **Refine.** Against those decisions, restate each pulled requirement in the detail this scope needs to build it — what it does exactly, what its states are, what happens at its edges. **Refining means more detail, never different meaning.** Each refined requirement cites the project requirement it came from.
-5. **Reconcile the divergences.** Anything in the refined set that the project docs do not support — a contradiction, or something they never covered — goes to the operator with `AskUserQuestion`. Options always include:
-   - **Update the project docs** — the project PRD or TDD is what changes, and the scope stands.
-   - **Change the scope** — the project docs hold, and the scope requirement is fixed to match.
-   - Whatever else fits.
-6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Classify each one by `conventions` § Major assumptions and **put every major one to the operator with `AskUserQuestion` before it is written down.** Everything else is minor: decide it yourself and move on.
-
-   **Every assumption goes into § 6 Assumptions — the minor ones as well as the confirmed major ones.** That section is the record of what this scope decided that the project docs did not, so an assumption left out of it is one nobody can find later. Deciding a minor one yourself means not asking about it, never not writing it down.
+5. **Reconcile the divergences.** Anything in the refined set that the project docs do not support — a contradiction, or something they never covered — goes to the operator per `conventions` § Reconciling. Here the two sides are **update the project docs**, and the scope stands, or **change the scope requirement** to match what they say.
+6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Classify each one by `conventions` § Major assumptions, ask the major ones before writing them down, decide the minor ones yourself — and **record both kinds in § 6 Assumptions.**
 7. **Write both documents**, then say where they are in one line and stop.
 
 ## Format
@@ -70,15 +65,13 @@ _Refines: project prd 2.2_
 
 ## 5. Out of scope
 
-The ceiling on everything downstream: `plan` may not plan it and `build` may not build it, and only the operator raises it. Write each line as **what a reader would reasonably expect here, plus why it is not coming** — specific enough that someone can tell which side of the line their idea falls on. *"Saved cards — a later scope; this one takes a card per purchase"* is a limit. *"Advanced payment features"* is not.
+The ceiling on everything downstream: `plan` may not plan it and `build` may not build it, and only the operator raises it (`conventions` § The ceiling). Write each line as **what a reader would reasonably expect here, plus why it is not coming** — specific enough that someone can tell which side of the line their idea falls on. *"Saved cards — a later scope; this one takes a card per purchase"* is a limit. *"Advanced payment features"* is not.
 
 - **<Thing>** — why it is not here, and what it waits for.
 
 ## 6. Assumptions
 
-**Every assumption this scope makes that the project docs did not settle — major and minor alike.** The major ones are the decisions confirmed with the operator in step 6; the minor ones you decided yourself. Both get written down: a minor assumption is not asked about, but it is never invisible, because the reader has no other way to tell what the scope decided from what the project docs already said.
-
-Write each one as settled, marked **major** or **minor**, and the major ones with the trigger that made them major (`conventions` § Major assumptions).
+**Every assumption this scope makes that the project docs did not settle — major and minor alike.** Write each one as settled, marked **major** or **minor**, and the major ones with the trigger that made them major (`conventions` § Major assumptions).
 
 - **<The assumption, as a decision.>** — major, hard to change later: <what will bind to it>. Confirmed.
 - **<The assumption, as a decision.>** — major, user-facing: <what someone sees or does differently>. Confirmed.

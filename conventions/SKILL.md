@@ -1,6 +1,6 @@
 ---
 name: conventions
-description: The rules every dev-system phase follows — how to ask the operator, what makes an assumption major enough to ask about, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
+description: The rules every dev-system phase follows — how to ask the operator, how a difference between the documents and the code is reconciled, what makes an assumption major enough to ask about, what the scope's out-of-scope ceiling binds, how the operator's design references are used, how documents are numbered and cited, what the status markers mean, what proving a change green takes, how diagrams are written, and what belongs in the chat rather than in an artifact. Read alongside whichever phase skill is running; it writes nothing of its own. Trigger on "dev system conventions", or read it from project, scope, plan, build and finalize.
 ---
 # Conventions
 
@@ -24,6 +24,22 @@ Four rules hold for every question set, in every phase:
 
 Nothing undecided is written down. A document records decisions, never open questions.
 
+## Reconciling
+
+`docs/project/prd.md` and `docs/project/tdd.md` are the source of truth **over the codebase too.** The code is evidence of what the software currently does; it is never authority for what the software is supposed to do — *"the code does X"* is a fact about the present, never a reason for X to be correct. The same holds one level down: a scope document refines the project docs, and the plan refines the scope docs.
+
+So a difference between a document and whatever diverged from it — the code, or a document downstream of it — is an **open decision, not a fact to write down.** Whichever phase trips over it puts it to the operator with `AskUserQuestion`, and two options are always on the table:
+
+- **Change what diverged** — the requirement or decision holds and the code, scope or plan is wrong. Say in a line or two **how** the fix is done and where it lands, so they can price it.
+- **Update the document** — what diverged is what the product should do. Show it as an edit: what the requirement says now, and what it would say instead.
+
+Four rules:
+
+- **One of the two actually changes.** Never close a difference by picking the side that looks more sensible, by writing it down somewhere and moving on, or by writing the code and letting the document fall behind.
+- **The decision is the operator's; recording it is yours.** Whatever they choose is applied in the same run — the code edited, or the document edited, exactly as they chose it. Nothing else in this system notices a document that has fallen behind.
+- **Never write a requirement that describes code you have not been told is correct.**
+- **Say what is actually true about the trade-off.** The fix is usually **future-proof** and the document edit **cheaper now** — but where a requirement is simply stale, changing it is both the cheap and the correct answer, and dressing that up as a trade-off pushes the operator toward pointless work.
+
 ## Major assumptions
 
 An assumption is **anything the work needs that the documents do not settle.** Every phase that makes one classifies it the same way.
@@ -41,6 +57,12 @@ An assumption is **anything the work needs that the documents do not settle.** E
 **Major assumptions are asked** — with `AskUserQuestion`, before anything is built on them. **Minor ones are decided without asking.** When a call sits on the line, treat it as major.
 
 **Every assumption is written down, major and minor alike**, in the phase's assumptions record — `scope prd § 6` for the scope, the substep's *Assumptions* block in the plan for a build. The classification decides whether the operator is **asked**, never whether they can **find it**: an assumption nobody recorded is indistinguishable later from something the documents actually said, which is how a decision Claude made ends up being read as a requirement.
+
+## The ceiling
+
+`docs/scope/prd.md` § 5 *Out of scope* is the ceiling on everything downstream of it. **`plan` may not plan what it excludes and `build` may not build it** — however close the work sits to it, and however cheap it looks once you are already in the file. A substep covering something § 5 excludes is scope creep with a number on it.
+
+**Only the operator raises the ceiling.** Something the scope plainly cannot be delivered without goes to them with `AskUserQuestion`, and what changes is `docs/scope/prd.md` — never the plan or the code quietly covering more. Raising it is theirs; **editing § 5 to record what they chose is yours, in the same run.**
 
 ## Design references
 
@@ -107,6 +129,14 @@ Every feature and requirement in `docs/project/prd.md` carries one:
 - **Features are derived**, never asserted: ✅ only when every requirement under it is ✅, and one 🔨 makes the feature 🔨.
 - **Only `finalize` moves a marker**, and only against what the code actually does. `project` writes 📝 on everything, because nothing is built when the PRD is written.
 - **Acceptance criteria in the plan use checkboxes instead** — `[ ]` unbuilt, `[x]` met — and only `build` ticks them.
+
+## Reaching green
+
+Every phase that writes code proves it the same way.
+
+- **Run the tests covering the change** — its own tests, plus the tests over the callers of what you changed and anything binding to a name, shape, route or schema you edited. **Go and look rather than assuming nothing else touches it.**
+- **Never weaken a test, a criterion, or a requirement to reach green.** That turns a real gap into a documented one, which is the opposite of the point. If an honest test is red, the work is not done — report it red.
+- **Never narrow a run to dodge a failure.** A red test outside what you were aimed at is a real result: fix it, or report it. Never `.skip` a test to get green, and never report a test as passing without running it.
 
 ## Diagrams
 

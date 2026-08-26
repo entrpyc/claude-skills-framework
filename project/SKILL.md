@@ -9,7 +9,7 @@ Produce `docs/project/prd.md` and `docs/project/tdd.md` from what the operator t
 
 These two documents are the single source of truth. Everything after them refines them, so they describe the **whole** product — no phasing, no deferral, nothing left for later.
 
-> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows, and they are not repeated here.
 
 ## How it runs
 
@@ -21,19 +21,11 @@ These two documents are the single source of truth. Everything after them refine
    - **Vague requirements** — a requirement that cannot be tested as written, because it does not say what would count as it working. Take it to the operator with the concrete readings it could have.
    - **Contradictions** — two requirements that cannot both hold. Show both, and ask which one stands.
    - **Duplicates** — two requirements that say the same thing in different words. Ask whether they are one requirement, or whether they differ in a way the wording lost.
-4. **Write both documents.**
-5. **Say where they are in one line, then stop.**
+4. **Write both documents**, then say where they are in one line and stop.
 
-## The source of truth
+## Running on existing code
 
-`docs/project/prd.md` and `docs/project/tdd.md` outrank everything, **the codebase included**. The code is the answer to what the software currently does; it is never the answer to what the software is supposed to do.
-
-So when this skill runs on a project that already has code, and the code and the documents disagree, that is a **difference to reconcile, not a fact to write down**. Take it to the operator with two options on the table:
-
-- **Update the document** — what the code does is what the product should do.
-- **Change the code** — the requirement or decision holds and the software is wrong. Say in a line how the fix is done, so they can price it.
-
-One of the two actually changes. Never close a difference by picking the side that looks more sensible, and never write a requirement that describes code you have not been told is correct.
+Where this skill runs on a project that already has code, and the code and the documents disagree, that is a **difference to reconcile, not a fact to write down** — take it to the operator per `conventions` § Reconciling, before either document is written.
 
 ## Format
 

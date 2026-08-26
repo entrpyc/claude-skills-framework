@@ -9,7 +9,7 @@ Produce `docs/scope/plan.md` — the implementation of the current scope, split 
 
 The plan carries the scope's status for the rest of its life: the build phase checks its acceptance criteria off, and the scope is delivered when they are all checked.
 
-> **Read the `conventions` skill before anything below.** It carries the rules every phase follows — asking the operator, reference numbers and citing, status markers, diagrams, and what goes in the chat.
+> **Read the `conventions` skill before anything below.** It carries the rules every phase follows, and they are not repeated here.
 
 ## How it runs
 
@@ -17,7 +17,7 @@ The plan carries the scope's status for the rest of its life: the build phase ch
 
    - **§ 3 the functional requirements** — the list the plan is accountable for. Every one of them is covered by exactly one substep.
    - **§ 4 the non-functional requirements** — accountable the same way, but they constrain rather than deliver: each one is named in the *References* of every substep it binds, and at least one acceptance criterion somewhere tests it. A scope NFR no criterion tests is a requirement nothing will ever check.
-   - **§ 5 Out of scope — the ceiling.** No step, substep or criterion may cover what it excludes, and **the plan is not what raises it.** Something the scope plainly cannot be delivered without goes to the operator with `AskUserQuestion`, and the scope PRD is what changes — **raising the ceiling is theirs, editing `docs/scope/prd.md` to record what they chose is yours, in the same run.** A plan that covers what § 5 still excludes is the one outcome that is not allowed.
+   - **§ 5 Out of scope — the ceiling** (`conventions` § The ceiling). No step, substep or criterion may cover what it excludes, and **the plan is not what raises it.** A plan that covers what § 5 still excludes is the one outcome that is not allowed.
 
    Where the scope has a user interface, read `docs/design-references/` for the surfaces it puts in front of someone — see `conventions` § Design references — and name the file on each substep that builds against it.
 2. **Decide the steps.** One step per feature of the scope, then split each step into substeps small enough to build and review in one sitting. Every substep names the scope requirements and decisions it covers, and every functional requirement in the scope PRD is covered by exactly one substep.
@@ -113,6 +113,6 @@ _Written by the build phase — leave empty here._
 - **Substeps are sequential.** Their order is the build order, across steps as well as inside one. A reader should be able to start at 1.1 and never need something that has not been built yet.
 - **A substep is one unit of work, not a phase.** Reviewable on its own, testable on its own. If it carries a large chunk of work, it is cut wrong — split it.
 - **Cover everything once.** Every functional requirement in the scope PRD appears in exactly one substep's *References*. One covered nowhere is a hole; one covered in two substeps is a boundary in the wrong place. Non-functional requirements are the exception — they appear wherever they bind, and are covered when a criterion tests them.
-- **Nothing in `Out of scope` gets planned.** `docs/scope/prd.md` § 5 is the ceiling on the whole plan, and only the operator raises it. A substep covering something § 5 excludes is scope creep with a number on it.
-- **Cite the design reference on every substep that builds a surface.** Where `docs/design-references/` covers what the substep puts in front of a user, name the file in *References* so the build phase reads it instead of inventing the interface.
+- **Nothing in `Out of scope` gets planned** — `conventions` § The ceiling.
+- **Cite the design reference on every substep that builds a surface**, so the build phase reads it instead of inventing the interface.
 - **Name the test, and name one that could fail.** Every acceptance criterion says what verifies it. If you cannot name a test that would go **red** with the behavior absent, the criterion is too vague to build against — sharpen it, split it, or drop it. The build phase writes that test before the code and watches it fail, so a criterion no test can be red for cannot be built against.

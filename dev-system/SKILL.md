@@ -55,9 +55,9 @@ The operator's visual material — screenshots, mockups, brand and UI assets. **
 
 ## The source of truth
 
-`docs/project/prd.md` and `docs/project/tdd.md`, `docs/project/diagram.svg` are the single source of truth **over the codebase too**. The code is evidence of what the software currently does. It is never authority for what the software is supposed to do — "the code does X" is a fact about the present, never a reason for X to be correct.
+`docs/project/prd.md`, `docs/project/tdd.md` and `docs/project/diagram.svg` are the single source of truth **over the codebase too** — and every scope, plan and build downstream of them refines them rather than contradicting them.
 
-A difference between the code and the project documents is therefore an open decision, not an answer. It is never closed by picking the side that looks more sensible. It goes to the operator, in whatever phase trips over it, with two options: **update the document**, or **change the code** — and one of the two actually changes.
+A difference between the documents and the code is therefore an open decision, not an answer. It goes to the operator, in whatever phase trips over it, with two options: **update the document**, or **change the code**. See `conventions` § Reconciling — the rule and the two options are the same in every phase.
 
 ## System flow
 
@@ -82,7 +82,7 @@ The system is five phase skills, plus `conventions`, which all of them read firs
 | `plan`           | Breaks the scope into implementable steps                                    | scope PRD, scope TDD, design references     | `docs/scope/plan.md`, and the scope PRD edits the operator chooses           | once per scope       |
 | `build`          | Writes the code for the steps the operator points at                         | the plan, and the references its steps name | code; the plan's status, assumptions, edge cases and manual steps; and the scope PRD edits the operator chooses | many times per scope |
 | `finalize`       | Reconciles the code against the project docs, folds the scope back into them | the code, the project docs, the scope docs  | project doc updates; clears `docs/scope/`                                    | once per scope       |
-| `conventions` | The rules every phase follows — asking, major assumptions, design references, reference numbers, citing, status markers, diagrams, chat | — | nothing | read by every phase |
+| `conventions` | The rules every phase follows — asking, reconciling, major assumptions, the ceiling, design references, reference numbers, citing, status markers, reaching green, diagrams, chat | — | nothing | read by every phase |
 
 Two skills sit alongside the five and write nothing: **`conventions`** — the rules every phase follows, read before any of them run — and **`dev-system`**, this skill, the map over the whole thing.
 
