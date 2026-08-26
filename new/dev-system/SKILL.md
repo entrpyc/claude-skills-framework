@@ -31,11 +31,11 @@ docs/
 
 Full project product requirements and technical decisions.
 
-| File                         | Contents                                                                                                                                                                         |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/project/prd.md`      | Product requirements document. Overview, functional requirements, non-functional requirements. This is the**what** of the project.                                         |
-| `docs/project/tdd.md`      | Technical decisions document. High level overview, infrastructure, tech stack, services, tools, running cost, performance requirements. This is the**how** of the project. |
-| `docs/project/diagram.svg` | The system diagram from the project TDD, drawn as SVG. Always matches it.                                                                                                        |
+| File                                     | Contents                                                                                                                                                                         |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/project/prd.md`                                     | Product requirements document. Overview, functional requirements, non-functional requirements. This is the**what** of the project.                                         |
+| `docs/project/tdd.md`                                     | Technical decisions document. High level overview, infrastructure, tech stack, services, tools, running cost, performance requirements. This is the**how** of the project. |
+| `docs/project/diagram.svg`                                | The system diagram from the project TDD, drawn as SVG. Always matches it.                                                                                                        |
 
 ### `docs/scope`
 
