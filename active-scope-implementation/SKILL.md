@@ -13,6 +13,8 @@ The target is one or more of:
 - a **task** — `Task 2.3`, meaning every unchecked criterion in it;
 - specific **criteria** — `2.3.1`, `2.3.1 and 2.4.2`.
 
+**The operator picks the target; a run builds one task of it.** Several tasks named at once are built one per run, in plan order, with a checkpoint after each — never sized or split as a question (§ 1).
+
 **The criteria are the brief and the ceiling.** They already exist, they were agreed, and they are not yours to widen, narrow, or reinterpret. Everything below serves that.
 
 > Part of the **dev system** — see the `dev-system` skill for the pipeline, references, question rules, major-assumption rules, and what goes in the chat.
@@ -43,13 +45,15 @@ Then check the ordering, because a targeted build can land out of order in ways 
 - **Partial task.** The target is some but not all of a task's criteria. Fine and expected — but the task's *Record* stays open and its checkbox set stays mixed, so say so rather than leaving it looking abandoned.
 - **Nothing left.** Every criterion in the target is already checked. Say so in one line and stop.
 
-**Size the target before you start, and stop if it's too big.** Two things make it too big, and either one is enough: a diff that won't fit in the operator's head, and a criterion count that makes step 7 expensive — the break pass scales with criteria, so a thirty-criterion target in a repo with a slow suite burns an hour before any code is reviewable. Both are the granularity knob showing up late.
+**One task per run, with a checkpoint after each. Don't ask how to split the target** — this is the operator's standing answer, and a target spanning several tasks is a queue, not a question.
 
-Don't absorb it. Ask with `AskUserQuestion` — the whole target in one run, or one task at a time with a checkpoint each — and price both: how many criteria, and roughly what the runs cost at the suite time you measure in step 7. **A task-sized target is nearly always the cheaper one**, because the break pass and the diff both shrink with it while the fixed costs are paid once either way.
+So where the target is a group, or several tasks named at once, take them in plan order and **stop after each task**: steps 2 through 10 for that task, its manual-validation checklist, then hand control back. Say up front which task this run is building and what's queued behind it, so nothing looks dropped. Individual criteria inside one task are a single run.
+
+This is why it's the cheaper split anyway: the diff stays small enough to hold in your head, and step 7's break pass scales with criteria, so a thirty-criterion run in a repo with a slow suite burns an hour before any code is reviewable. The fixed costs get paid once either way.
 
 ### 2. Confirm prerequisites, then build
 
-The target's tasks list *Prerequisites* — operator-side things that must exist first. **Assume they're done**; the operator didn't aim you here otherwise. Only stop if one turns out to be genuinely missing in practice.
+The task lists *Prerequisites* — operator-side things that must exist first. **Assume they're done**; the operator didn't aim you here otherwise. Only stop if one turns out to be genuinely missing in practice.
 
 Then implement. No permission-asking and no clarifying questions, *unless* the work needs a major architectural decision changed — that's step 4 or step 5.
 
@@ -144,7 +148,7 @@ With the code settled by step 7: every targeted criterion implemented, covered b
 
 **This is the gate, so it is the one run that is never narrowed.** Never disable or `.skip` a test to get green, never narrow the run to make it pass, and never report a test as passing without running it. Note anything skipped or excluded by config — **a test that doesn't run is a false positive with extra steps.**
 
-**Once per target, not once per criterion.** If it comes back red, fix and re-run; where the fix changes a criterion's behavior, redo that one criterion's break check narrowly rather than repeating step 7 wholesale.
+**Once per run, not once per criterion.** If it comes back red, fix and re-run; where the fix changes a criterion's behavior, redo that one criterion's break check narrowly rather than repeating step 7 wholesale.
 
 **And once, not twice.** Step 7 ends with the tree restored to its final state — the next full run *is* this gate. Don't spend one run to close step 7 and another to open step 8.
 
