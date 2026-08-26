@@ -19,17 +19,16 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
    - **Drop the blocked requirement** — it leaves the scope and waits for a later one.
    - Whatever else fits — a thinner version of the dependency, a stub, a different cut.
 3. **Pull the technical decisions.** Read `docs/project/tdd.md` and pull the decisions the scope's requirements rest on.
+
+   **Where the scope puts anything in front of a user, read `docs/design-references/` in the same pass** — see `conventions` § Design references. What a mockup covers is what the requirement says, cited by filename; what it does not cover is unspecified interface, and that is a question in step 6, never something you design.
 4. **Refine.** Against those decisions, restate each pulled requirement in the detail this scope needs to build it — what it does exactly, what its states are, what happens at its edges. **Refining means more detail, never different meaning.** Each refined requirement cites the project requirement it came from.
 5. **Reconcile the divergences.** Anything in the refined set that the project docs do not support — a contradiction, or something they never covered — goes to the operator with `AskUserQuestion`. Options always include:
    - **Update the project docs** — the project PRD or TDD is what changes, and the scope stands.
    - **Change the scope** — the project docs hold, and the scope requirement is fixed to match.
    - Whatever else fits.
-6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Put every **major** one to the operator with `AskUserQuestion` before it is written down. A decision is major if any one of these holds:
-   - it **changes what the product costs** to run or to maintain;
-   - it is **user-facing** — it changes what someone sees or does;
-   - it is **hard to change later** — a data shape, a boundary, an interface other code will bind to.
+6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Classify each one by `conventions` § Major assumptions and **put every major one to the operator with `AskUserQuestion` before it is written down.** Everything else is minor: decide it yourself and move on.
 
-   Everything else is minor: decide it yourself and move on. When a decision sits on the line, treat it as major. **Every major decision, once confirmed, is written into § 6 Edge cases** — that section is the record of what this scope decided that the project docs did not.
+   **Every assumption goes into § 6 Assumptions — the minor ones as well as the confirmed major ones.** That section is the record of what this scope decided that the project docs did not, so an assumption left out of it is one nobody can find later. Deciding a minor one yourself means not asking about it, never not writing it down.
 7. **Write both documents**, then say where they are in one line and stop.
 
 ## Format
@@ -71,15 +70,21 @@ _Refines: project prd 3.2_
 
 ## 5. Out of scope
 
+The ceiling on everything downstream: `plan` may not plan it and `build` may not build it, and only the operator raises it. Write each line as **what a reader would reasonably expect here, plus why it is not coming** — specific enough that someone can tell which side of the line their idea falls on. *"Saved cards — a later scope; this one takes a card per purchase"* is a limit. *"Advanced payment features"* is not.
+
 - **<Thing>** — why it is not here, and what it waits for.
 
-## 6. Edge cases
+## 6. Assumptions
 
-Every assumption this scope makes that the project docs did not settle, and that is **hard to change later, changes what the product costs, changes the project architecture, or is user-facing**. These are the ones confirmed with the operator in step 6 — write each one as settled, with the test it trips.
+**Every assumption this scope makes that the project docs did not settle — major and minor alike.** The major ones are the decisions confirmed with the operator in step 6; the minor ones you decided yourself. Both get written down: a minor assumption is not asked about, but it is never invisible, because the reader has no other way to tell what the scope decided from what the project docs already said.
 
-- **<The assumption, as a decision.>** — hard to change later: <what will bind to it>. Confirmed.
-- **<The assumption, as a decision.>** — user-facing: <what someone sees or does differently>. Confirmed.
-- **<The assumption, as a decision.>** — cost: <what it adds to running or maintaining the product>. Confirmed.
+Write each one as settled, marked **major** or **minor**, and the major ones with the trigger that made them major (`conventions` § Major assumptions).
+
+- **<The assumption, as a decision.>** — major, hard to change later: <what will bind to it>. Confirmed.
+- **<The assumption, as a decision.>** — major, user-facing: <what someone sees or does differently>. Confirmed.
+- **<The assumption, as a decision.>** — major, cost: <what it adds to running or maintaining the product>. Confirmed.
+- **<The assumption, as a decision.>** — minor.
+- **<The assumption, as a decision.>** — minor.
 ```
 
 ### `docs/scope/tdd.md`
