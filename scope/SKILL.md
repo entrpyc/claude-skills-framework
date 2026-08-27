@@ -13,18 +13,26 @@ The operator's ask comes in two shapes, and both land in the same place: a broad
 
 ## How it runs
 
-1. **Pull the requirements.** Read `docs/project/prd.md` and pull the requirements the ask covers. A broad ask is mapped onto the requirements that carry it. Anything the ask needs that no requirement covers is a divergence — hold it for step 5.
+1. **Pull the requirements.** Read `docs/project/prd.md` and pull the requirements the ask covers. A broad ask is mapped onto the requirements that carry it. Anything the ask needs that no requirement covers is a divergence — hold it for step 6.
 2. **Settle the dependencies.** Follow the `Depends on:` line of every pulled requirement, and of what those depend on in turn. Anything not already in the scope and not already built goes to the operator with `AskUserQuestion`. Options always include:
    - **Pull the dependencies in** — the scope grows to cover them.
    - **Drop the blocked requirement** — it leaves the scope and waits for a later one.
    - Whatever else fits — a thinner version of the dependency, a stub, a different cut.
 3. **Pull the technical decisions.** Read `docs/project/tdd.md` and pull the decisions the scope's requirements rest on.
 
-   **Where the scope puts anything in front of a user, read `docs/design-references/` in the same pass** — see `conventions` § Design references. What a mockup covers is what the requirement says, cited by filename; what it does not cover is unspecified interface, and that is a question in step 6, never something you design.
+   **Where the scope puts anything in front of a user, read `docs/design-references/` in the same pass** — see `conventions` § Design references. What a mockup covers is what the requirement says, cited by filename; what it does not cover is unspecified interface, and that is a question in step 7, never something you design.
 4. **Refine.** Against those decisions, restate each pulled requirement in the detail this scope needs to build it — what it does exactly, what its states are, what happens at its edges. **Refining means more detail, never different meaning.** Each refined requirement cites the project requirement it came from.
-5. **Reconcile the divergences.** Anything in the refined set that the project docs do not support — a contradiction, or something they never covered — goes to the operator per `conventions` § Reconciling. Here the two sides are **update the project docs**, and the scope stands, or **change the scope requirement** to match what they say.
-6. **Confirm the major decisions.** Refining makes decisions the project docs never made. Classify each one by `conventions` § Major assumptions, ask the major ones before writing them down, decide the minor ones yourself — and **record both kinds in § 6 Assumptions.**
-7. **Write both documents**, then say where they are in one line and stop.
+5. **Prove the numbers, or ask them.** Refining is where numbers get invented — a size, a duration, a count, a rate, a limit, a threshold, a guarantee. **A scope requirement is what the build is measured against, and it is the last place a number can still be cheap.** Nothing downstream re-checks whether the stack can reach it: `plan` copies it, `build` binds code and tests and shared constants to it, and it is discovered by the build failing against it, several substeps in, at the price of the rework that costs.
+
+   So no number reaches § 3, § 4 or § 6 until one of these has happened:
+
+   - **Proved.** Run the smallest real check the stack allows, against the **worst case the requirement admits** rather than a typical one — re-encode the largest input it accepts, not a representative one; time the slowest path, not the warm one. Write what you ran and what it measured into the assumption, so the next phase can see the number was measured rather than chosen.
+   - **Asked.** Where the check is not cheap, or the number is the operator's to set rather than the stack's to yield, put it to them with `AskUserQuestion` — carrying **what the stack actually does at the worst case**, and the options that follow from it: move the number to what the stack yields, degrade instead of refusing, or drop the guarantee and say what happens instead.
+
+   A number is **never a minor assumption** (`conventions` § Major assumptions). A guarantee nobody proved and nobody chose is a guess with a requirement number on it, and every phase after this one reads it as settled.
+6. **Reconcile the divergences.** Anything in the refined set that the project docs do not support — a contradiction, or something they never covered — goes to the operator per `conventions` § Reconciling. Here the two sides are **update the project docs**, and the scope stands, or **change the scope requirement** to match what they say.
+7. **Confirm the major decisions.** Refining makes decisions the project docs never made. Classify each one by `conventions` § Major assumptions, ask the major ones before writing them down, decide the minor ones yourself — and **record both kinds in § 6 Assumptions.**
+8. **Write both documents**, then say where they are in one line and stop.
 
 ## Format
 
@@ -76,6 +84,8 @@ The ceiling on everything downstream: `plan` may not plan it and `build` may not
 - **<The assumption, as a decision.>** — major, hard to change later: <what will bind to it>. Confirmed.
 - **<The assumption, as a decision.>** — major, user-facing: <what someone sees or does differently>. Confirmed.
 - **<The assumption, as a decision.>** — major, cost: <what it adds to running or maintaining the product>. Confirmed.
+- **<The number, as a decision.>** — major, number in a requirement: proved — <what was run, against what worst case, and what it measured>. Binds 3.1.2.
+- **<The number, as a decision.>** — major, number in a requirement: <what the stack does at the worst case>. Confirmed. Binds 4.1.
 - **<The assumption, as a decision.>** — minor.
 - **<The assumption, as a decision.>** — minor.
 ```
@@ -103,7 +113,8 @@ What this scope adds and where it attaches to what already exists, drawn — wri
 
 ## Rules
 
-- **Refine, never contradict.** A scope document says the same thing as its project parent, in more detail. If it says something different, that is step 5, not a sentence you write.
+- **Refine, never contradict.** A scope document says the same thing as its project parent, in more detail. If it says something different, that is step 6, not a sentence you write.
 - **Cite the parent.** Every refined requirement and decision names the project requirement or decision it came from. A requirement with no parent is uncovered — raise it, never invent a parent to make it resolve.
 - **More detail, not less.** If a line could be deleted and the project doc would still carry the same information, delete it and cite the parent instead. A scope PRD that reads as a summary of the project PRD has failed.
-- **Never widen the scope yourself.** What is in is the operator's decision, settled in steps 2, 5 and 6. Everything you leave out goes in *Out of scope* so it is visible.
+- **Every number is proved or asked before it is written** — step 5. A limit, a size, a duration, a count, a threshold, a guarantee: measure it against the worst case the requirement admits, or put it to the operator with what the stack actually does. A number written on judgement alone is the one kind of requirement the build cannot argue with and cannot meet.
+- **Never widen the scope yourself.** What is in is the operator's decision, settled in steps 2, 6 and 7. Everything you leave out goes in *Out of scope* so it is visible.

@@ -55,6 +55,7 @@ An assumption is **anything the work needs that the documents do not settle.** E
 - it **changes the technical decisions** the TDD carries;
 - it **produces code later steps will not anticipate**;
 - it is **hard to change later** — a data shape, a boundary, a naming or ownership convention, an interface other code will bind to. Cheap now, expensive once twenty files depend on it.
+- it **puts a number in a requirement** — a size, a duration, a count, a rate, a limit, a threshold, a guarantee the code has to hit. A number is what the build is measured against, and **nothing downstream re-checks whether the stack can reach it** — it is discovered by the build failing against it. A number is never minor, however small the change to it looks on the page.
 
 **Minor** — everything else: not covered, but it contradicts nothing, is not user-facing, is not cost-impacting, and stays cheap to reverse.
 
